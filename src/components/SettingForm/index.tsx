@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, FormInstance, Input, Switch, Tag } from 'antd';
+import { Form, FormInstance, Input, Tag } from 'antd';
 import styles from './index.module.css';
 import { IHead } from '@/services/home';
 import { useEffect } from 'react';

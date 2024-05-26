@@ -23,3 +23,15 @@ export const apiUpdateHead = (payload: IHead) => {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiUpdateHead]', err));
 };
+
+export const apiUploadImg = (payload: { file: File }) => {
+  return fetch('/api/media', {
+    method: 'PUT',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: payload.file,
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiUpdateHead]', err));
+};

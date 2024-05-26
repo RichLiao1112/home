@@ -3,52 +3,6 @@
     "logo": "https://rich-cdn.xy-design.top/ens-avatar.png",
     "name": "My Home"
   },
-  "dataSource": [
-    {
-      "id": "0",
-      "title": "Alist",
-      "cover": "https://cdn.jsdelivr.net/gh/alist-org/logo@main/logo.svg",
-      "wanLink": "https://my.liveppp.com:5245",
-      "lanLink": "http://192.168.50.168:5244",
-      "autoSelectLink": true,
-      "openInNewWindow": true
-    },
-    {
-      "title": "DSM",
-      "cover": "https://rich-cdn.xy-design.top/dsm/synology-dsm.png",
-      "wanLink": "https://my.liveppp.com:5001",
-      "lanLink": "https://192.168.50.168:5001",
-      "autoSelectLink": true,
-      "openInNewWindow": true,
-      "id": "1"
-    },
-    {
-      "title": "DSM 920+",
-      "cover": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/synology-drive.png",
-      "wanLink": "",
-      "lanLink": "http://192.168.50.112:5000",
-      "autoSelectLink": true,
-      "openInNewWindow": true,
-      "id": "2"
-    },
-    {
-      "title": "Openwrt",
-      "cover": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/openwrt.png",
-      "wanLink": "",
-      "lanLink": "http://192.168.50.177",
-      "autoSelectLink": true,
-      "openInNewWindow": true,
-      "id": "3"
-    },
-    {
-      "title": "Jellyfin",
-      "cover": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/jellyfin.svg",
-      "wanLink": "https://my.liveppp.com:18096",
-      "lanLink": "http://192.168.50.168:8096",
-      "autoSelectLink": true,
-      "openInNewWindow": true,
-      "id": "4"
-    }
-  ]
+  "dataSource": []
 }
 
