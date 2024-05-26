@@ -3,6 +3,15 @@
     "logo": "https://rich-cdn.xy-design.top/ens-avatar.png",
     "name": "My Home"
   },
-  "dataSource": []
+  "dataSource": [
+    {
+      "title": "DSM",
+      "cover": "https://rich-cdn.xy-design.top/dsm/synology-dsm.png",
+      "wanLink": "https://my.liveppp.com:5001",
+      "lanLink": "",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "0"
+    }
+  ]
 }
-

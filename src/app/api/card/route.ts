@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService from '@/services/home';
-import { message } from 'antd';
 
 export async function PUT(req: NextRequest) {
   const body = await req.json();

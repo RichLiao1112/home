@@ -65,6 +65,7 @@ class HomeService {
   writeDBFileSync = (payload: Partial<IHomeData>) => {
     try {
       writeFileSync(this.homeDBPath, JSON.stringify(payload, null, 2));
+      this.readDBFileSync();
     } catch (err) {
       console.warn('[writeDBFileSync]', err);
       return err;
