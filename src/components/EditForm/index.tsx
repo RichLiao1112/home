@@ -55,6 +55,11 @@ const EditForm = (props: IProps) => {
       requiredMark={customizeRequiredMark}
       form={form}
     >
+      {originData?.id && (
+        <Form.Item label={renderLabel('ID')} required name='id'>
+          <Input disabled />
+        </Form.Item>
+      )}
       <Form.Item
         label={renderLabel('应用名称', '用于在面板上显示应用。')}
         required

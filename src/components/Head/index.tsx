@@ -15,7 +15,7 @@ const Head = (props: IProps) => {
         <div className={styles.name}>{payload.name}</div>
       </div>
       <div className={styles.right}>
-        <HeadRight />
+        <HeadRight payload={payload} />
       </div>
     </div>
   );

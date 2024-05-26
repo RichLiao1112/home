@@ -19,7 +19,7 @@ const Card = (props: IProps) => {
     if (editCardMode === true) {
       setEditModalData?.({
         open: true,
-        title: `修改：${payload.title}`,
+        title: `修改 ${payload.title || ''}`,
         data: payload,
       });
     } else {
