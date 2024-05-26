@@ -1,23 +1,28 @@
-import Image from 'next/image';
 import styles from './page.module.css';
+import { HomeService } from '@/services/home';
+import Card from '@/components/Card';
+import Head from '@/components/Head';
+import { PageContextProvider } from '@/context/page.context';
 
-export default function Home() {
+const readHomeData = () => {
+  return new HomeService().readDBFile();
+};
+
+export default async function Home() {
+  const homeData = await readHomeData();
+  const { data } = homeData;
+  const { dataSource, head } = data || {};
+
   return (
-    <main className={styles.main}>
-      <div className={styles.grid}>
-        <div className={styles.card}>
-          <img
-            src='https://rich-cdn.xy-design.top/dsm/ddns-updater.png'
-            alt=''
-            className={styles.cover}
-          />
-          <strong>1112</strong>
-          <div className={styles['card-btn']}>
-            <a>外网地址</a>
-            <a>内网地址</a>
-          </div>
+    <PageContextProvider>
+      <main className={styles.main}>
+        <Head payload={head} />
+        <div className={styles.flex}>
+          {dataSource?.map((item, index) => {
+            return <Card payload={item} index={index} key={index} />;
+          })}
         </div>
-      </div>
-    </main>
+      </main>
+    </PageContextProvider>
   );
 }

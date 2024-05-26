@@ -1,1 +1,16 @@
-{}
+{
+  "head": {
+    "logo": "https://rich-cdn.xy-design.top/ens-avatar.png",
+    "name": "My Home"
+  },
+  "dataSource": [
+    {
+      "title": "DSM",
+      "cover": "https://rich-cdn.xy-design.top/dsm/synology-dsm.png",
+      "wanLink": "https://my.liveppp.com:5001",
+      "lanLink": "https://192.168.50.168:5001",
+      "autoSelectLink": true,
+      "openInNewWindow": false
+    }
+  ]
+}

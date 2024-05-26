@@ -1,0 +1,11 @@
+.right {
+  display: flex;
+  flex-direction: row;
+}
+
+.edit {
+  padding: 0 0.5rem;
+}
+
+.settings {
+}
