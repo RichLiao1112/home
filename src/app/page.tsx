@@ -1,8 +1,10 @@
-import styles from './page.module.css';
-import HomeService from '@/services/home';
-import Card from '@/components/Card';
-import Head from '@/components/Head';
-import { PageContextProvider } from '@/context/page.context';
+import styles from "./page.module.css";
+import HomeService from "@/services/home";
+import Card from "@/components/Card";
+import Head from "@/components/Head";
+import { PageContextProvider } from "@/context/page.context";
+
+export const dynamic = "force-dynamic";
 
 const readHomeData = () => {
   const { homeDBData } = HomeService;
