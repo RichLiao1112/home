@@ -1,7 +1,14 @@
 'use client';
 
-import { ICard, IHead } from '@/services/home';
-import React, { createContext, useState, FC } from 'react';
+import { ICard, ILayout } from '@/services/home';
+import React, {
+  createContext,
+  useState,
+  FC,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react';
 
 export interface IPageContext {
   editCardMode: boolean;
@@ -16,7 +23,7 @@ export interface IPageContext {
   ) => void;
   editDrawerData: {
     open: boolean;
-    data: IHead;
+    data: ILayout;
     title: string;
   };
   setEditDrawerData: (
@@ -27,24 +34,39 @@ export interface IPageContext {
 export const PageContext = createContext<Partial<IPageContext>>({});
 
 export const PageContextProvider: FC<any> = (props) => {
-  const [editCardMode, setEditCardMode] = useState(false);
-  const [editModalData, setEditModalData] =
+  const [editCardMode, modifyEditCardMode] = useState(false);
+  const [editModalData, modifyEditModalData] =
     useState<IPageContext['editModalData']>();
-  const [editDrawerData, setEditDrawerData] =
+  const [editDrawerData, modifyEditDrawerData] =
     useState<IPageContext['editDrawerData']>();
 
+  const setEditCardMode = useCallback(
+    (payload: boolean) => modifyEditCardMode(payload),
+    []
+  );
+  const setEditModalData = useCallback(
+    (payload: IPageContext['editModalData'] | undefined) =>
+      modifyEditModalData(payload),
+    []
+  );
+  const setEditDrawerData = useCallback(
+    (payload: IPageContext['editDrawerData'] | undefined) =>
+      modifyEditDrawerData(payload),
+    []
+  );
+
+  const value = useMemo(() => {
+    return {
+      editCardMode,
+      setEditCardMode,
+      editModalData,
+      setEditModalData,
+      editDrawerData,
+      setEditDrawerData,
+    };
+  }, [editCardMode, editModalData, editDrawerData]);
+
   return (
-    <PageContext.Provider
-      value={{
-        editCardMode,
-        setEditCardMode,
-        editModalData,
-        setEditModalData,
-        editDrawerData,
-        setEditDrawerData,
-      }}
-    >
-      {props.children}
-    </PageContext.Provider>
+    <PageContext.Provider value={value}>{props.children}</PageContext.Provider>
   );
 };

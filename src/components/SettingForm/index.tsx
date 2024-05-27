@@ -1,13 +1,14 @@
 'use client';
 
-import { Form, FormInstance, Input, Tag } from 'antd';
+import { Form, FormInstance, Input, Select, Tag } from 'antd';
 import styles from './index.module.css';
-import { IHead } from '@/services/home';
+import { ILayout } from '@/services/home';
 import { useEffect } from 'react';
+const { Option } = Select;
 
 export interface IProps {
   form: FormInstance;
-  originData?: IHead;
+  originData?: ILayout;
 }
 
 const SettingForm = (props: IProps) => {
@@ -41,7 +42,10 @@ const SettingForm = (props: IProps) => {
   };
 
   useEffect(() => {
-    form.setFieldsValue(originData);
+    form.setFieldsValue({
+      ...originData,
+      cardListStyle: JSON.stringify(originData?.cardListStyle),
+    });
   }, [form, originData]);
 
   return (
@@ -53,12 +57,45 @@ const SettingForm = (props: IProps) => {
     >
       <Form.Item
         label={renderLabel('logo', '本图片将被用于页面左上角')}
-        name='logo'
+        name={['head', 'logo']}
       >
         <Input />
       </Form.Item>
-      <Form.Item label={renderLabel('站点名称', '左上角的名称')} name='name'>
+      <Form.Item
+        label={renderLabel('站点名称', '左上角的名称')}
+        name={['head', 'name']}
+      >
         <Input />
+      </Form.Item>
+      <Form.Item
+        label={renderLabel('应用卡片排版', '应用的整体排列')}
+        name='cardListStyle'
+      >
+        <Select
+          options={[
+            {
+              label: '左上=>右下',
+              value: JSON.stringify({
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+              }),
+            },
+            {
+              label: '居中',
+              value: JSON.stringify({
+                justifyContent: 'center',
+                alignItems: 'center',
+              }),
+            },
+            {
+              label: '右上=>左下',
+              value: JSON.stringify({
+                justifyContent: 'flex-end',
+                alignItems: 'flex-start',
+              }),
+            },
+          ]}
+        />
       </Form.Item>
     </Form>
   );

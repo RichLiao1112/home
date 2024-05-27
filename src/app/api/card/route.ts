@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import HomeService from '@/services/home';
+import HomeService, { ICard } from '@/services/home';
 
 export async function PUT(req: NextRequest) {
-  const body = await req.json();
-  const { data } = body;
   try {
+    const body = await req.json();
+    const { data } = body;
     const dto = await HomeService.upsertCard({
       title: data.title,
       cover: data.cover,

@@ -7,22 +7,22 @@ import {
   AppstoreAddOutlined,
 } from '@ant-design/icons';
 import styles from './index.module.css';
-import { Button, Tooltip, Modal, Form, Drawer, Space } from 'antd';
+import { Button, Tooltip, Modal, Form, Drawer } from 'antd';
 import { useContext, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { PageContext } from '@/context/page.context';
 import EditForm from '../EditForm';
-import { ICard, IHead } from '@/services/home';
-import { apiUpdateHead, apiUpsertCard } from '@/requests';
+import { ICard, ILayout } from '@/services/home';
+import { apiUpdateUI, apiUpsertCard } from '@/requests';
 import SettingForm from '../SettingForm';
 
 export interface IProps {
-  payload: IHead;
+  layout: ILayout;
 }
 
 const HeadRight = (props: IProps) => {
-  const { payload } = props;
+  const { layout } = props;
   const router = useRouter();
 
   const {
@@ -35,9 +35,9 @@ const HeadRight = (props: IProps) => {
   } = useContext(PageContext);
 
   const [form] = Form.useForm<ICard>();
-  const [settingForm] = Form.useForm<IHead>();
+  const [settingForm] = Form.useForm<ILayout>();
   const [fetching, setFetching] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const onCancelModal = () => {
     setEditModalData?.(undefined);
@@ -64,14 +64,19 @@ const HeadRight = (props: IProps) => {
   };
 
   const onShowDrawer = () => {
-    setEditDrawerData?.({ open: true, title: '', data: payload });
+    setEditDrawerData?.({ open: true, title: '', data: layout });
   };
 
   const onSubmitSettingForm = async () => {
     try {
       setFetching(true);
       const data = await settingForm.validateFields();
-      const res = await apiUpdateHead(data);
+      const res = await apiUpdateUI({
+        ...data,
+        cardListStyle: data.cardListStyle
+          ? JSON.parse(data.cardListStyle as string)
+          : undefined,
+      });
       if (res.success) {
         onCancelDrawer();
       }
@@ -115,7 +120,7 @@ const HeadRight = (props: IProps) => {
           </Button>
         }
       >
-        <SettingForm form={settingForm} originData={payload} />
+        <SettingForm form={settingForm} originData={layout} />
       </Drawer>
 
       <div>

@@ -16,9 +16,19 @@ export interface IHead {
   name?: string;
 }
 
+export interface ICardListStyle {
+  justifyContent?: string;
+  alignItems?: string;
+}
+
+export interface ILayout {
+  cardListStyle?: ICardListStyle;
+  head?: IHead;
+}
+
 export interface IHomeData {
-  head: IHead;
   dataSource: ICard[];
+  layout: ILayout;
 }
 
 /**
@@ -32,40 +42,49 @@ class HomeService {
     this.readDBFileSync();
   }
 
+  set layout(payload: ILayout) {
+    this.homeDBData.layout = payload;
+  }
+
+  get layout() {
+    const { layout } = this.homeDBData || {};
+    return layout || {};
+  }
+
+  set head(payload: IHead) {
+    this.homeDBData.layout = {
+      ...(this.layout || {}),
+      head: payload,
+    };
+  }
+
+  get head() {
+    const { head } = this.homeDBData.layout || {};
+    return head || {};
+  }
+
+  set dataSource(payload: ICard[]) {
+    this.homeDBData.dataSource = payload;
+  }
+
+  get dataSource() {
+    const { dataSource = [] } = this.homeDBData;
+    return dataSource;
+  }
+
+  save = () => {
+    this.writeDBFileSync(this.homeDBData);
+  };
+
   private readDBFileSync = () => {
     const data = readFileSync(this.homeDBPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
     this.homeDBData = parseData;
   };
 
-  // readDBFile = (): Promise<{
-  //   data: IHomeData | undefined;
-  //   message: any;
-  // }> => {
-  //   return new Promise((resolve) => {
-  //     readFile(this.homeDBPath, { encoding: 'utf-8' }, (err, res) => {
-  //       if (err) {
-  //         return resolve({ message: err, data: undefined });
-  //       }
-  //       try {
-  //         const result = JSON.parse(res);
-  //         const { dataSource = [] } = result;
-  //         dataSource.forEach((item: ICard, index: number) => {
-  //           item.id = index;
-  //         });
-  //         this.homeDBData = result;
-  //         return resolve({ data: result, message: 'success' });
-  //       } catch (err) {
-  //         return resolve({ data: undefined, message: err });
-  //       }
-  //     });
-  //   });
-  // };
-
   writeDBFileSync = (payload: Partial<IHomeData>) => {
     try {
       writeFileSync(this.homeDBPath, JSON.stringify(payload, null, 2));
-      this.readDBFileSync();
     } catch (err) {
       console.warn('[writeDBFileSync]', err);
       return err;
@@ -86,12 +105,16 @@ class HomeService {
         dto.lanLink = card.lanLink ?? dto.lanLink;
         dto.autoSelectLink = card.autoSelectLink ?? dto.autoSelectLink;
         dto.openInNewWindow = card.openInNewWindow ?? dto.autoSelectLink;
-        this.writeDBFileSync(homeDBData);
+        this.dataSource = dataSource;
+        this.save();
+
         return dto;
       } else {
         const dto = { ...card, id: `${dataSource.length}` };
         dataSource.push(dto);
-        this.writeDBFileSync(homeDBData);
+        this.dataSource = dataSource;
+        this.save();
+
         return dto;
       }
     } catch (err) {
@@ -99,13 +122,35 @@ class HomeService {
     }
   }
 
+  deleteCard(id: ICard['id']) {
+    this.dataSource = this.dataSource.filter((card) => card.id !== id);
+  }
+
   updateHead(head: IHead) {
-    const homeDBData = this.homeDBData || {};
-    const headDTO = homeDBData.head || {};
-    headDTO.logo = head.logo ?? headDTO.logo;
-    headDTO.name = head.name ?? headDTO.name;
-    this.writeDBFileSync(homeDBData);
-    return headDTO;
+    const headDTO = this.head;
+
+    this.head = {
+      ...headDTO,
+      logo: head.logo ?? headDTO.logo,
+      name: head.name ?? headDTO.name,
+    };
+
+    return this.head;
+  }
+
+  updateCardListStyle(payload: ICardListStyle) {
+    const layout = this.layout;
+    const cardListStyleDTO = layout.cardListStyle || {};
+
+    cardListStyleDTO.justifyContent =
+      payload.justifyContent ?? cardListStyleDTO.justifyContent;
+    cardListStyleDTO.alignItems =
+      payload.alignItems ?? cardListStyleDTO.alignItems;
+
+    layout.cardListStyle = cardListStyleDTO;
+    this.layout = layout;
+
+    return layout;
   }
 }
 

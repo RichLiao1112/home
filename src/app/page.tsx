@@ -1,10 +1,10 @@
-import styles from "./page.module.css";
-import HomeService from "@/services/home";
-import Card from "@/components/Card";
-import Head from "@/components/Head";
-import { PageContextProvider } from "@/context/page.context";
+import styles from './page.module.css';
+import HomeService from '@/services/home';
+import Card from '@/components/Card';
+import Head from '@/components/Head';
+import { PageContextProvider } from '@/context/page.context';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 const readHomeData = () => {
   const { homeDBData } = HomeService;
@@ -13,15 +13,16 @@ const readHomeData = () => {
 
 export default async function Home() {
   const homeData = readHomeData();
-  const { dataSource, head } = homeData;
+  const { dataSource, layout } = homeData;
+  const { cardListStyle } = layout || {};
 
   return (
     <PageContextProvider>
       <main className={styles.main}>
-        <Head payload={head} />
-        <div className={styles.flex}>
+        <Head layout={layout} />
+        <div className={styles.flex} style={cardListStyle}>
           {dataSource?.map((item, index) => {
-            return <Card payload={item} index={index} key={index} />;
+            return <Card payload={item} key={index} />;
           })}
         </div>
       </main>

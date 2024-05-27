@@ -3,15 +3,21 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
   background-color: white;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .flex {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   margin: auto;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
 }

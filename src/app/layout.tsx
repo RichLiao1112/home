@@ -9,7 +9,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: HomeService.homeDBData.head?.name,
+  title: HomeService.homeDBData.layout?.head?.name,
   description: '',
 };
 

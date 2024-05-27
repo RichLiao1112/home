@@ -1,7 +1,22 @@
 {
-  "head": {
-    "logo": "",
-    "name": "My Home"
+  "layout": {
+    "head": {
+      "name": "XL"
+    },
+    "cardListStyle": {
+      "justifyContent": "center",
+      "alignItems": "center"
+    }
   },
-  "dataSource": []
+  "dataSource": [
+    {
+      "title": "DSM",
+      "cover": "",
+      "wanLink": "",
+      "lanLink": "",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "0"
+    }
+  ]
 }

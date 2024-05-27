@@ -5,14 +5,18 @@ import styles from './index.module.css';
 import { useContext } from 'react';
 import { PageContext } from '@/context/page.context';
 import classNames from 'classnames';
+import { MinusCircleFilled } from '@ant-design/icons';
+import { Button, Modal } from 'antd';
+import { apiDeleteCard } from '@/requests';
+import { useRouter } from 'next/navigation';
 
 export interface IProps {
   payload: ICard;
-  index: number;
 }
 
 const Card = (props: IProps) => {
-  const { payload, index } = props;
+  const router = useRouter();
+  const { payload } = props;
   const { editCardMode, setEditModalData } = useContext(PageContext);
 
   const onCardClick = () => {
@@ -37,18 +41,42 @@ const Card = (props: IProps) => {
     }
   };
 
+  const onClickDelete = (payload: ICard) => {
+    Modal.confirm({
+      title: `确定删除 ${payload.title} ？`,
+      onOk: () => apiDeleteCard(payload.id).finally(() => router.refresh()),
+    });
+  };
+
   return (
-    <div
-      className={classNames(
-        styles.card,
-        editCardMode === true ? styles.shake : ''
+    <div className={styles.cardWrapper}>
+      {editCardMode === true && (
+        <div className={styles.delete}>
+          <Button
+            type='text'
+            icon={
+              <MinusCircleFilled style={{ color: 'red', fontSize: '1rem' }} />
+            }
+            onClick={() => onClickDelete(payload)}
+          />
+        </div>
       )}
-      onClick={onCardClick}
-    >
-      <div className={styles.mask}></div>
-      <img src={payload.cover} alt='' className={styles.cover} />
-      <div className={styles.title}>
-        <span>{payload.title}</span>
+      <div
+        className={classNames(
+          styles.card,
+          editCardMode === true ? styles.shake : ''
+        )}
+        onClick={onCardClick}
+      >
+        <div className={styles.mask}></div>
+        {payload.cover ? (
+          <img src={payload.cover} alt='' className={styles.cover} />
+        ) : (
+          <div className={styles.cover}>{payload.title[0]}</div>
+        )}
+        <div className={styles.title}>
+          <span>{payload.title}</span>
+        </div>
       </div>
     </div>
   );
