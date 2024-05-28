@@ -5,18 +5,9 @@
     },
     "cardListStyle": {
       "justifyContent": "center",
-      "alignItems": "center"
+      "alignItems": "center",
+      "alignContent": "center"
     }
   },
-  "dataSource": [
-    {
-      "title": "DSM",
-      "cover": "",
-      "wanLink": "",
-      "lanLink": "",
-      "autoSelectLink": true,
-      "openInNewWindow": true,
-      "id": "0"
-    }
-  ]
+  "dataSource": []
 }

@@ -1,4 +1,4 @@
-import { readFile, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
 export interface ICard {
@@ -14,11 +14,13 @@ export interface ICard {
 export interface IHead {
   logo?: string;
   name?: string;
+  backgroundImage?: string;
 }
 
 export interface ICardListStyle {
   justifyContent?: string;
   alignItems?: string;
+  alignContent?: string;
 }
 
 export interface ILayout {
@@ -146,6 +148,8 @@ class HomeService {
       payload.justifyContent ?? cardListStyleDTO.justifyContent;
     cardListStyleDTO.alignItems =
       payload.alignItems ?? cardListStyleDTO.alignItems;
+    cardListStyleDTO.alignContent =
+      payload.alignContent ?? cardListStyleDTO.alignContent;
 
     layout.cardListStyle = cardListStyleDTO;
     this.layout = layout;
