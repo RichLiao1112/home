@@ -9,12 +9,14 @@ export interface ICard {
   autoSelectLink?: boolean;
   openInNewWindow?: boolean;
   id?: string;
+  coverColor?: string;
 }
 
 export interface IHead {
   logo?: string;
   name?: string;
   backgroundImage?: string;
+  logoColor?: string;
 }
 
 export interface ICardListStyle {
@@ -107,6 +109,7 @@ class HomeService {
         dto.lanLink = card.lanLink ?? dto.lanLink;
         dto.autoSelectLink = card.autoSelectLink ?? dto.autoSelectLink;
         dto.openInNewWindow = card.openInNewWindow ?? dto.autoSelectLink;
+        dto.coverColor = card.coverColor ?? dto.coverColor;
         this.dataSource = dataSource;
         this.save();
 
@@ -135,6 +138,8 @@ class HomeService {
       ...headDTO,
       logo: head.logo ?? headDTO.logo,
       name: head.name ?? headDTO.name,
+      logoColor: head.logoColor ?? headDTO.logoColor,
+      backgroundImage: head.backgroundImage ?? headDTO.backgroundImage,
     };
 
     return this.head;

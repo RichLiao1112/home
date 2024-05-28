@@ -4,6 +4,8 @@ import { Form, FormInstance, Input, Switch, Tag } from 'antd';
 import styles from './index.module.css';
 import { ICard } from '@/services/home';
 import { useEffect } from 'react';
+import SearchIconSelect from '../SearchIconSelect';
+import SelcetColor from '../SelectColor';
 
 export interface IProps {
   form: FormInstance;
@@ -68,8 +70,24 @@ const EditForm = (props: IProps) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item label={renderLabel('应用图标', '上传应用图片')} name='cover'>
-        <Input />
+      <Form.Item shouldUpdate noStyle>
+        {() => (
+          <Form.Item
+            label={renderLabel('应用图标', '搜索、上传应用图片')}
+            name='cover'
+          >
+            <SearchIconSelect color={form.getFieldValue('coverColor')} />
+          </Form.Item>
+        )}
+      </Form.Item>
+      <Form.Item
+        label={renderLabel(
+          '图标颜色',
+          '适用于修改搜索出的图片颜色（实验性功能）'
+        )}
+        name='coverColor'
+      >
+        <SelcetColor />
       </Form.Item>
       <Form.Item
         label={renderLabel('公网地址', '点击应用打开的公网地址')}
