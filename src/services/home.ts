@@ -14,6 +14,7 @@ export interface ICard {
 export interface IHead {
   logo?: string;
   name?: string;
+  backgroundImage?: string;
 }
 
 export interface ICardListStyle {

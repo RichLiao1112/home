@@ -14,7 +14,9 @@ const Head = (props: IProps) => {
     <div className={styles.head}>
       <div className={styles.left}>
         {/* <img alt='' src={head.logo || '/home.png'} className={styles.logo} /> */}
-        <Iconify icon={head.logo || ''} width="2.5rem" height="2.5rem" />
+        <div className={styles.logo}>
+          <Iconify icon={head.logo || ''} width="2.5rem" height="2.5rem" />
+        </div>
         <div className={styles.name}>{head.name}</div>
       </div>
       <div className={styles.right}>

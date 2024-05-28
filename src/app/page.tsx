@@ -18,7 +18,10 @@ export default async function Home() {
 
   return (
     <PageContextProvider>
-      <main className={styles.main}>
+      <main
+        className={styles.main}
+        style={{ backgroundImage: `url(${layout?.head?.backgroundImage})` }}
+      >
         <Head layout={layout} />
         <div className={styles.flex} style={cardListStyle}>
           {dataSource?.map((item, index) => {
