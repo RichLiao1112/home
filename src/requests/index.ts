@@ -1,4 +1,5 @@
 import { ICard, ILayout } from '@/services/home';
+import { ISearchIcon } from '@/services/media';
 
 export const apiUpsertCard = (payload: ICard) => {
   return fetch('/api/card', {
@@ -33,4 +34,15 @@ export const apiUpdateUI = (payload: ILayout) => {
   })
     .then((res) => res.json())
     .catch((err) => console.warn('[apiUpdateHead]', err));
+};
+
+export const apiSearchIcon = (payload: ISearchIcon) => {
+  return fetch(`/api/icon?q=${payload.q}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiSearchIcon]', err));
 };

@@ -3,16 +3,23 @@
 import { Form, FormInstance, Input, Select, Tag } from 'antd';
 import styles from './index.module.css';
 import { ILayout } from '@/services/home';
-import { useEffect } from 'react';
-const { Option } = Select;
+import { useEffect, useState } from 'react';
+import debounce from 'lodash/debounce';
+import { apiSearchIcon } from '@/requests';
+import Iconify from '@/components/Iconify';
 
 export interface IProps {
   form: FormInstance;
   originData?: ILayout;
 }
 
+export type TRemoteIcon = {
+  id: string;
+};
+
 const SettingForm = (props: IProps) => {
   const { form, originData } = props;
+  const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
 
   const customizeRequiredMark = (
     label: React.ReactNode,
@@ -20,11 +27,11 @@ const SettingForm = (props: IProps) => {
   ) => (
     <>
       {required ? (
-        <Tag color='error' style={{ fontSize: '.6rem' }}>
+        <Tag color="error" style={{ fontSize: '.6rem' }}>
           必填
         </Tag>
       ) : (
-        <Tag color='warning' style={{ fontSize: '.6rem' }}>
+        <Tag color="warning" style={{ fontSize: '.6rem' }}>
           可选
         </Tag>
       )}
@@ -41,6 +48,32 @@ const SettingForm = (props: IProps) => {
     );
   };
 
+  const onIconSearch = debounce((value) => {
+    if (value) {
+      apiSearchIcon({ q: value })
+        .then((res) => {
+          const icons = (res.data?.icons || []).map((icon: TRemoteIcon) => ({
+            id: icon.id,
+          }));
+          setRemoteIconList(icons);
+        })
+        .catch((err) => console.log('[onIconSearch]', err));
+    }
+  }, 300);
+
+  const renderSelectOption = (payload: TRemoteIcon) => {
+    return {
+      label: (
+        <div className={styles.option}>
+          <Iconify width="2rem" height="2rem" icon={payload.id} />
+          &nbsp;
+          <span>{payload.id}</span>
+        </div>
+      ),
+      value: payload.id,
+    };
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       ...originData,
@@ -50,8 +83,8 @@ const SettingForm = (props: IProps) => {
 
   return (
     <Form
-      layout='vertical'
-      variant='outlined'
+      layout="vertical"
+      variant="outlined"
       requiredMark={customizeRequiredMark}
       form={form}
     >
@@ -59,7 +92,12 @@ const SettingForm = (props: IProps) => {
         label={renderLabel('logo', '本图片将被用于页面左上角')}
         name={['head', 'logo']}
       >
-        <Input />
+        <Select
+          showSearch
+          onSearch={onIconSearch}
+          placeholder="输入关键字搜索图片"
+          options={remoteIconList.map((icon) => renderSelectOption(icon))}
+        />
       </Form.Item>
       <Form.Item
         label={renderLabel('站点名称', '左上角的名称')}
@@ -69,7 +107,7 @@ const SettingForm = (props: IProps) => {
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name='cardListStyle'
+        name="cardListStyle"
       >
         <Select
           options={[
@@ -78,6 +116,7 @@ const SettingForm = (props: IProps) => {
               value: JSON.stringify({
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
+                alignContent: 'flex-start',
               }),
             },
             {
@@ -85,6 +124,7 @@ const SettingForm = (props: IProps) => {
               value: JSON.stringify({
                 justifyContent: 'center',
                 alignItems: 'center',
+                alignContent: 'center',
               }),
             },
             {
@@ -92,6 +132,7 @@ const SettingForm = (props: IProps) => {
               value: JSON.stringify({
                 justifyContent: 'flex-end',
                 alignItems: 'flex-start',
+                alignContent: 'flex-start',
               }),
             },
           ]}

@@ -7,3 +7,10 @@
   color: rgb(134, 142, 150);
   margin-left: 0.5rem;
 }
+
+.option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
