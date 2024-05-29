@@ -25,11 +25,11 @@ const SettingForm = (props: IProps) => {
   ) => (
     <>
       {required ? (
-        <Tag color='error' style={{ fontSize: '.6rem' }}>
+        <Tag color="error" style={{ fontSize: '.6rem' }}>
           必填
         </Tag>
       ) : (
-        <Tag color='warning' style={{ fontSize: '.6rem' }}>
+        <Tag color="warning" style={{ fontSize: '.6rem' }}>
           可选
         </Tag>
       )}
@@ -55,15 +55,18 @@ const SettingForm = (props: IProps) => {
 
   return (
     <Form
-      layout='vertical'
-      variant='outlined'
+      layout="vertical"
+      variant="outlined"
       requiredMark={customizeRequiredMark}
       form={form}
     >
       <Form.Item shouldUpdate noStyle>
         {() => (
           <Form.Item
-            label={renderLabel('logo', '本图片将被用于页面左上角')}
+            label={renderLabel(
+              'logo',
+              '关键字搜索应用图片 或 填写http开头的图片地址'
+            )}
             name={['head', 'logo']}
           >
             <SearchIconSelect
@@ -89,7 +92,7 @@ const SettingForm = (props: IProps) => {
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name='cardListStyle'
+        name="cardListStyle"
       >
         <Select
           options={[

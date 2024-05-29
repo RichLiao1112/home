@@ -1,1 +1,196 @@
-{}
+{
+  "name": "XL",
+  "layout": {
+    "cardListStyle": {
+      "justifyContent": "center",
+      "alignItems": "center",
+      "alignContent": "center"
+    },
+    "head": {
+      "logo": "simple-icons:mediamarkt",
+      "name": "XL",
+      "logoColor": "#eab308"
+    }
+  },
+  "dataSource": [
+    {
+      "title": "DSM 918+ ",
+      "cover": "token-branded:dsm",
+      "coverColor": "#eab308",
+      "wanLink": "https://my.liveppp.com:5001",
+      "lanLink": "https://192.168.50.168:5001",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "0"
+    },
+    {
+      "title": "DSM 920+",
+      "cover": "token:dsm",
+      "coverColor": "#0891b2",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.112:5000",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "1"
+    },
+    {
+      "title": "Asus",
+      "cover": "simple-icons:asus",
+      "coverColor": "#65a30d",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.1",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "2"
+    },
+    {
+      "title": "Openwrt",
+      "cover": "simple-icons:openwrt",
+      "coverColor": "#0284c7",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.177",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "3"
+    },
+    {
+      "title": "vmware",
+      "cover": "simple-icons:vmware",
+      "coverColor": "#999999",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.69",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "4"
+    },
+    {
+      "title": "DDNS-go",
+      "cover": "eos-icons:dns",
+      "coverColor": "#db2777",
+      "wanLink": "",
+      "lanLink": "",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "5"
+    },
+    {
+      "title": "Alist",
+      "cover": "streamline:play-store",
+      "coverColor": "#eab308",
+      "wanLink": "https://my.liveppp.com:5245",
+      "lanLink": "http://192.168.50.168:5244",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "6"
+    },
+    {
+      "title": "小雅",
+      "cover": "streamline:play-store",
+      "coverColor": "#7c3aed",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.168:5678/",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "7"
+    },
+    {
+      "title": "Jenkins",
+      "cover": "devicon:jenkins",
+      "coverColor": "",
+      "wanLink": "https://my.liveppp.com:28181",
+      "lanLink": "http://192.168.50.168:18181",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "8"
+    },
+    {
+      "title": "Jellyfin",
+      "cover": "openmoji:jellyfin",
+      "coverColor": "",
+      "wanLink": "https://my.liveppp.com:18096",
+      "lanLink": "http://192.168.50.168:8096",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "9"
+    },
+    {
+      "title": "Gitlab",
+      "cover": "logos:gitlab",
+      "coverColor": "",
+      "wanLink": "https://my.liveppp.com:18929",
+      "lanLink": "http://192.168.50.168:8929",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "10"
+    },
+    {
+      "title": "AriaNg",
+      "cover": "material-symbols:rocket",
+      "coverColor": "#ff60a0",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.168:6880/",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "11"
+    },
+    {
+      "title": "Dashdot",
+      "cover": "icon-park:radar-chart",
+      "coverColor": "",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.168:3001/",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "12"
+    },
+    {
+      "title": "VoceChat",
+      "cover": "simple-icons:mediamarkt",
+      "coverColor": "#059669",
+      "wanLink": "https://my.liveppp.com:13009/",
+      "lanLink": "http://192.168.50.168:3009",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "13"
+    },
+    {
+      "title": "Tplink",
+      "cover": "cbi:tplink-router",
+      "coverColor": "#0891b2",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.125",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "14"
+    },
+    {
+      "title": "Netdata",
+      "cover": "simple-icons:netdata",
+      "coverColor": "#0891b2",
+      "wanLink": "",
+      "lanLink": "http://192.168.50.168:19999",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "15"
+    },
+    {
+      "title": "DSM Drive",
+      "cover": "material-symbols:file-copy",
+      "coverColor": "#999999",
+      "wanLink": "https://my.liveppp.com:5001/?launchApp=SYNO.SDS.Drive.Application",
+      "lanLink": "https://192.168.50.168:5001/?launchApp=SYNO.SDS.Drive.Application#/signin",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "16"
+    },
+    {
+      "title": "VS Code",
+      "cover": "devicon:vscode",
+      "wanLink": "https://my.liveppp.com:18443",
+      "lanLink": "http://192.168.50.168:8443",
+      "autoSelectLink": true,
+      "openInNewWindow": true,
+      "id": "17"
+    }
+  ]
+}

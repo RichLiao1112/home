@@ -10,7 +10,7 @@ import { Button, Modal } from 'antd';
 import { apiDeleteCard } from '@/requests';
 import { useRouter } from 'next/navigation';
 import Iconify from '../Iconify';
-import { isHttpSource } from '@/common';
+import { getLinkJumpMode, isHttpSource, jumpMode } from '@/common';
 
 export interface IProps {
   payload: ICard;
@@ -29,16 +29,24 @@ const Card = (props: IProps) => {
         data: payload,
       });
     } else {
-      let url = payload.wanLink || payload.lanLink;
+      let url = payload.wanLink;
       let openInNewWindow = payload.openInNewWindow !== false;
-      if (payload.autoSelectLink !== false && payload.lanLink) {
-        if (
-          location.host.startsWith('localhost') ||
-          /[a-zA-Z]/g.test(location.host) !== true
-        ) {
-          url = payload.lanLink;
-        }
+      // if (payload.autoSelectLink !== false && payload.lanLink) {
+      //   if (
+      //     location.host.startsWith('localhost') ||
+      //     /[a-zA-Z]/g.test(location.host) !== true
+      //   ) {
+      //     url = payload.lanLink;
+      //   }
+      // }
+      if (getLinkJumpMode() === jumpMode.lan && payload.lanLink) {
+        url = payload.lanLink;
       }
+      if (url?.startsWith('http://') || url?.startsWith('https://')) {
+      } else {
+        url = 'http://' + url;
+      }
+      console.log(url);
       window.open(url, openInNewWindow ? '_blank' : '_self');
     }
   };
@@ -52,12 +60,12 @@ const Card = (props: IProps) => {
 
   const renderCover = (source?: string, coverColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt='' className={styles.cover} />;
+      return <img src={source} alt="" className={styles.cover} />;
     }
     if (source) {
       return (
         <div className={styles.cover} style={{ color: coverColor }}>
-          <Iconify icon={source} width='100%' height='100%' />
+          <Iconify icon={source} width="100%" height="100%" />
         </div>
       );
     }
@@ -69,7 +77,7 @@ const Card = (props: IProps) => {
       {editCardMode === true && (
         <div className={styles.delete}>
           <Button
-            type='text'
+            type="text"
             icon={
               <MinusCircleFilled style={{ color: 'red', fontSize: '1rem' }} />
             }
