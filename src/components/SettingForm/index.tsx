@@ -112,7 +112,7 @@ const SettingForm = (props: IProps) => {
         <Select
           options={[
             {
-              label: '左上=>右下',
+              label: '左=>右',
               value: JSON.stringify({
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
@@ -128,7 +128,7 @@ const SettingForm = (props: IProps) => {
               }),
             },
             {
-              label: '右上=>左下',
+              label: '右=>左',
               value: JSON.stringify({
                 justifyContent: 'flex-end',
                 alignItems: 'flex-start',

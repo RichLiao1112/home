@@ -1,12 +1,13 @@
 .main {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  height: 100vh;
+  align-items: center; */
+  display: block;
+  height: auto;
+  min-height: 100vh;
   background-color: white;
   box-sizing: border-box;
-  overflow: auto;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -21,7 +22,7 @@
   align-content: flex-start;
   margin: auto;
   width: 100%;
-  height: 100%;
+  height: auto;
   box-sizing: border-box;
   padding: 1rem;
 }

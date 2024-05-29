@@ -20,7 +20,9 @@ export default async function Home() {
     <PageContextProvider>
       <main
         className={styles.main}
-        style={{ backgroundImage: `url(${layout?.head?.backgroundImage})` }}
+        style={{
+          backgroundImage: `url(${layout?.head?.backgroundImage || ''})`,
+        }}
       >
         <Head layout={layout} />
         <div className={styles.flex} style={cardListStyle}>
