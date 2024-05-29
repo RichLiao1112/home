@@ -37,4 +37,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Deploy
 
-docker buildx build --platform=linux/amd64,linux/arm64 -t 2458006757/home:0.0.3 --push .
+docker buildx build --platform=linux/amd64,linux/arm64 -t 2458006757/home:latest --push .
+
+jenkins auto deploy
