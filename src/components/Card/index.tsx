@@ -29,7 +29,7 @@ const Card = (props: IProps) => {
         data: payload,
       });
     } else {
-      let url = payload.wanLink;
+      let url = payload.wanLink || payload.lanLink;
       let openInNewWindow = payload.openInNewWindow !== false;
       // if (payload.autoSelectLink !== false && payload.lanLink) {
       //   if (
@@ -42,11 +42,11 @@ const Card = (props: IProps) => {
       if (getLinkJumpMode() === jumpMode.lan && payload.lanLink) {
         url = payload.lanLink;
       }
+
       if (url?.startsWith('http://') || url?.startsWith('https://')) {
-      } else {
+      } else if (url) {
         url = 'http://' + url;
       }
-      console.log(url);
       window.open(url, openInNewWindow ? '_blank' : '_self');
     }
   };
