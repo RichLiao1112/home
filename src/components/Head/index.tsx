@@ -2,6 +2,7 @@ import { ILayout } from '@/services/home';
 import HeadRight from '@/components/HeadRight';
 import styles from './index.module.css';
 import Iconify from '../Iconify';
+import { isHttpSource } from '@/common';
 
 export interface IProps {
   layout?: ILayout;
@@ -10,13 +11,24 @@ export interface IProps {
 const Head = (props: IProps) => {
   const { layout = {} } = props;
   const { head = {} } = layout;
+
+  const renderCover = (source?: string, logoColor?: string) => {
+    if (isHttpSource(source)) {
+      return <img src={source} alt='' className={styles.logo} />;
+    }
+    if (source) {
+      return (
+        <div className={styles.logo} style={{ color: logoColor }}>
+          <Iconify icon={source} width='100%' height='100%' />
+        </div>
+      );
+    }
+    return <div className={styles.logo} style={{ color: logoColor }}></div>;
+  };
   return (
     <div className={styles.head}>
       <div className={styles.left}>
-        {/* <img alt='' src={head.logo || '/home.png'} className={styles.logo} /> */}
-        <div className={styles.logo}>
-          <Iconify icon={head.logo || ''} width="2.5rem" height="2.5rem" />
-        </div>
+        {renderCover(head.logo, head.logoColor)}
         <div className={styles.name}>{head.name}</div>
       </div>
       <div className={styles.right}>

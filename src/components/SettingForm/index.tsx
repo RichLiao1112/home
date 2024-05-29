@@ -3,10 +3,9 @@
 import { Form, FormInstance, Input, Select, Tag } from 'antd';
 import styles from './index.module.css';
 import { ILayout } from '@/services/home';
-import { useEffect, useState } from 'react';
-import debounce from 'lodash/debounce';
-import { apiSearchIcon } from '@/requests';
-import Iconify from '@/components/Iconify';
+import { useEffect } from 'react';
+import SearchIconSelect from '../SearchIconSelect';
+import SelcetColor from '../SelectColor';
 
 export interface IProps {
   form: FormInstance;
@@ -19,7 +18,6 @@ export type TRemoteIcon = {
 
 const SettingForm = (props: IProps) => {
   const { form, originData } = props;
-  const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
 
   const customizeRequiredMark = (
     label: React.ReactNode,
@@ -27,11 +25,11 @@ const SettingForm = (props: IProps) => {
   ) => (
     <>
       {required ? (
-        <Tag color="error" style={{ fontSize: '.6rem' }}>
+        <Tag color='error' style={{ fontSize: '.6rem' }}>
           必填
         </Tag>
       ) : (
-        <Tag color="warning" style={{ fontSize: '.6rem' }}>
+        <Tag color='warning' style={{ fontSize: '.6rem' }}>
           可选
         </Tag>
       )}
@@ -48,32 +46,6 @@ const SettingForm = (props: IProps) => {
     );
   };
 
-  const onIconSearch = debounce((value) => {
-    if (value) {
-      apiSearchIcon({ q: value })
-        .then((res) => {
-          const icons = (res.data?.icons || []).map((icon: TRemoteIcon) => ({
-            id: icon.id,
-          }));
-          setRemoteIconList(icons);
-        })
-        .catch((err) => console.log('[onIconSearch]', err));
-    }
-  }, 300);
-
-  const renderSelectOption = (payload: TRemoteIcon) => {
-    return {
-      label: (
-        <div className={styles.option}>
-          <Iconify width="2rem" height="2rem" icon={payload.id} />
-          &nbsp;
-          <span>{payload.id}</span>
-        </div>
-      ),
-      value: payload.id,
-    };
-  };
-
   useEffect(() => {
     form.setFieldsValue({
       ...originData,
@@ -83,21 +55,31 @@ const SettingForm = (props: IProps) => {
 
   return (
     <Form
-      layout="vertical"
-      variant="outlined"
+      layout='vertical'
+      variant='outlined'
       requiredMark={customizeRequiredMark}
       form={form}
     >
+      <Form.Item shouldUpdate noStyle>
+        {() => (
+          <Form.Item
+            label={renderLabel('logo', '本图片将被用于页面左上角')}
+            name={['head', 'logo']}
+          >
+            <SearchIconSelect
+              color={form.getFieldValue(['head', 'logoColor'])}
+            />
+          </Form.Item>
+        )}
+      </Form.Item>
       <Form.Item
-        label={renderLabel('logo', '本图片将被用于页面左上角')}
-        name={['head', 'logo']}
+        label={renderLabel(
+          'logo颜色',
+          '适用于修改搜索出的图片颜色（实验性功能）'
+        )}
+        name={['head', 'logoColor']}
       >
-        <Select
-          showSearch
-          onSearch={onIconSearch}
-          placeholder="输入关键字搜索图片"
-          options={remoteIconList.map((icon) => renderSelectOption(icon))}
-        />
+        <SelcetColor />
       </Form.Item>
       <Form.Item
         label={renderLabel('站点名称', '左上角的名称')}
@@ -107,7 +89,7 @@ const SettingForm = (props: IProps) => {
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name="cardListStyle"
+        name='cardListStyle'
       >
         <Select
           options={[

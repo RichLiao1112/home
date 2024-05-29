@@ -9,6 +9,8 @@ import { MinusCircleFilled } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 import { apiDeleteCard } from '@/requests';
 import { useRouter } from 'next/navigation';
+import Iconify from '../Iconify';
+import { isHttpSource } from '@/common';
 
 export interface IProps {
   payload: ICard;
@@ -48,6 +50,20 @@ const Card = (props: IProps) => {
     });
   };
 
+  const renderCover = (source?: string, coverColor?: string) => {
+    if (isHttpSource(source)) {
+      return <img src={source} alt='' className={styles.cover} />;
+    }
+    if (source) {
+      return (
+        <div className={styles.cover} style={{ color: coverColor }}>
+          <Iconify icon={source} width='100%' height='100%' />
+        </div>
+      );
+    }
+    return <div className={styles.cover}>{payload.title[0]}</div>;
+  };
+
   return (
     <div className={styles.cardWrapper}>
       {editCardMode === true && (
@@ -69,11 +85,7 @@ const Card = (props: IProps) => {
         onClick={onCardClick}
       >
         <div className={styles.mask}></div>
-        {payload.cover ? (
-          <img src={payload.cover} alt='' className={styles.cover} />
-        ) : (
-          <div className={styles.cover}>{payload.title[0]}</div>
-        )}
+        {renderCover(payload.cover, payload.coverColor)}
         <div className={styles.title}>
           <span>{payload.title}</span>
         </div>
