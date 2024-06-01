@@ -3,6 +3,6 @@ services:
   home:
     image: 2458006757/home:0.0.2
   volumns:
-    - ./home.json:/app/db/home.json
+    - ./home.json:/app/home.json
   ports:
     - 13111:3000

@@ -39,7 +39,7 @@ export interface IHomeData {
  * 单例使用
  */
 class HomeService {
-  homeDBPath = path.join(process.cwd(), 'db', 'home.json');
+  homeDBPath = path.join(process.cwd(), 'home.json');
   homeDBData: Partial<IHomeData> = {};
 
   constructor() {
