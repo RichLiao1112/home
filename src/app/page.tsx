@@ -3,6 +3,9 @@ import HomeService from '@/services/home';
 import Card from '@/components/Card';
 import Head from '@/components/Head';
 import { PageContextProvider } from '@/context/page.context';
+import { Suspense } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import CardList from '@/components/CardList';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +16,7 @@ const readHomeData = () => {
 
 export default async function Home() {
   const homeData = readHomeData();
-  const { dataSource, layout } = homeData;
+  const { dataSource = [], layout } = homeData;
   const { cardListStyle } = layout || {};
 
   return (
@@ -25,11 +28,7 @@ export default async function Home() {
         }}
       >
         <Head layout={layout} />
-        <div className={styles.flex} style={cardListStyle}>
-          {dataSource?.map((item, index) => {
-            return <Card payload={item} key={index} />;
-          })}
-        </div>
+        <CardList dataSource={dataSource} cardListStyle={cardListStyle} />
       </main>
     </PageContextProvider>
   );

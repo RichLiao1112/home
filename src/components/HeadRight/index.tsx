@@ -4,13 +4,10 @@ import {
   EditOutlined,
   SettingOutlined,
   CheckOutlined,
-  AppstoreAddOutlined,
-  GlobalOutlined,
-  DesktopOutlined,
 } from '@ant-design/icons';
 import styles from './index.module.css';
-import { Button, Tooltip, Modal, Form, Drawer } from 'antd';
-import { useContext, useEffect, useState, useTransition } from 'react';
+import { Button, Tooltip, Modal, Form, Drawer, Badge } from 'antd';
+import { useContext, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { PageContext } from '@/context/page.context';
@@ -18,7 +15,8 @@ import EditForm from '../EditForm';
 import { ICard, ILayout } from '@/services/home';
 import { apiUpdateUI, apiUpsertCard } from '@/requests';
 import SettingForm from '../SettingForm';
-import { getLinkJumpMode, jumpMode, setLinkJumpMode } from '@/common';
+import { jumpMode, setLinkJumpMode } from '@/common';
+import { NetIconLan, NetIconWan } from '../NetIcon';
 
 export interface IProps {
   layout: ILayout;
@@ -35,14 +33,14 @@ const HeadRight = (props: IProps) => {
     setEditModalData,
     editDrawerData,
     setEditDrawerData,
+    linkMode,
+    setLinkMode,
   } = useContext(PageContext);
 
   const [form] = Form.useForm<ICard>();
   const [settingForm] = Form.useForm<ILayout>();
   const [fetching, setFetching] = useState(false);
   const [, startTransition] = useTransition();
-
-  const [currentJumpMode, setCurrentJumpMode] = useState(getLinkJumpMode());
 
   const onCancelModal = () => {
     setEditModalData?.(undefined);
@@ -95,7 +93,7 @@ const HeadRight = (props: IProps) => {
 
   const modifyLinkJumpMode = (mode: string) => {
     setLinkJumpMode(mode);
-    setCurrentJumpMode(mode);
+    setLinkMode?.(mode);
   };
 
   return (
@@ -109,7 +107,7 @@ const HeadRight = (props: IProps) => {
           loading: fetching,
           disabled: fetching,
         }}
-        okText="保存"
+        okText='保存'
         destroyOnClose
       >
         <EditForm form={form} originData={editModalData?.data} />
@@ -121,7 +119,7 @@ const HeadRight = (props: IProps) => {
         onClose={onCancelDrawer}
         extra={
           <Button
-            type="primary"
+            type='primary'
             onClick={onSubmitSettingForm}
             loading={fetching}
             disabled={fetching}
@@ -133,60 +131,31 @@ const HeadRight = (props: IProps) => {
         <SettingForm form={settingForm} originData={layout} />
       </Drawer>
 
-      {currentJumpMode === jumpMode.lan ? (
-        <Tooltip title="优先跳转内网地址">
-          <Button
-            icon={<GlobalOutlined style={{ fontSize: '1rem' }} />}
-            type="text"
-            onClick={() => modifyLinkJumpMode(jumpMode.wan)}
-          />
-        </Tooltip>
+      {linkMode === jumpMode.lan ? (
+        <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
       ) : (
-        <Tooltip title="优先跳转公网地址">
-          <Button
-            icon={<DesktopOutlined style={{ fontSize: '1rem' }} />}
-            type="text"
-            onClick={() => modifyLinkJumpMode(jumpMode.lan)}
-          />
-        </Tooltip>
+        <NetIconWan handleClick={() => modifyLinkJumpMode(jumpMode.lan)} />
       )}
-      <Tooltip title="新增">
-        <Button
-          icon={<AppstoreAddOutlined style={{ fontSize: '1rem' }} />}
-          type="text"
-          onClick={() =>
-            setEditModalData?.({
-              open: true,
-              title: '',
-              data: {
-                title: '',
-                cover: '',
-                wanLink: '',
-                lanLink: '',
-              },
-            })
-          }
-        />
-      </Tooltip>
+
       {editCardMode === false ? (
-        <Tooltip title="编辑">
+        <Tooltip title='编辑'>
           <Button
             icon={<EditOutlined style={{ fontSize: '1rem' }} />}
-            type="text"
+            type='text'
             onClick={() => setEditCardMode?.(true)}
           />
         </Tooltip>
       ) : (
-        <Tooltip title="结束">
+        <Tooltip title='结束'>
           <Button
             icon={<CheckOutlined style={{ fontSize: '1rem' }} />}
-            type="text"
+            type='text'
             onClick={() => setEditCardMode?.(false)}
           />
         </Tooltip>
       )}
-      <Tooltip title="设置">
-        <Button icon={<SettingOutlined />} type="text" onClick={onShowDrawer} />
+      <Tooltip title='设置'>
+        <Button icon={<SettingOutlined />} type='text' onClick={onShowDrawer} />
       </Tooltip>
     </div>
   );

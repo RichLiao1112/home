@@ -1,0 +1,13 @@
+.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  margin: auto;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  padding: 1rem;
+}

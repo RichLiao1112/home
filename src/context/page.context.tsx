@@ -1,5 +1,6 @@
 'use client';
 
+import { getLinkJumpMode } from '@/common';
 import { ICard, ILayout } from '@/services/home';
 import React, {
   createContext,
@@ -29,6 +30,8 @@ export interface IPageContext {
   setEditDrawerData: (
     payload: IPageContext['editDrawerData'] | undefined
   ) => void;
+  linkMode: string | null;
+  setLinkMode: (payload: string | null) => void;
 }
 
 export const PageContext = createContext<Partial<IPageContext>>({});
@@ -39,6 +42,7 @@ export const PageContextProvider: FC<any> = (props) => {
     useState<IPageContext['editModalData']>();
   const [editDrawerData, modifyEditDrawerData] =
     useState<IPageContext['editDrawerData']>();
+  const [linkMode, modifyLinkMode] = useState(getLinkJumpMode());
 
   const setEditCardMode = useCallback(
     (payload: boolean) => modifyEditCardMode(payload),
@@ -54,6 +58,10 @@ export const PageContextProvider: FC<any> = (props) => {
       modifyEditDrawerData(payload),
     []
   );
+  const setLinkMode = useCallback(
+    (payload: string | null) => modifyLinkMode(payload),
+    []
+  );
 
   const value = useMemo(() => {
     return {
@@ -63,8 +71,10 @@ export const PageContextProvider: FC<any> = (props) => {
       setEditModalData,
       editDrawerData,
       setEditDrawerData,
+      linkMode,
+      setLinkMode,
     };
-  }, [editCardMode, editModalData, editDrawerData]);
+  }, [editCardMode, editModalData, editDrawerData, linkMode]);
 
   return (
     <PageContext.Provider value={value}>{props.children}</PageContext.Provider>

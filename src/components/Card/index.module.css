@@ -81,6 +81,14 @@
   z-index: 2;
 }
 
+.status-lan {
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  display: inline;
+  z-index: 2;
+}
+
 @keyframes shake {
   0% {
     transform: rotate(0);
