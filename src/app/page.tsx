@@ -1,17 +1,13 @@
 import styles from './page.module.css';
 import HomeService from '@/services/home';
-import Card from '@/components/Card';
 import Head from '@/components/Head';
 import { PageContextProvider } from '@/context/page.context';
-import { Suspense } from 'react';
-import { LoadingOutlined } from '@ant-design/icons';
 import CardList from '@/components/CardList';
 
 export const dynamic = 'force-dynamic';
 
 const readHomeData = () => {
-  const { homeDBData } = HomeService;
-  return homeDBData;
+  return HomeService.getHomeDBData;
 };
 
 export default async function Home() {

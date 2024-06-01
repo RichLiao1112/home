@@ -3,7 +3,8 @@ export const isHttpSource = (src?: string) => {
     src &&
     (src.startsWith('http://') ||
       src.startsWith('https://') ||
-      src.startsWith('//'))
+      src.startsWith('//') ||
+      src?.startsWith('/'))
   ) {
     return true;
   }

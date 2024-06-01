@@ -2,19 +2,15 @@
 
 import { ICard } from '@/services/home';
 import styles from './index.module.css';
-import { Suspense, useContext, useEffect, useMemo, useState } from 'react';
+import { useContext } from 'react';
 import { PageContext } from '@/context/page.context';
 import classNames from 'classnames';
-import {
-  MinusCircleFilled,
-  GlobalOutlined,
-  DesktopOutlined,
-} from '@ant-design/icons';
+import { MinusCircleFilled } from '@ant-design/icons';
 import { Badge, Button, Modal, Tooltip } from 'antd';
 import { apiDeleteCard } from '@/requests';
 import { useRouter } from 'next/navigation';
 import Iconify from '../Iconify';
-import { isHttpSource, jumpMode } from '@/common';
+import { getLinkJumpMode, isHttpSource, jumpMode } from '@/common';
 
 export type TType = 'normal' | 'add';
 
@@ -27,14 +23,6 @@ const Card = (props: IProps) => {
   const router = useRouter();
   const { payload, type } = props;
   const { editCardMode, setEditModalData, linkMode } = useContext(PageContext);
-
-  const [showWanBadge, setShowWanBadge] = useState(false);
-
-  useEffect(() => {
-    return setShowWanBadge(
-      !!(type !== 'add' && linkMode === jumpMode.wan && payload.wanLink)
-    );
-  }, [type, payload.wanLink, linkMode]);
 
   const onCardClick = () => {
     if (type === 'add') {
@@ -57,7 +45,7 @@ const Card = (props: IProps) => {
     } else {
       let url = payload.wanLink || payload.lanLink;
       let openInNewWindow = payload.openInNewWindow !== false;
-      if (linkMode === jumpMode.lan && payload.lanLink) {
+      if (getLinkJumpMode() === jumpMode.lan && payload.lanLink) {
         url = payload.lanLink;
       }
 
@@ -110,6 +98,19 @@ const Card = (props: IProps) => {
     return null;
   };
 
+  const renderWanBadge = () => {
+    if (type !== 'add' && linkMode === jumpMode.wan && payload.wanLink) {
+      return (
+        <Tooltip title='优先跳转公网地址'>
+          <div className={styles['status-lan']}>
+            <Badge status='processing' text='' />
+          </div>
+        </Tooltip>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className={styles.cardWrapper}>
       {renderDelete()}
@@ -120,13 +121,7 @@ const Card = (props: IProps) => {
         )}
         onClick={onCardClick}
       >
-        {showWanBadge && (
-          <Tooltip title='优先跳转公网地址'>
-            <div className={styles['status-lan']}>
-              <Badge status='processing' text='' />
-            </div>
-          </Tooltip>
-        )}
+        {renderWanBadge()}
         <div className={styles.mask}></div>
         {renderCover(payload.cover, payload.coverColor)}
         <div className={styles.title}>

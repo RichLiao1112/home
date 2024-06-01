@@ -6,8 +6,8 @@ import {
   CheckOutlined,
 } from '@ant-design/icons';
 import styles from './index.module.css';
-import { Button, Tooltip, Modal, Form, Drawer, Badge } from 'antd';
-import { useContext, useState, useTransition } from 'react';
+import { Button, Tooltip, Modal, Form, Drawer } from 'antd';
+import { useContext, useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { PageContext } from '@/context/page.context';
@@ -15,7 +15,7 @@ import EditForm from '../EditForm';
 import { ICard, ILayout } from '@/services/home';
 import { apiUpdateUI, apiUpsertCard } from '@/requests';
 import SettingForm from '../SettingForm';
-import { jumpMode, setLinkJumpMode } from '@/common';
+import { getLinkJumpMode, jumpMode, setLinkJumpMode } from '@/common';
 import { NetIconLan, NetIconWan } from '../NetIcon';
 
 export interface IProps {
@@ -92,9 +92,15 @@ const HeadRight = (props: IProps) => {
   };
 
   const modifyLinkJumpMode = (mode: string) => {
+    console.log('[mode]', mode);
     setLinkJumpMode(mode);
     setLinkMode?.(mode);
   };
+
+  useEffect(() => {
+    const mode = getLinkJumpMode();
+    setLinkMode?.(mode || jumpMode.wan);
+  }, [setLinkMode]);
 
   return (
     <div className={styles.right}>
@@ -131,12 +137,11 @@ const HeadRight = (props: IProps) => {
         <SettingForm form={settingForm} originData={layout} />
       </Drawer>
 
-      {linkMode === jumpMode.lan ? (
-        <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
-      ) : (
+      {linkMode === jumpMode.wan ? (
         <NetIconWan handleClick={() => modifyLinkJumpMode(jumpMode.lan)} />
+      ) : (
+        <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
       )}
-
       {editCardMode === false ? (
         <Tooltip title='编辑'>
           <Button

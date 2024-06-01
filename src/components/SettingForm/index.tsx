@@ -6,6 +6,7 @@ import { ILayout } from '@/services/home';
 import { useEffect } from 'react';
 import SearchIconSelect from '../SearchIconSelect';
 import SelcetColor from '../SelectColor';
+import { isHttpSource } from '@/common';
 
 export interface IProps {
   form: FormInstance;
@@ -25,11 +26,11 @@ const SettingForm = (props: IProps) => {
   ) => (
     <>
       {required ? (
-        <Tag color="error" style={{ fontSize: '.6rem' }}>
+        <Tag color='error' style={{ fontSize: '.6rem' }}>
           必填
         </Tag>
       ) : (
-        <Tag color="warning" style={{ fontSize: '.6rem' }}>
+        <Tag color='warning' style={{ fontSize: '.6rem' }}>
           可选
         </Tag>
       )}
@@ -55,8 +56,8 @@ const SettingForm = (props: IProps) => {
 
   return (
     <Form
-      layout="vertical"
-      variant="outlined"
+      layout='vertical'
+      variant='outlined'
       requiredMark={customizeRequiredMark}
       form={form}
     >
@@ -75,14 +76,22 @@ const SettingForm = (props: IProps) => {
           </Form.Item>
         )}
       </Form.Item>
-      <Form.Item
-        label={renderLabel(
-          'logo颜色',
-          '适用于修改搜索出的图片颜色（实验性功能）'
-        )}
-        name={['head', 'logoColor']}
-      >
-        <SelcetColor />
+      <Form.Item shouldUpdate noStyle>
+        {() => {
+          if (!isHttpSource(form.getFieldValue(['head', 'logo']))) {
+            return (
+              <Form.Item
+                label={renderLabel(
+                  '图标颜色',
+                  '适用于修改搜索出的图片颜色（实验性功能）'
+                )}
+                name={['head', 'logoColor']}
+              >
+                <SelcetColor />
+              </Form.Item>
+            );
+          }
+        }}
       </Form.Item>
       <Form.Item
         label={renderLabel('站点名称', '左上角的名称')}
@@ -92,7 +101,7 @@ const SettingForm = (props: IProps) => {
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name="cardListStyle"
+        name='cardListStyle'
       >
         <Select
           options={[

@@ -39,11 +39,15 @@ export interface IHomeData {
  * 单例使用
  */
 class HomeService {
-  homeDBPath = path.join(process.cwd(), 'home.json');
+  private homeDBPath = path.join(process.cwd(), 'home.json');
   homeDBData: Partial<IHomeData> = {};
 
   constructor() {
     this.readDBFileSync();
+  }
+
+  get getHomeDBData() {
+    return this.homeDBData;
   }
 
   set layout(payload: ILayout) {

@@ -46,3 +46,14 @@ export const apiSearchIcon = (payload: ISearchIcon) => {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiSearchIcon]', err));
 };
+
+export const apiQueryPngSvgMedia = (payload: ISearchIcon) => {
+  return fetch(`/api/media?q=${payload.q}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiQueryPngSvgMedia]', err));
+};

@@ -1,12 +1,40 @@
-import { readFile, readFileSync, writeFileSync } from 'fs';
+import {
+  readFile,
+  readFileSync,
+  readdir,
+  readdirSync,
+  writeFileSync,
+} from 'fs';
 import path from 'path';
 
 export interface ISearchIcon {
   q: string;
 }
 
+export interface IMediaSource {
+  name: string;
+  path: string;
+}
+
 class MediaService {
-  mediaDBPath = path.join(process.cwd(), 'public', 'media', 'imgs');
+  mediaPngPath = path.join(process.cwd(), 'public', 'media', 'imgs', 'png');
+  mediaSvgPath = path.join(process.cwd(), 'public', 'media', 'imgs', 'svg');
+
+  private mediaPngList: IMediaSource[] = [];
+  private mediaSvgList: IMediaSource[] = [];
+
+  constructor() {
+    this.mediaPngList = this.readMediaFiles(this.mediaPngPath, 'png');
+    this.mediaSvgList = this.readMediaFiles(this.mediaSvgPath, 'svg');
+  }
+
+  get getMediaPngList() {
+    return this.mediaPngList;
+  }
+
+  get getMediaSvgList() {
+    return this.mediaSvgList;
+  }
 
   searchIcon = (payload: ISearchIcon) => {
     return fetch(
@@ -18,6 +46,27 @@ class MediaService {
         },
       }
     ).then((res) => res.json());
+  };
+
+  queryMedia = (payload: ISearchIcon) => {
+    if (!payload.q) return [];
+    const pngs = this.mediaPngList.filter((media) =>
+      media.name.includes(payload.q)
+    );
+    const svgs = this.mediaSvgList.filter((media) =>
+      media.name.includes(payload.q)
+    );
+    return [...pngs, ...svgs];
+  };
+
+  readMediaFiles = (path: string, type: 'png' | 'svg') => {
+    const files = readdirSync(path, {
+      withFileTypes: true,
+    });
+    return files.map((f) => ({
+      name: f.name,
+      path: `/media/imgs/${type}/${f.name}`,
+    }));
   };
 }
 
