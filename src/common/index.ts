@@ -18,9 +18,14 @@ export const jumpMode = {
 };
 
 export const setLinkJumpMode = (value: string) => {
-  localStorage.setItem(jumpModeStorageKey, value);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(jumpModeStorageKey, value);
+  }
 };
 
 export const getLinkJumpMode = () => {
-  return localStorage.getItem(jumpModeStorageKey);
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(jumpModeStorageKey);
+  }
+  return null;
 };
