@@ -99,14 +99,17 @@ const Card = (props: IProps) => {
   };
 
   const renderWanBadge = () => {
-    if (type !== 'add' && linkMode === jumpMode.wan && payload.wanLink) {
-      return (
-        <Tooltip title='优先跳转公网地址'>
-          <div className={styles['status-lan']}>
-            <Badge status='processing' text='' />
-          </div>
-        </Tooltip>
-      );
+    if (type === 'add') return null;
+    if (payload.wanLink) {
+      if (linkMode === jumpMode.wan || !payload.lanLink) {
+        return (
+          <Tooltip title='跳转公网地址'>
+            <div className={styles['status-lan']}>
+              <Badge status='processing' text='' />
+            </div>
+          </Tooltip>
+        );
+      }
     }
     return null;
   };
