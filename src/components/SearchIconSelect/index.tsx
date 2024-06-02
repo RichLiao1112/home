@@ -37,7 +37,7 @@ export default function SearchIconSelect(props: IProps) {
         .catch((err) => console.log('[onIconSearch]', err))
         .finally(() => setLoading(false));
     }
-  }, 500);
+  }, 300);
 
   const handleSearchFromAPI = (
     value: string
@@ -88,6 +88,7 @@ export default function SearchIconSelect(props: IProps) {
 
   return (
     <Select
+      allowClear
       showSearch
       filterOption={false}
       onSearch={onIconSearch}

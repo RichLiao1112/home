@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
@@ -8,10 +8,32 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: HomeService.homeDBData.layout?.head?.name,
-  description: '',
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
+export function generateMetadata({ params, searchParams }: Props): Metadata {
+  const head = HomeService.homeDBData.layout?.head || {};
+  return {
+    title: head.name,
+    description: head.name,
+    icons: {
+      icon: head.logo,
+      shortcut: head.logo,
+      apple: head.logo,
+    },
+  };
+}
+export function generateViewport({ params, searchParams }: Props): Viewport {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    // Also supported by less commonly used
+    // interactiveWidget: 'resizes-visual',
+  };
+}
 
 export default function RootLayout({
   children,

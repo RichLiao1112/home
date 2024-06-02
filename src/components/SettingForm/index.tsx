@@ -100,6 +100,12 @@ const SettingForm = (props: IProps) => {
         <Input />
       </Form.Item>
       <Form.Item
+        label={renderLabel('背景图', '页面的背景图')}
+        name={['head', 'backgroundImage']}
+      >
+        <Input placeholder='背景图地址' />
+      </Form.Item>
+      <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
         name='cardListStyle'
       >

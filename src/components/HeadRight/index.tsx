@@ -92,7 +92,6 @@ const HeadRight = (props: IProps) => {
   };
 
   const modifyLinkJumpMode = (mode: string) => {
-    console.log('[mode]', mode);
     setLinkJumpMode(mode);
     setLinkMode?.(mode);
   };
