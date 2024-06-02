@@ -8,11 +8,13 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-export function generateMetadata({ params, searchParams }: Props): Metadata {
+// type Props = {
+//   params: { id: string };
+//   searchParams: { [key: string]: string | string[] | undefined };
+// };
+
+// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
+export function generateMetadata(): Metadata {
   const head = HomeService.homeDBData.layout?.head || {};
   return {
     title: head.name,
@@ -24,7 +26,7 @@ export function generateMetadata({ params, searchParams }: Props): Metadata {
     },
   };
 }
-export function generateViewport({ params, searchParams }: Props): Viewport {
+export function generateViewport(): Viewport {
   return {
     width: 'device-width',
     initialScale: 1,
