@@ -16,10 +16,7 @@ RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
 # Production image, copy all the files and run next
 FROM node:20.13.1-alpine AS runner
 
-RUN chmod 770 /app
-
 WORKDIR /app
-RUN chmod g+s /app
 
 ENV NODE_ENV production
 
