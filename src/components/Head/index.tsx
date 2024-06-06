@@ -3,6 +3,7 @@ import HeadRight from '@/components/HeadRight';
 import styles from './index.module.css';
 import Iconify from '../Iconify';
 import { isHttpSource } from '@/common';
+import HomeService from '@/services/home';
 
 export interface IProps {
   layout?: ILayout;
@@ -14,12 +15,12 @@ const Head = (props: IProps) => {
 
   const renderCover = (source?: string, logoColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt='' className={styles.logo} />;
+      return <img src={source} alt="" className={styles.logo} />;
     }
     if (source) {
       return (
         <div className={styles.logo} style={{ color: logoColor }}>
-          <Iconify icon={source} width='100%' height='100%' />
+          <Iconify icon={source} width="100%" height="100%" />
         </div>
       );
     }

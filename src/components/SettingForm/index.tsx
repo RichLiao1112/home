@@ -26,11 +26,11 @@ const SettingForm = (props: IProps) => {
   ) => (
     <>
       {required ? (
-        <Tag color='error' style={{ fontSize: '.6rem' }}>
+        <Tag color="error" style={{ fontSize: '.6rem' }}>
           必填
         </Tag>
       ) : (
-        <Tag color='warning' style={{ fontSize: '.6rem' }}>
+        <Tag color="warning" style={{ fontSize: '.6rem' }}>
           可选
         </Tag>
       )}
@@ -56,9 +56,9 @@ const SettingForm = (props: IProps) => {
 
   return (
     <Form
-      layout='vertical'
-      variant='outlined'
-      requiredMark={customizeRequiredMark}
+      layout="vertical"
+      variant="outlined"
+      // requiredMark={customizeRequiredMark}
       form={form}
     >
       <Form.Item shouldUpdate noStyle>
@@ -103,11 +103,11 @@ const SettingForm = (props: IProps) => {
         label={renderLabel('背景图', '页面的背景图')}
         name={['head', 'backgroundImage']}
       >
-        <Input placeholder='背景图地址' />
+        <Input placeholder="背景图地址" />
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name='cardListStyle'
+        name="cardListStyle"
       >
         <Select
           options={[

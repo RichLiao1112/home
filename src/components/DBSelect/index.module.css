@@ -1,0 +1,11 @@
+.btns {
+  margin-top: 0.5rem;
+  width: 100%;
+  text-align: right;
+}
+
+.option {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

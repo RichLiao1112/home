@@ -23,11 +23,11 @@ const EditForm = (props: IProps) => {
   ) => (
     <>
       {required ? (
-        <Tag color='error' style={{ fontSize: '.6rem' }}>
+        <Tag color="error" style={{ fontSize: '.6rem' }}>
           必填
         </Tag>
       ) : (
-        <Tag color='warning' style={{ fontSize: '.6rem' }}>
+        <Tag color="warning" style={{ fontSize: '.6rem' }}>
           可选
         </Tag>
       )}
@@ -54,20 +54,20 @@ const EditForm = (props: IProps) => {
 
   return (
     <Form
-      layout='vertical'
-      variant='outlined'
-      requiredMark={customizeRequiredMark}
+      layout="vertical"
+      variant="outlined"
+      // requiredMark={customizeRequiredMark}
       form={form}
     >
       {originData?.id && (
-        <Form.Item label={renderLabel('ID')} required name='id'>
+        <Form.Item label={renderLabel('ID')} required name="id">
           <Input disabled />
         </Form.Item>
       )}
       <Form.Item
         label={renderLabel('应用名称', '用于在面板上显示应用。')}
         required
-        name='title'
+        name="title"
         rules={[{ required: true, message: '' }]}
       >
         <Input />
@@ -79,7 +79,7 @@ const EditForm = (props: IProps) => {
               '应用图标',
               '关键字搜索应用图片 或 填写http开头的图片地址'
             )}
-            name='cover'
+            name="cover"
           >
             <SearchIconSelect color={form.getFieldValue('coverColor')} />
           </Form.Item>
@@ -94,7 +94,7 @@ const EditForm = (props: IProps) => {
                   '图标颜色',
                   '适用于修改搜索出的图片颜色（实验性功能）'
                 )}
-                name='coverColor'
+                name="coverColor"
               >
                 <SelcetColor />
               </Form.Item>
@@ -110,9 +110,9 @@ const EditForm = (props: IProps) => {
             {renderLabel('公网地址', '点击应用打开的公网地址')}
           </>
         }
-        name='wanLink'
+        name="wanLink"
       >
-        <Input placeholder='http...' />
+        <Input placeholder="http..." />
       </Form.Item>
       <Form.Item
         label={
@@ -122,9 +122,9 @@ const EditForm = (props: IProps) => {
             {renderLabel('内网地址', '点击应用打开的内部IP地址')}
           </>
         }
-        name='lanLink'
+        name="lanLink"
       >
-        <Input placeholder='http...' />
+        <Input placeholder="http..." />
       </Form.Item>
       {/* <Form.Item
         label={renderLabel(
@@ -140,7 +140,7 @@ const EditForm = (props: IProps) => {
           '在新标签页打开',
           '在新标签中打开应用，而不是当前标签'
         )}
-        name='openInNewWindow'
+        name="openInNewWindow"
       >
         <Switch />
       </Form.Item>

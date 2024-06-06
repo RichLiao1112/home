@@ -6,7 +6,7 @@ import {
   CheckOutlined,
 } from '@ant-design/icons';
 import styles from './index.module.css';
-import { Button, Tooltip, Modal, Form, Drawer } from 'antd';
+import { Button, Tooltip, Modal, Form, Drawer, Typography } from 'antd';
 import { useContext, useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -17,6 +17,9 @@ import { apiUpdateUI, apiUpsertCard } from '@/requests';
 import SettingForm from '../SettingForm';
 import { getLinkJumpMode, jumpMode, setLinkJumpMode } from '@/common';
 import { NetIconLan, NetIconWan } from '../NetIcon';
+import DBSelect from '../DBSelect';
+
+const { Title } = Typography;
 
 export interface IProps {
   layout: ILayout;
@@ -112,7 +115,7 @@ const HeadRight = (props: IProps) => {
           loading: fetching,
           disabled: fetching,
         }}
-        okText='保存'
+        okText="保存"
         destroyOnClose
       >
         <EditForm form={form} originData={editModalData?.data} />
@@ -122,18 +125,25 @@ const HeadRight = (props: IProps) => {
         open={editDrawerData?.open}
         title={editDrawerData?.title}
         onClose={onCancelDrawer}
-        extra={
-          <Button
-            type='primary'
-            onClick={onSubmitSettingForm}
-            loading={fetching}
-            disabled={fetching}
-          >
-            保存
-          </Button>
-        }
       >
-        <SettingForm form={settingForm} originData={layout} />
+        <>
+          <Title level={5}>外观</Title>
+          <SettingForm form={settingForm} originData={layout} />
+          <div className={styles.btns}>
+            <Button
+              type="primary"
+              onClick={onSubmitSettingForm}
+              loading={fetching}
+              disabled={fetching}
+              size="small"
+            >
+              保存
+            </Button>
+          </div>
+          <div className={styles.blank}></div>
+          <Title level={5}>配置</Title>
+          <DBSelect />
+        </>
       </Drawer>
 
       {linkMode === jumpMode.wan ? (
@@ -142,24 +152,24 @@ const HeadRight = (props: IProps) => {
         <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
       )}
       {editCardMode === false ? (
-        <Tooltip title='编辑'>
+        <Tooltip title="编辑">
           <Button
             icon={<EditOutlined style={{ fontSize: '1rem' }} />}
-            type='text'
+            type="text"
             onClick={() => setEditCardMode?.(true)}
           />
         </Tooltip>
       ) : (
-        <Tooltip title='结束'>
+        <Tooltip title="结束">
           <Button
             icon={<CheckOutlined style={{ fontSize: '1rem' }} />}
-            type='text'
+            type="text"
             onClick={() => setEditCardMode?.(false)}
           />
         </Tooltip>
       )}
-      <Tooltip title='设置'>
-        <Button icon={<SettingOutlined />} type='text' onClick={onShowDrawer} />
+      <Tooltip title="设置">
+        <Button icon={<SettingOutlined />} type="text" onClick={onShowDrawer} />
       </Tooltip>
     </div>
   );

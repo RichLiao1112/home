@@ -1,3 +1,5 @@
+import { IFile } from '@/services/home';
+
 export const isHttpSource = (src?: string) => {
   if (
     src &&
@@ -29,4 +31,10 @@ export const getLinkJumpMode = () => {
     return localStorage.getItem(jumpModeStorageKey);
   }
   return null;
+};
+
+export const defaultDBFile: IFile = {
+  filename: 'home.json',
+  type: 'default',
+  basePath: '',
 };

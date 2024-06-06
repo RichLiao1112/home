@@ -2,3 +2,13 @@
   display: flex;
   flex-direction: row;
 }
+
+.btns {
+  width: 100%;
+  text-align: right;
+}
+
+.blank {
+  height: 1rem;
+  width: 100%;
+}

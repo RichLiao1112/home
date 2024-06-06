@@ -1,4 +1,17 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { defaultDBFile } from '@/common';
+import {
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  accessSync,
+  mkdirSync,
+  writeFile,
+  access,
+  mkdir,
+  readdir,
+  unlink,
+  readFile,
+} from 'fs';
 import path from 'path';
 
 export interface ICard {
@@ -35,15 +48,28 @@ export interface IHomeData {
   layout: ILayout;
 }
 
+export interface IFile {
+  filename: string;
+  type: 'default' | 'custom';
+  basePath: string;
+}
+
 /**
  * 单例使用
  */
 class HomeService {
-  private homeDBPath = path.join(process.cwd(), 'home.json');
+  currentDBFile: IFile = defaultDBFile;
+
+  private defaultDBPath = path.join(process.cwd(), defaultDBFile.filename);
   homeDBData: Partial<IHomeData> = {};
 
+  customDBDir = path.join(process.cwd(), 'db');
+  customDBFiles: IFile[] = [];
+
   constructor() {
-    this.readDBFileSync();
+    this.readDBFileSync(this.defaultDBPath);
+    this.currentDBFile = defaultDBFile;
+    this.queryDBFiles(this.customDBDir, 'db');
   }
 
   get getHomeDBData() {
@@ -84,22 +110,50 @@ class HomeService {
     this.writeDBFileSync(this.homeDBData);
   };
 
-  private readDBFileSync = () => {
-    const data = readFileSync(this.homeDBPath, { encoding: 'utf-8' });
+  private readDBFileSync = (dbPath: string) => {
+    const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
     this.homeDBData = parseData;
   };
 
+  private readDBFile = (dbPath: string) => {
+    return new Promise((resolve, reject) => {
+      readFile(dbPath, { encoding: 'utf-8' }, (err, data) => {
+        console.log(err, data);
+        if (err) {
+          reject(err);
+        } else {
+          const parseData = JSON.parse(data || '{}');
+          this.homeDBData = parseData;
+          console.log(this.homeDBData);
+          resolve(parseData);
+        }
+      });
+    });
+  };
+
   writeDBFileSync = (payload: Partial<IHomeData>) => {
     try {
-      writeFileSync(this.homeDBPath, JSON.stringify(payload, null, 2));
+      writeFileSync(this.defaultDBPath, JSON.stringify(payload, null, 2));
     } catch (err) {
       console.warn('[writeDBFileSync]', err);
       return err;
     }
   };
 
-  async upsertCard(card: ICard) {
+  createFile = (path: string) => {
+    return new Promise((resolve, reject) =>
+      writeFile(path, JSON.stringify({}), (err) => {
+        console.log('[createFile]', err);
+        if (err) {
+          reject(err);
+        }
+        resolve({ succcess: true });
+      })
+    );
+  };
+
+  upsertCard = async (card: ICard) => {
     const homeDBData = this.homeDBData || {};
     const { dataSource = [] } = homeDBData || {};
     try {
@@ -129,13 +183,13 @@ class HomeService {
     } catch (err) {
       return err;
     }
-  }
+  };
 
-  deleteCard(id: ICard['id']) {
+  deleteCard = (id: ICard['id']) => {
     this.dataSource = this.dataSource.filter((card) => card.id !== id);
-  }
+  };
 
-  updateHead(head: IHead) {
+  updateHead = (head: IHead) => {
     const headDTO = this.head;
 
     this.head = {
@@ -147,9 +201,9 @@ class HomeService {
     };
 
     return this.head;
-  }
+  };
 
-  updateCardListStyle(payload: ICardListStyle) {
+  updateCardListStyle = (payload: ICardListStyle) => {
     const layout = this.layout;
     const cardListStyleDTO = layout.cardListStyle || {};
 
@@ -164,7 +218,77 @@ class HomeService {
     this.layout = layout;
 
     return layout;
-  }
+  };
+
+  queryDBFiles = (p: string, basePath = 'db'): Promise<IFile[]> => {
+    return new Promise((resolve, reject) => {
+      access(p, (err) => {
+        if (err) {
+          return mkdir(this.customDBDir, (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              this.customDBFiles = [];
+              resolve([]);
+            }
+          });
+        } else {
+          readdir(p, (err, files) => {
+            if (err) {
+              reject(err);
+            } else {
+              const dbFiles: IFile[] = files
+                .filter((file) => path.extname(file).toLowerCase() === '.json')
+                .map((file) => ({
+                  filename: file,
+                  type: 'custom',
+                  basePath,
+                }));
+              this.customDBFiles = dbFiles;
+              resolve(dbFiles);
+            }
+          });
+        }
+      });
+    });
+  };
+
+  selectCustomDBFile = async (
+    filename: string,
+    basePath = '',
+    type: IFile['type']
+  ) => {
+    if (type === 'default') {
+      await this.readDBFile(path.join(this.defaultDBPath, filename));
+    } else if (
+      type === 'custom' &&
+      this.customDBFiles.find((file) => file.filename === filename)
+    ) {
+      await this.readDBFile(path.join(this.customDBDir, filename));
+    }
+    this.currentDBFile = {
+      filename: filename,
+      basePath,
+      type,
+    };
+  };
+
+  upsertDBFile = (filename: string) => {
+    console.log('[upsertDBFile]', filename);
+    return this.createFile(path.join(this.customDBDir, filename));
+  };
+
+  deleteDBFile = (filename: string) => {
+    return new Promise((resolve, reject) => {
+      unlink(path.join(this.customDBDir, filename), (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ success: true });
+        }
+      });
+    });
+  };
 }
 
 export default new HomeService();
