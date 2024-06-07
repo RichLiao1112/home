@@ -7,7 +7,7 @@ import CardList from '@/components/CardList';
 export const dynamic = 'force-dynamic';
 
 const readHomeData = () => {
-  return HomeService.getHomeDBData;
+  return HomeService.homeDBData;
 };
 
 export default async function Home() {

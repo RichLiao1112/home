@@ -50,6 +50,13 @@ const SettingForm = (props: IProps) => {
   useEffect(() => {
     form.setFieldsValue({
       ...originData,
+      head: {
+        ...(originData?.head || {}),
+        logo: originData?.head?.logo || '',
+        name: originData?.head?.name || '',
+        backgroundImage: originData?.head?.backgroundImage || '',
+        logoColor: originData?.head?.logoColor || '',
+      },
       cardListStyle: JSON.stringify(originData?.cardListStyle),
     });
   }, [form, originData]);

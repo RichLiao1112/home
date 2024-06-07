@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     HomeService.save();
 
     return NextResponse.json({
-      data: { layout: HomeService.layout, head: HomeService.head },
+      data: HomeService.homeDBData,
       success: true,
       message: '',
     });

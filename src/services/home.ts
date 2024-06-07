@@ -60,10 +60,12 @@ export interface IFile {
 class HomeService {
   currentDBFile: IFile = defaultDBFile;
 
-  private defaultDBPath = path.join(process.cwd(), defaultDBFile.filename);
-  homeDBData: Partial<IHomeData> = {};
+  private readonly sourcePath = process.cwd();
 
-  customDBDir = path.join(process.cwd(), 'db');
+  private defaultDBPath = path.join(this.sourcePath, defaultDBFile.filename);
+  _homeDBData: Partial<IHomeData> = {};
+
+  customDBDir = path.join(this.sourcePath, 'db');
   customDBFiles: IFile[] = [];
 
   constructor() {
@@ -72,8 +74,15 @@ class HomeService {
     this.queryDBFiles(this.customDBDir, 'db');
   }
 
-  get getHomeDBData() {
-    return this.homeDBData;
+  set homeDBData(payload: Partial<IHomeData>) {
+    this._homeDBData = payload;
+    this.layout = this._homeDBData.layout || {};
+    this.head = this._homeDBData.layout?.head || {};
+    this.dataSource = this._homeDBData.dataSource || [];
+  }
+
+  get homeDBData() {
+    return this._homeDBData;
   }
 
   set layout(payload: ILayout) {
@@ -86,14 +95,17 @@ class HomeService {
   }
 
   set head(payload: IHead) {
-    this.homeDBData.layout = {
-      ...(this.layout || {}),
-      head: payload,
-    };
+    if (this.layout) {
+      this.layout.head = payload;
+    } else {
+      this.layout = {
+        head: payload,
+      };
+    }
   }
 
   get head() {
-    const { head } = this.homeDBData.layout || {};
+    const { head } = this.layout || {};
     return head || {};
   }
 
@@ -102,8 +114,7 @@ class HomeService {
   }
 
   get dataSource() {
-    const { dataSource = [] } = this.homeDBData;
-    return dataSource;
+    return this.homeDBData.dataSource || [];
   }
 
   save = () => {
@@ -125,7 +136,6 @@ class HomeService {
         } else {
           const parseData = JSON.parse(data || '{}');
           this.homeDBData = parseData;
-          console.log(this.homeDBData);
           resolve(parseData);
         }
       });
@@ -134,7 +144,14 @@ class HomeService {
 
   writeDBFileSync = (payload: Partial<IHomeData>) => {
     try {
-      writeFileSync(this.defaultDBPath, JSON.stringify(payload, null, 2));
+      writeFileSync(
+        path.join(
+          this.sourcePath,
+          this.currentDBFile.basePath,
+          this.currentDBFile.filename
+        ),
+        JSON.stringify(payload, null, 2)
+      );
     } catch (err) {
       console.warn('[writeDBFileSync]', err);
       return err;
@@ -259,7 +276,7 @@ class HomeService {
     type: IFile['type']
   ) => {
     if (type === 'default') {
-      await this.readDBFile(path.join(this.defaultDBPath, filename));
+      await this.readDBFile(this.defaultDBPath);
     } else if (
       type === 'custom' &&
       this.customDBFiles.find((file) => file.filename === filename)

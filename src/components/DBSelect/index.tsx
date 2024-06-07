@@ -18,53 +18,64 @@ export interface IProps {
   onChange?: (value?: string) => void;
   value?: string;
 }
+export type TFileOptions = Array<{
+  label: string;
+  value: string;
+  dataSource: IFile;
+}>;
 
 export default function DBSelect(props: IProps) {
   const router = useRouter();
-  const [options, setOptions] = useState<IFile[]>([]);
-  const [current, setCurrent] = useState<IFile>();
+  const [options, setOptions] = useState<TFileOptions>([]);
+  const [current, setCurrent] = useState<IFile['filename']>();
   const [open, setOpen] = useState(false);
   const [addFileName, setAddFileName] = useState<string>();
   const [loading, setLoading] = useState(false);
 
-  const genValue = (payload?: IFile) => {
-    if (!payload) return '';
-    return JSON.stringify(payload);
-  };
-
   const onShowAddModal = () => {
+    setAddFileName('');
     setOpen(true);
   };
 
   const labelSplit = (label: string) => {
-    return label.slice(0, label.length - 5);
+    return label;
+    // return label.slice(0, label.length - 5);
   };
 
   const onAdd = async () => {
     if (addFileName) {
       setLoading(true);
-      const res = await apitUpsertDBFile({ filename: addFileName }).finally(
-        () => setLoading(false)
-      );
-      fetchDBFiles();
-      console.log(res);
-      if (res.success) {
-        setOpen(false);
-        setAddFileName('');
+      try {
+        const res = await apitUpsertDBFile({ filename: addFileName });
+        const files = await fetchDBFiles();
+        if (res.success) {
+          message.success('新增成功');
+          setOpen(false);
+          setAddFileName('');
+          onSelect(`${addFileName}.json`, files);
+        } else {
+          message.error('新增失败: ' + res.message);
+        }
+      } catch (err) {
+        console.log('[onAdd]', err);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const fetchDBFiles = () => {
-    apiQueryDBFiles().then((res) => {
+    return apiQueryDBFiles().then((res) => {
       const { data } = res;
       const { db, all } = data;
       const files = all.map((it: IFile) => ({
         label: labelSplit(it.filename),
-        value: genValue(it),
+        value: it.filename,
+        dataSource: it,
       }));
-      setCurrent(db);
+      setCurrent(db.filename);
       setOptions(files);
+      return files;
     });
   };
 
@@ -78,28 +89,38 @@ export default function DBSelect(props: IProps) {
           .then((res) => {
             if (res.success) {
               message.success('删除成功');
+              if (current === filename) {
+                onSelect(defaultDBFile.filename);
+              } else {
+                fetchDBFiles();
+              }
             } else {
               message.error('删除失败');
             }
           })
-          .catch((err: any) => message.error(err?.message))
-          .finally(() => {
+          .catch((err: any) => {
+            message.error(err?.message);
             fetchDBFiles();
           });
       },
     });
   };
 
-  const onSelectClick = (value: string) => {
-    console.log(value);
-    const payload: IFile = JSON.parse(value || '{}');
-    apiSelectDBFile({
-      filename: payload.filename,
-      basePath: payload.basePath,
-      type: payload.type,
-    })
-      .then((res) => router.refresh())
-      .catch((err) => console.log(err));
+  const onSelect = (value: string, data?: TFileOptions) => {
+    const list = data || options;
+    const payload = list.find((it) => it.value === value);
+    if (payload) {
+      setCurrent(value);
+      const { dataSource } = payload;
+      apiSelectDBFile({
+        filename: dataSource.filename,
+        basePath: dataSource.basePath,
+        type: dataSource.type,
+      })
+        .then(() => router.refresh())
+        .catch((err) => console.log(err))
+        .finally(() => fetchDBFiles());
+    }
   };
 
   useEffect(() => {
@@ -128,7 +149,11 @@ export default function DBSelect(props: IProps) {
                       shape="circle"
                       icon={<MinusCircleFilled style={{ color: 'red' }} />}
                       size="small"
-                      onClick={() => onDeleteClick(option.data.label)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onDeleteClick(option.data.label);
+                      }}
                     />
                   </Tooltip>
                 )}
@@ -137,8 +162,8 @@ export default function DBSelect(props: IProps) {
           );
         }}
         style={{ width: '100%' }}
-        value={genValue(current)}
-        onChange={(value) => onSelectClick(value)}
+        value={current}
+        onChange={(value) => onSelect(value)}
       />
       <div className={styles.btns}>
         {/* <Button size="small" type="dashed">
@@ -163,6 +188,7 @@ export default function DBSelect(props: IProps) {
         <Input
           placeholder="输入配置名字（不可重复）"
           onChange={(e) => setAddFileName(e.target.value)}
+          value={addFileName}
         />
       </Modal>
     </div>

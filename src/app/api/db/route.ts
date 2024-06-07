@@ -61,7 +61,7 @@ export async function DELETE(req: NextRequest) {
     if (!filename) {
       return NextResponse.json({ success: false, message: '文件不存在' });
     }
-    await HomeService.deleteDBFile(`${filename}.json`);
+    await HomeService.deleteDBFile(filename);
 
     return NextResponse.json({ data: {}, success: true, message: '' });
   } catch (err) {
@@ -74,7 +74,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { data } = body;
     const { filename, basePath, type } = data;
-    console.log(data);
     await HomeService.selectCustomDBFile(filename, basePath, type);
     return NextResponse.json({ data: {}, success: true, message: '' });
   } catch (err) {

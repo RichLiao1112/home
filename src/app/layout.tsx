@@ -15,14 +15,15 @@ const inter = Inter({ subsets: ['latin'] });
 
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 export function generateMetadata(): Metadata {
-  const head = HomeService.homeDBData.layout?.head || {};
+  const head = HomeService.head || {};
+  const logo = head.logo || '/next.svg';
   return {
     title: head.name,
     description: head.name,
     icons: {
-      icon: head.logo,
-      shortcut: head.logo,
-      apple: head.logo,
+      icon: logo,
+      shortcut: logo,
+      apple: logo,
     },
   };
 }
@@ -43,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body className={inter.className}>
         <AntdRegistry>
           <ConfigProvider locale={zhCN}>{children}</ConfigProvider>
