@@ -1,4 +1,9 @@
-import { IFile } from '@/services/home';
+export interface IFile {
+  filename: string;
+  // type: 'default' | 'custom';
+  basePath: string;
+  defaultConfigKey: string;
+}
 
 export const isHttpSource = (src?: string) => {
   if (
@@ -35,6 +40,6 @@ export const getLinkJumpMode = () => {
 
 export const defaultDBFile: IFile = {
   filename: 'home.json',
-  type: 'default',
   basePath: '',
+  defaultConfigKey: 'default',
 };

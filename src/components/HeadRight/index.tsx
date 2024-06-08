@@ -6,7 +6,16 @@ import {
   CheckOutlined,
 } from '@ant-design/icons';
 import styles from './index.module.css';
-import { Button, Tooltip, Modal, Form, Drawer, Typography } from 'antd';
+import {
+  Button,
+  Tooltip,
+  Modal,
+  Form,
+  Drawer,
+  Typography,
+  message,
+  Space,
+} from 'antd';
 import { useContext, useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -23,10 +32,11 @@ const { Title } = Typography;
 
 export interface IProps {
   layout: ILayout;
+  configKey: string | undefined;
 }
 
 const HeadRight = (props: IProps) => {
-  const { layout } = props;
+  const { layout, configKey } = props;
   const router = useRouter();
 
   const {
@@ -53,9 +63,11 @@ const HeadRight = (props: IProps) => {
     try {
       setFetching(true);
       const data = await form.validateFields();
-      const res = await apiUpsertCard(data);
+      const res = await apiUpsertCard({ ...data, key: configKey });
       if (res.success) {
         onCancelModal();
+      } else {
+        message.error(res.message);
       }
     } catch (err) {
       console.log('[err]', err);
@@ -82,6 +94,7 @@ const HeadRight = (props: IProps) => {
         cardListStyle: data.cardListStyle
           ? JSON.parse(data.cardListStyle as string)
           : undefined,
+        key: configKey,
       });
       if (res.success) {
         onCancelDrawer();
@@ -146,31 +159,37 @@ const HeadRight = (props: IProps) => {
         </>
       </Drawer>
 
-      {linkMode === jumpMode.wan ? (
-        <NetIconWan handleClick={() => modifyLinkJumpMode(jumpMode.lan)} />
-      ) : (
-        <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
-      )}
-      {editCardMode === false ? (
-        <Tooltip title="编辑">
+      <Space>
+        {linkMode === jumpMode.wan ? (
+          <NetIconWan handleClick={() => modifyLinkJumpMode(jumpMode.lan)} />
+        ) : (
+          <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
+        )}
+        {editCardMode === false ? (
+          <Tooltip title="编辑">
+            <Button
+              icon={<EditOutlined style={{ fontSize: '1rem' }} />}
+              type="default"
+              onClick={() => setEditCardMode?.(true)}
+            />
+          </Tooltip>
+        ) : (
+          <Tooltip title="结束">
+            <Button
+              icon={<CheckOutlined style={{ fontSize: '1rem' }} />}
+              type="default"
+              onClick={() => setEditCardMode?.(false)}
+            />
+          </Tooltip>
+        )}
+        <Tooltip title="设置">
           <Button
-            icon={<EditOutlined style={{ fontSize: '1rem' }} />}
-            type="text"
-            onClick={() => setEditCardMode?.(true)}
+            icon={<SettingOutlined />}
+            type="default"
+            onClick={onShowDrawer}
           />
         </Tooltip>
-      ) : (
-        <Tooltip title="结束">
-          <Button
-            icon={<CheckOutlined style={{ fontSize: '1rem' }} />}
-            type="text"
-            onClick={() => setEditCardMode?.(false)}
-          />
-        </Tooltip>
-      )}
-      <Tooltip title="设置">
-        <Button icon={<SettingOutlined />} type="text" onClick={onShowDrawer} />
-      </Tooltip>
+      </Space>
     </div>
   );
 };

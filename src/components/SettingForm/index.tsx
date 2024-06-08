@@ -20,24 +20,6 @@ export type TRemoteIcon = {
 const SettingForm = (props: IProps) => {
   const { form, originData } = props;
 
-  const customizeRequiredMark = (
-    label: React.ReactNode,
-    { required }: { required: boolean }
-  ) => (
-    <>
-      {required ? (
-        <Tag color="error" style={{ fontSize: '.6rem' }}>
-          必填
-        </Tag>
-      ) : (
-        <Tag color="warning" style={{ fontSize: '.6rem' }}>
-          可选
-        </Tag>
-      )}
-      {label}
-    </>
-  );
-
   const renderLabel = (label: string, tips?: string) => {
     return (
       <div>
@@ -62,12 +44,7 @@ const SettingForm = (props: IProps) => {
   }, [form, originData]);
 
   return (
-    <Form
-      layout="vertical"
-      variant="outlined"
-      // requiredMark={customizeRequiredMark}
-      form={form}
-    >
+    <Form layout="vertical" variant="outlined" form={form}>
       <Form.Item shouldUpdate noStyle>
         {() => (
           <Form.Item

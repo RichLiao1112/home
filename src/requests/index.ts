@@ -1,7 +1,7 @@
-import { ICard, IFile, ILayout } from '@/services/home';
+import { ICard, ILayout } from '@/services/home';
 import { ISearchIcon } from '@/services/media';
 
-export const apiUpsertCard = (payload: ICard) => {
+export const apiUpsertCard = (payload: ICard & { key?: string }) => {
   return fetch('/api/card', {
     method: 'PUT',
     headers: {
@@ -13,8 +13,8 @@ export const apiUpsertCard = (payload: ICard) => {
     .catch((err) => console.warn('[apiUpsertCard]', err));
 };
 
-export const apiDeleteCard = (id: ICard['id']) => {
-  return fetch(`/api/card/${id}`, {
+export const apiDeleteCard = (payload: { id: ICard['id']; key?: string }) => {
+  return fetch(`/api/card/${payload.id}?key=${payload.key}`, {
     method: 'DELETE',
     headers: {
       'Content-type': 'application/json',
@@ -24,7 +24,7 @@ export const apiDeleteCard = (id: ICard['id']) => {
     .catch((err) => console.warn('[apiUpsertCard]', err));
 };
 
-export const apiUpdateUI = (payload: ILayout) => {
+export const apiUpdateUI = (payload: ILayout & { key?: string }) => {
   return fetch('/api/ui', {
     method: 'POST',
     headers: {
@@ -66,7 +66,7 @@ export const apiQueryDBFiles = () => {
     .catch((err) => console.warn('[apiQueryDBFiles]', err));
 };
 
-export const apitUpsertDBFile = (payload: { filename: string }) => {
+export const apitUpsertDBFile = (payload: { key: string }) => {
   return fetch(`/api/db`, {
     method: 'PUT',
     body: JSON.stringify({ data: payload }),
@@ -75,7 +75,7 @@ export const apitUpsertDBFile = (payload: { filename: string }) => {
     .catch((err) => console.warn('[apiQueryDBFiles]', err));
 };
 
-export const apiDeleteDBFile = (payload: { filename: string }) => {
+export const apiDeleteDBFile = (payload: { key: string }) => {
   return fetch(`/api/db`, {
     method: 'DELETE',
     headers: {
@@ -87,11 +87,7 @@ export const apiDeleteDBFile = (payload: { filename: string }) => {
     .catch((err) => console.warn('[apiUpsertCard]', err));
 };
 
-export const apiSelectDBFile = (payload: {
-  filename: string;
-  basePath: string;
-  type: string;
-}) => {
+export const apiSelectDBFile = (payload: { key: string }) => {
   return fetch(`/api/db`, {
     method: 'POST',
     headers: {

@@ -6,16 +6,13 @@ import zhCN from 'antd/locale/zh_CN';
 import HomeService from '@/services/home';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+export const dynamic = 'force-dynamic';
 
-// type Props = {
-//   params: { id: string };
-//   searchParams: { [key: string]: string | string[] | undefined };
-// };
+const inter = Inter({ subsets: ['latin'] });
 
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 export function generateMetadata(): Metadata {
-  const head = HomeService.head || {};
+  const head = HomeService.getHead() || {};
   const logo = head.logo || '/next.svg';
   return {
     title: head.name,

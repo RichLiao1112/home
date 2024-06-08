@@ -7,12 +7,12 @@ export interface IProps {
 
 export const NetIconWan = (props: IProps) => {
   return (
-    <Tooltip title='公网地址优先跳转'>
+    <Tooltip title="公网地址优先跳转">
       <Button
         icon={
           <DesktopOutlined style={{ fontSize: '1rem', color: '#1677ff' }} />
         }
-        type='text'
+        type="default"
         onClick={() => props.handleClick?.()}
       />
     </Tooltip>
@@ -21,10 +21,10 @@ export const NetIconWan = (props: IProps) => {
 
 export const NetIconLan = (props: IProps) => {
   return (
-    <Tooltip title='内网地址优先跳转'>
+    <Tooltip title="内网地址优先跳转">
       <Button
         icon={<GlobalOutlined style={{ fontSize: '1rem' }} />}
-        type='text'
+        type="default"
         onClick={() => props.handleClick?.()}
       />
     </Tooltip>

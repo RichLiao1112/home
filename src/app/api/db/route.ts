@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService from '@/services/home';
-import { defaultDBFile } from '@/common';
 
 export async function GET() {
   try {
-    // const customDBFiles = HomeService.customDBFiles;
-    const customDBFiles = await HomeService.queryDBFiles(
-      HomeService.customDBDir,
-      'db'
-    );
     return NextResponse.json({
       data: {
-        db: HomeService.currentDBFile,
-        all: [defaultDBFile, ...customDBFiles],
+        all: HomeService.queryConfigKeys(),
+        current: HomeService.getSelectedKey(),
       },
       success: true,
       message: '',
@@ -26,20 +20,21 @@ export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
     const { data } = body;
-    const filename = `${data.filename}.json`;
-    if (
-      filename === defaultDBFile.filename ||
-      HomeService.customDBFiles.find((file) => file?.filename === filename)
-    ) {
-      return NextResponse.json({
-        success: false,
-        data: null,
-        message: '文件名重复',
-      });
+    const { key } = data;
+
+    const allConfigKeys = HomeService.queryConfigKeys();
+    if (!key) throw new Error('请命名');
+    if (allConfigKeys.find((it) => it === key)) {
+      throw new Error('命名重复');
     }
-    await HomeService.upsertDBFile(filename);
+    HomeService.updateDBData(key, { dataSource: [], layout: {} });
+
+    await HomeService.writeDBFile(
+      HomeService.getDefaultDBPath(),
+      HomeService.getDBData()
+    );
     return NextResponse.json({
-      data: data.filename,
+      data: key,
       success: true,
       message: '',
     });
@@ -50,18 +45,22 @@ export async function PUT(req: NextRequest) {
 }
 
 export type TParams = {
-  filename: string;
+  key: string;
 };
 
 export async function DELETE(req: NextRequest) {
   try {
     const body = await req.json();
     const { data } = body;
-    const { filename } = data;
-    if (!filename) {
-      return NextResponse.json({ success: false, message: '文件不存在' });
+    const { key } = data;
+    if (!key) {
+      return NextResponse.json({ success: false, message: '配置不存在' });
     }
-    await HomeService.deleteDBFile(filename);
+    HomeService.updateDBData(key, null);
+    await HomeService.writeDBFile(
+      HomeService.getDefaultDBPath(),
+      HomeService.getDBData()
+    );
 
     return NextResponse.json({ data: {}, success: true, message: '' });
   } catch (err) {
@@ -73,9 +72,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { data } = body;
-    const { filename, basePath, type } = data;
-    await HomeService.selectCustomDBFile(filename, basePath, type);
-    return NextResponse.json({ data: {}, success: true, message: '' });
+    const { key } = data;
+    HomeService.setSelectedKey(key);
+    return NextResponse.json({ data: key, success: true, message: '' });
   } catch (err) {
     return NextResponse.json({ success: false, message: err });
   }

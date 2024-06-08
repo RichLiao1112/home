@@ -17,11 +17,12 @@ export type TType = 'normal' | 'add';
 export interface IProps {
   payload: ICard;
   type?: TType;
+  configKey?: string;
 }
 
 const Card = (props: IProps) => {
   const router = useRouter();
-  const { payload, type } = props;
+  const { payload, type, configKey } = props;
   const { editCardMode, setEditModalData, linkMode } = useContext(PageContext);
 
   const onCardClick = () => {
@@ -60,18 +61,21 @@ const Card = (props: IProps) => {
   const onClickDelete = (payload: ICard) => {
     Modal.confirm({
       title: `确定删除 ${payload.title} ？`,
-      onOk: () => apiDeleteCard(payload.id).finally(() => router.refresh()),
+      onOk: () =>
+        apiDeleteCard({ id: payload.id, key: configKey }).finally(() =>
+          router.refresh()
+        ),
     });
   };
 
   const renderCover = (source?: string, coverColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt='' className={styles.cover} />;
+      return <img src={source} alt="" className={styles.cover} />;
     }
     if (source) {
       return (
         <div className={styles.cover} style={{ color: coverColor }}>
-          <Iconify icon={source} width='100%' height='100%' />
+          <Iconify icon={source} width="100%" height="100%" />
         </div>
       );
     }
@@ -86,7 +90,7 @@ const Card = (props: IProps) => {
       return (
         <div className={styles.delete}>
           <Button
-            type='text'
+            type="text"
             icon={
               <MinusCircleFilled style={{ color: 'red', fontSize: '1rem' }} />
             }
@@ -103,9 +107,9 @@ const Card = (props: IProps) => {
     if (payload.wanLink) {
       if (linkMode === jumpMode.wan || !payload.lanLink) {
         return (
-          <Tooltip title='跳转公网地址'>
+          <Tooltip title="跳转公网地址">
             <div className={styles['status-lan']}>
-              <Badge status='processing' text='' />
+              <Badge status="processing" text="" />
             </div>
           </Tooltip>
         );

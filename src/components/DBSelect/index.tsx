@@ -8,9 +8,8 @@ import {
   apiDeleteDBFile,
   apiSelectDBFile,
 } from '@/requests';
-import { IFile } from '@/services/home';
 import styles from './index.module.css';
-import { MinusCircleFilled } from '@ant-design/icons';
+import { MinusCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import { defaultDBFile } from '@/common';
 import { useRouter } from 'next/navigation';
 
@@ -21,13 +20,12 @@ export interface IProps {
 export type TFileOptions = Array<{
   label: string;
   value: string;
-  dataSource: IFile;
 }>;
 
 export default function DBSelect(props: IProps) {
   const router = useRouter();
   const [options, setOptions] = useState<TFileOptions>([]);
-  const [current, setCurrent] = useState<IFile['filename']>();
+  const [current, setCurrent] = useState<string>();
   const [open, setOpen] = useState(false);
   const [addFileName, setAddFileName] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -46,13 +44,13 @@ export default function DBSelect(props: IProps) {
     if (addFileName) {
       setLoading(true);
       try {
-        const res = await apitUpsertDBFile({ filename: addFileName });
+        const res = await apitUpsertDBFile({ key: addFileName });
         const files = await fetchDBFiles();
         if (res.success) {
           message.success('新增成功');
           setOpen(false);
           setAddFileName('');
-          onSelect(`${addFileName}.json`, files);
+          onSelect(addFileName);
         } else {
           message.error('新增失败: ' + res.message);
         }
@@ -67,15 +65,11 @@ export default function DBSelect(props: IProps) {
   const fetchDBFiles = () => {
     return apiQueryDBFiles().then((res) => {
       const { data } = res;
-      const { db, all } = data;
-      const files = all.map((it: IFile) => ({
-        label: labelSplit(it.filename),
-        value: it.filename,
-        dataSource: it,
-      }));
-      setCurrent(db.filename);
-      setOptions(files);
-      return files;
+      const { all, current } = data;
+      const dbConfigs = all.map((it: string) => ({ label: it, value: it }));
+      setCurrent(current);
+      setOptions(dbConfigs);
+      return dbConfigs;
     });
   };
 
@@ -84,13 +78,13 @@ export default function DBSelect(props: IProps) {
       title: `删除后不可恢复，确定删除 ${filename} ？`,
       onOk: () => {
         apiDeleteDBFile({
-          filename,
+          key: filename,
         })
           .then((res) => {
             if (res.success) {
               message.success('删除成功');
               if (current === filename) {
-                onSelect(defaultDBFile.filename);
+                onSelect('default');
               } else {
                 fetchDBFiles();
               }
@@ -106,20 +100,32 @@ export default function DBSelect(props: IProps) {
     });
   };
 
-  const onSelect = (value: string, data?: TFileOptions) => {
-    const list = data || options;
-    const payload = list.find((it) => it.value === value);
-    if (payload) {
-      setCurrent(value);
-      const { dataSource } = payload;
-      apiSelectDBFile({
-        filename: dataSource.filename,
-        basePath: dataSource.basePath,
-        type: dataSource.type,
-      })
-        .then(() => router.refresh())
-        .catch((err) => console.log(err))
-        .finally(() => fetchDBFiles());
+  const onSelect = (value: string) => {
+    setCurrent(value);
+    apiSelectDBFile({
+      key: value,
+    })
+      .then(() => router.refresh())
+      .catch((err) => console.log(err))
+      .finally(() => fetchDBFiles());
+  };
+
+  const handleDownload = async () => {
+    try {
+      const jsonData = await import('../../../home.json');
+      const blob = new Blob([JSON.stringify(jsonData.default || {}, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'home.json'; // 指定下载的文件名
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -131,10 +137,13 @@ export default function DBSelect(props: IProps) {
     <div>
       <Select
         options={options}
+        style={{ width: '100%' }}
+        value={current}
+        onChange={(value) => onSelect(value)}
         optionRender={(option) => {
           return (
             <div className={styles.option}>
-              <span>{option.data.label}</span>
+              <span>{option.label}</span>
               <Space>
                 {/* <Button
                   type="text"
@@ -142,7 +151,7 @@ export default function DBSelect(props: IProps) {
                   icon={<DownloadOutlined />}
                   size="small"
                 /> */}
-                {option.data.label !== labelSplit(defaultDBFile.filename) && (
+                {option.label !== 'default' && (
                   <Tooltip title="删除配置">
                     <Button
                       type="text"
@@ -161,20 +170,19 @@ export default function DBSelect(props: IProps) {
             </div>
           );
         }}
-        style={{ width: '100%' }}
-        value={current}
-        onChange={(value) => onSelect(value)}
       />
       <div className={styles.btns}>
-        {/* <Button size="small" type="dashed">
-          下载配置
-        </Button> */}
-        <Button size="small" type="primary" onClick={onShowAddModal}>
-          新增一份配置
-        </Button>
-        {/* <Button danger type="dashed" size="small">
+        <Space>
+          <Button size="small" type="primary" onClick={handleDownload}>
+            下载配置
+          </Button>
+          <Button size="small" type="primary" onClick={onShowAddModal}>
+            新增配置
+          </Button>
+          {/* <Button danger type="dashed" size="small">
           删除配置
         </Button> */}
+        </Space>
       </div>
       <Modal
         title="新增配置"

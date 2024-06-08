@@ -1,21 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService from '@/services/home';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { data } = body;
   try {
+    if (!data.key) throw new Error('缺少参数key');
+    const layout = HomeService.getLayout();
+    const cardListStyle = JSON.parse(
+      JSON.stringify(layout.cardListStyle || {})
+    );
+    const head = JSON.parse(JSON.stringify(layout.head || {}));
     if (data.cardListStyle) {
-      HomeService.updateCardListStyle(data.cardListStyle);
+      cardListStyle.justifyContent =
+        data.cardListStyle.justifyContent ?? cardListStyle.justifyContent;
+      cardListStyle.alignItems =
+        data.cardListStyle.alignItems ?? cardListStyle.alignItems;
+      cardListStyle.alignContent =
+        data.cardListStyle.alignContent ?? cardListStyle.alignContent;
     }
-    if (data.head) {
-      HomeService.updateHead(data.head);
-    }
+    HomeService.updateLayout(data.key, {
+      ...layout,
+      cardListStyle,
+      head: { ...head, ...(data.head || {}) },
+    });
 
-    HomeService.save();
+    const dbData = HomeService.getDBData();
+    await HomeService.writeDBFile(HomeService.getDefaultDBPath(), dbData);
 
     return NextResponse.json({
-      data: HomeService.homeDBData,
+      data: dbData,
       success: true,
       message: '',
     });

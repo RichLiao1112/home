@@ -68,9 +68,9 @@ export default function SearchIconSelect(props: IProps) {
       label: (
         <div className={styles.option} style={{ color: color ?? '#000000' }}>
           {isImg ? (
-            <img alt='' src={payload.id} className={styles.img} />
+            <img alt="" src={payload.id} className={styles.img} />
           ) : (
-            <Iconify width='1.5rem' height='1.5rem' icon={payload.id} />
+            <Iconify width="1.5rem" height="1.5rem" icon={payload.id} />
           )}
           &nbsp;
           <span style={{ color: '#000000' }}>{payload.id}</span>
@@ -92,12 +92,12 @@ export default function SearchIconSelect(props: IProps) {
       showSearch
       filterOption={false}
       onSearch={onIconSearch}
-      placeholder='输入关键字搜索图片'
+      placeholder="输入关键字搜索图片"
       options={remoteIconList.map((icon) => renderSelectOption(icon))}
-      onChange={(value) => onChange?.(value)}
+      onChange={(value) => onChange?.(value || '')}
       value={value}
       loading={loading}
-      notFoundContent={loading ? <Spin size='small' /> : null}
+      notFoundContent={loading ? <Spin size="small" /> : null}
     />
   );
 }

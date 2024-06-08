@@ -3,14 +3,16 @@ import HeadRight from '@/components/HeadRight';
 import styles from './index.module.css';
 import Iconify from '../Iconify';
 import { isHttpSource } from '@/common';
-import HomeService from '@/services/home';
+
+export const dynamic = 'force-dynamic';
 
 export interface IProps {
   layout?: ILayout;
+  configKey?: string;
 }
 
 const Head = (props: IProps) => {
-  const { layout = {} } = props;
+  const { layout = {}, configKey } = props;
   const { head = {} } = layout;
 
   const renderCover = (source?: string, logoColor?: string) => {
@@ -33,7 +35,7 @@ const Head = (props: IProps) => {
         <div className={styles.name}>{head.name}</div>
       </div>
       <div className={styles.right}>
-        <HeadRight layout={layout} />
+        <HeadRight layout={layout} configKey={configKey} />
       </div>
     </div>
   );
