@@ -5,7 +5,6 @@ import styles from './index.module.css';
 import { useContext } from 'react';
 import { PageContext } from '@/context/page.context';
 import classNames from 'classnames';
-import { MinusCircleFilled } from '@ant-design/icons';
 import { Badge, Button, Modal, Tooltip } from 'antd';
 import { apiDeleteCard } from '@/requests';
 import { useRouter } from 'next/navigation';
@@ -70,12 +69,12 @@ const Card = (props: IProps) => {
 
   const renderCover = (source?: string, coverColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt="" className={styles.cover} />;
+      return <img src={source} alt='' className={styles.cover} />;
     }
     if (source) {
       return (
         <div className={styles.cover} style={{ color: coverColor }}>
-          <Iconify icon={source} width="100%" height="100%" />
+          <Iconify icon={source} width='100%' height='100%' />
         </div>
       );
     }
@@ -90,9 +89,15 @@ const Card = (props: IProps) => {
       return (
         <div className={styles.delete}>
           <Button
-            type="text"
+            type='text'
             icon={
-              <MinusCircleFilled style={{ color: 'red', fontSize: '1rem' }} />
+              <span style={{ color: 'red' }}>
+                <Iconify
+                  icon='mdi:minus-circle'
+                  width='1.2rem'
+                  height='1.2rem'
+                />
+              </span>
             }
             onClick={() => onClickDelete(payload)}
           />
@@ -107,9 +112,9 @@ const Card = (props: IProps) => {
     if (payload.wanLink) {
       if (linkMode === jumpMode.wan || !payload.lanLink) {
         return (
-          <Tooltip title="跳转公网地址">
+          <Tooltip title='跳转公网地址'>
             <div className={styles['status-lan']}>
-              <Badge status="processing" text="" />
+              <Badge status='processing' text='' />
             </div>
           </Tooltip>
         );

@@ -9,9 +9,8 @@ import {
   apiSelectDBFile,
 } from '@/requests';
 import styles from './index.module.css';
-import { MinusCircleFilled, DownloadOutlined } from '@ant-design/icons';
-import { defaultDBFile } from '@/common';
 import { useRouter } from 'next/navigation';
+import Iconify from '../Iconify';
 
 export interface IProps {
   onChange?: (value?: string) => void;
@@ -145,19 +144,21 @@ export default function DBSelect(props: IProps) {
             <div className={styles.option}>
               <span>{option.label}</span>
               <Space>
-                {/* <Button
-                  type="text"
-                  shape="circle"
-                  icon={<DownloadOutlined />}
-                  size="small"
-                /> */}
                 {option.label !== 'default' && (
-                  <Tooltip title="删除配置">
+                  <Tooltip title='删除配置'>
                     <Button
-                      type="text"
-                      shape="circle"
-                      icon={<MinusCircleFilled style={{ color: 'red' }} />}
-                      size="small"
+                      type='text'
+                      shape='circle'
+                      icon={
+                        <span style={{ color: 'red' }}>
+                          <Iconify
+                            icon='mdi:minus-circle'
+                            width='1.2rem'
+                            height='1.2rem'
+                          />
+                        </span>
+                      }
+                      size='small'
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -173,19 +174,16 @@ export default function DBSelect(props: IProps) {
       />
       <div className={styles.btns}>
         <Space>
-          <Button size="small" type="primary" onClick={handleDownload}>
+          <Button size='small' type='primary' onClick={handleDownload}>
             下载配置
           </Button>
-          <Button size="small" type="primary" onClick={onShowAddModal}>
+          <Button size='small' type='primary' onClick={onShowAddModal}>
             新增配置
           </Button>
-          {/* <Button danger type="dashed" size="small">
-          删除配置
-        </Button> */}
         </Space>
       </div>
       <Modal
-        title="新增配置"
+        title='新增配置'
         open={open}
         onOk={onAdd}
         onCancel={() => setOpen(false)}
@@ -194,7 +192,7 @@ export default function DBSelect(props: IProps) {
         }}
       >
         <Input
-          placeholder="输入配置名字（不可重复）"
+          placeholder='输入配置名字（不可重复）'
           onChange={(e) => setAddFileName(e.target.value)}
           value={addFileName}
         />

@@ -1,10 +1,5 @@
 'use client';
 
-import {
-  EditOutlined,
-  SettingOutlined,
-  CheckOutlined,
-} from '@ant-design/icons';
 import styles from './index.module.css';
 import {
   Button,
@@ -27,6 +22,7 @@ import SettingForm from '../SettingForm';
 import { getLinkJumpMode, jumpMode, setLinkJumpMode } from '@/common';
 import { NetIconLan, NetIconWan } from '../NetIcon';
 import DBSelect from '../DBSelect';
+import Iconify from '../Iconify';
 
 const { Title } = Typography;
 
@@ -128,7 +124,7 @@ const HeadRight = (props: IProps) => {
           loading: fetching,
           disabled: fetching,
         }}
-        okText="保存"
+        okText='保存'
         destroyOnClose
       >
         <EditForm form={form} originData={editModalData?.data} />
@@ -140,21 +136,23 @@ const HeadRight = (props: IProps) => {
         onClose={onCancelDrawer}
       >
         <>
-          <Title level={5}>外观</Title>
+          <div className={styles.title}>外观</div>
           <SettingForm form={settingForm} originData={layout} />
           <div className={styles.btns}>
             <Button
-              type="primary"
+              type='primary'
               onClick={onSubmitSettingForm}
               loading={fetching}
               disabled={fetching}
-              size="small"
+              size='small'
             >
               保存
             </Button>
           </div>
           <div className={styles.blank}></div>
-          <Title level={5}>配置</Title>
+          <div className={styles.title}>
+            配置<span className={styles.tips}>设置多份配置，切换使用</span>
+          </div>
           <DBSelect />
         </>
       </Drawer>
@@ -166,26 +164,28 @@ const HeadRight = (props: IProps) => {
           <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
         )}
         {editCardMode === false ? (
-          <Tooltip title="编辑">
+          <Tooltip title='编辑'>
             <Button
-              icon={<EditOutlined style={{ fontSize: '1rem' }} />}
-              type="default"
+              icon={<Iconify icon='uil:edit-alt' width='1rem' height='1rem' />}
+              type='default'
               onClick={() => setEditCardMode?.(true)}
             />
           </Tooltip>
         ) : (
-          <Tooltip title="结束">
+          <Tooltip title='结束'>
             <Button
-              icon={<CheckOutlined style={{ fontSize: '1rem' }} />}
-              type="default"
+              icon={<Iconify icon='ep:finished' width='1rem' height='1rem' />}
+              type='default'
               onClick={() => setEditCardMode?.(false)}
             />
           </Tooltip>
         )}
-        <Tooltip title="设置">
+        <Tooltip title='设置'>
           <Button
-            icon={<SettingOutlined />}
-            type="default"
+            icon={
+              <Iconify icon='iconamoon:settings' width='1rem' height='1rem' />
+            }
+            type='default'
             onClick={onShowDrawer}
           />
         </Tooltip>

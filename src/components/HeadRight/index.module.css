@@ -12,3 +12,16 @@
   height: 1rem;
   width: 100%;
 }
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+}
+
+.tips {
+  font-size: 0.7rem;
+  color: rgb(134, 142, 150);
+  margin-left: 0.5rem;
+  font-weight: 500;
+}

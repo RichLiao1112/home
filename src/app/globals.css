@@ -107,3 +107,8 @@ a {
     color-scheme: dark;
   }
 }
+
+.ant-btn,
+.ant-tooltip-inner {
+  font-size: 0.8rem !important;
+}
