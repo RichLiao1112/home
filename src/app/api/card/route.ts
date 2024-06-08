@@ -26,12 +26,16 @@ export async function PUT(req: NextRequest) {
     }
 
     HomeService.updateCards(data.key, cards);
-    await HomeService.writeDBFile(
+    const saveResult = HomeService.writeDBFile(
       HomeService.getDefaultDBPath(),
       HomeService.getDBData()
     );
 
-    return NextResponse.json({ data: dto, success: true, message: '' });
+    return NextResponse.json({
+      data: dto,
+      success: saveResult.success,
+      message: saveResult.message,
+    });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err?.message });
   }

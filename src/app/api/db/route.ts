@@ -29,14 +29,14 @@ export async function PUT(req: NextRequest) {
     }
     HomeService.updateDBData(key, { dataSource: [], layout: {} });
 
-    await HomeService.writeDBFile(
+    const saveResult = HomeService.writeDBFile(
       HomeService.getDefaultDBPath(),
       HomeService.getDBData()
     );
     return NextResponse.json({
       data: key,
-      success: true,
-      message: '',
+      success: saveResult.success,
+      message: saveResult.message,
     });
   } catch (err: any) {
     console.log(err);
@@ -57,14 +57,18 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ success: false, message: '配置不存在' });
     }
     HomeService.updateDBData(key, null);
-    await HomeService.writeDBFile(
+    const saveResult = HomeService.writeDBFile(
       HomeService.getDefaultDBPath(),
       HomeService.getDBData()
     );
 
-    return NextResponse.json({ data: {}, success: true, message: '' });
-  } catch (err) {
-    return NextResponse.json({ success: false, message: err });
+    return NextResponse.json({
+      data: {},
+      success: saveResult.success,
+      message: saveResult.message,
+    });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err?.message });
   }
 }
 
@@ -75,7 +79,7 @@ export async function POST(req: NextRequest) {
     const { key } = data;
     HomeService.setSelectedKey(key);
     return NextResponse.json({ data: key, success: true, message: '' });
-  } catch (err) {
-    return NextResponse.json({ success: false, message: err });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err?.message });
   }
 }

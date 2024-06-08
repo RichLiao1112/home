@@ -1,15 +1,6 @@
 import { defaultDBFile } from '@/common';
-import {
-  readFileSync,
-  writeFileSync,
-  writeFile,
-  access,
-  mkdir,
-  readdir,
-  unlink,
-  readFile,
-} from 'fs';
-import path, { resolve } from 'path';
+import { readFileSync, writeFileSync } from 'fs';
+import path from 'path';
 
 export interface ICard {
   title: string;
@@ -55,11 +46,7 @@ export interface IDBData {
 class HomeService {
   private static instance: HomeService;
   private readonly sourcePath = process.cwd();
-  private _defaultDBPath = path.join(
-    this.sourcePath,
-    defaultDBFile.basePath,
-    defaultDBFile.filename
-  );
+  private _defaultDBPath = path.join(this.sourcePath, defaultDBFile.filename);
 
   private _dbData: IDBData = {};
 
@@ -81,21 +68,40 @@ class HomeService {
     return this._defaultDBPath;
   }
 
-  private readDBFileSync = (dbPath: string) => {
+  private readDBFileSync = async (dbPath: string) => {
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
+    let result: IDBData = parseData;
     if (parseData && !parseData.default) {
       // 兼容历史版本的配置数据
-      const result: IDBData = {
+      result = {
         default: {
           ...parseData,
         },
       };
-      this._dbData = result;
-    } else {
-      this._dbData = parseData;
     }
-    this.writeDBFile(this._defaultDBPath, this._dbData);
+
+    // 数据检查
+    Object.entries(result).forEach(([k, v]) => {
+      if (v.dataSource && v.dataSource instanceof Array) {
+        v.dataSource.map((card, index) => {
+          card.id = `${index}`;
+          return card;
+        });
+      } else {
+        v.dataSource = [];
+      }
+
+      if (!v.layout) {
+        v.layout = {};
+      }
+    });
+    this._dbData = result;
+
+    const saveResult = this.writeDBFile(this._defaultDBPath, this._dbData);
+    if (saveResult.success !== true) {
+      throw Error(saveResult.message);
+    }
   };
 
   public getDBData() {
@@ -121,16 +127,16 @@ class HomeService {
         [targetKey]: payload,
       };
     }
-    // await this.writeDBFile(this.defaultDBPath, this._dbData);
   }
 
   public writeDBFile(path: string, payload: IDBData) {
-    return new Promise((resolve, reject) => {
-      writeFile(path, JSON.stringify(payload, null, 2), (err) => {
-        if (err) reject(err);
-        resolve({ success: true });
-      });
-    });
+    try {
+      writeFileSync(path, JSON.stringify(payload, null, 2), 'utf-8');
+      return { success: true, message: '' };
+    } catch (err: any) {
+      console.log('[writeFileSync error]', err);
+      return { success: false, message: err?.message };
+    }
   }
 
   public updateLayout(targetKey: string, payload: ILayout) {

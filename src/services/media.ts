@@ -1,10 +1,4 @@
-import {
-  readFile,
-  readFileSync,
-  readdir,
-  readdirSync,
-  writeFileSync,
-} from 'fs';
+import { readdirSync } from 'fs';
 import path from 'path';
 
 export interface ISearchIcon {

@@ -1,7 +1,6 @@
 export interface IFile {
   filename: string;
   // type: 'default' | 'custom';
-  basePath: string;
   defaultConfigKey: string;
 }
 
@@ -40,6 +39,5 @@ export const getLinkJumpMode = () => {
 
 export const defaultDBFile: IFile = {
   filename: 'home.json',
-  basePath: '',
   defaultConfigKey: 'default',
 };

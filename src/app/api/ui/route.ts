@@ -28,12 +28,15 @@ export async function POST(req: NextRequest) {
     });
 
     const dbData = HomeService.getDBData();
-    await HomeService.writeDBFile(HomeService.getDefaultDBPath(), dbData);
+    const saveResult = HomeService.writeDBFile(
+      HomeService.getDefaultDBPath(),
+      dbData
+    );
 
     return NextResponse.json({
       data: dbData,
-      success: true,
-      message: '',
+      success: saveResult.success,
+      message: saveResult.message,
     });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err?.message });
