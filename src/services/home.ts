@@ -96,7 +96,7 @@ class HomeService {
         v.layout = {
           cardListStyle: {
             justifyContent: 'center',
-            alignContent: 'flex-start',
+            alignContent: 'center',
             alignItems: 'center',
           },
           head: {},
