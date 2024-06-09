@@ -17,16 +17,16 @@ const Head = (props: IProps) => {
 
   const renderCover = (source?: string, logoColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt="" className={styles.logo} />;
+      return <img src={source} alt='' className={styles.logo} />;
     }
     if (source) {
       return (
         <div className={styles.logo} style={{ color: logoColor }}>
-          <Iconify icon={source} width="100%" height="100%" />
+          <Iconify icon={source} width='100%' height='100%' />
         </div>
       );
     }
-    return <div className={styles.logo} style={{ color: logoColor }}></div>;
+    return null;
   };
   return (
     <div className={styles.head}>

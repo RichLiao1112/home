@@ -87,17 +87,17 @@ export const apiDeleteDBFile = (payload: { key: string }) => {
     .catch((err) => console.warn('[apiUpsertCard]', err));
 };
 
-export const apiSelectDBFile = (payload: { key: string }) => {
-  return fetch(`/api/db`, {
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify({ data: payload }),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.warn('[apiUpsertCard]', err));
-};
+// export const apiSelectDBFile = (payload: { key: string }) => {
+//   return fetch(`/api/db`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-type': 'application/json',
+//     },
+//     body: JSON.stringify({ data: payload }),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.warn('[apiUpsertCard]', err));
+// };
 
 export const apiGetAllDBData = () => {
   return fetch(`/api/db/all`, {

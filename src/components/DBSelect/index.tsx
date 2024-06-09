@@ -2,14 +2,9 @@
 
 import { useState } from 'react';
 import { Button, Input, Modal, Select, Space, Tooltip, message } from 'antd';
-import {
-  apitUpsertDBFile,
-  apiDeleteDBFile,
-  apiSelectDBFile,
-  apiGetAllDBData,
-} from '@/requests';
+import { apitUpsertDBFile, apiDeleteDBFile, apiGetAllDBData } from '@/requests';
 import styles from './index.module.css';
-import Iconify from '../Iconify';
+import { setSelectedKey } from '@/common';
 
 export interface IProps {
   hideButtions?: boolean;
@@ -84,13 +79,8 @@ const DBSelect = (props: IProps) => {
   };
 
   const onSelect = (value: string) => {
-    apiSelectDBFile({
-      key: value,
-    })
-      .then(() => {
-        props.onChange?.();
-      })
-      .catch((err) => console.log(err));
+    setSelectedKey(value);
+    props.onChange?.();
   };
 
   const handleDownload = async () => {

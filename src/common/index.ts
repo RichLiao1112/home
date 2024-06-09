@@ -17,7 +17,7 @@ export const isHttpSource = (src?: string) => {
   return false;
 };
 
-export const jumpModeStorageKey = 'LINK_JUMP_MODE';
+export const jumpModeStorageKey = 'HOME_CONFIG_LINK_JUMP_MODE';
 
 export const jumpMode = {
   lan: 'lan',
@@ -40,4 +40,19 @@ export const getLinkJumpMode = () => {
 export const defaultDBFile: IFile = {
   filename: 'home.json',
   defaultConfigKey: 'default',
+};
+
+export const dbSelectedStorageKey = 'HOME_CONFIG_SELECTED_KEY';
+
+export const setSelectedKey = (value: string) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(dbSelectedStorageKey, value);
+  }
+};
+
+export const getSelectedKey = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(dbSelectedStorageKey) || 'default';
+  }
+  return 'default';
 };

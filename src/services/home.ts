@@ -50,11 +50,11 @@ class HomeService {
 
   private _dbData: IDBData = {};
 
-  private _selectedKey: string = '';
+  // private _selectedKey: string = '';
 
   private constructor() {
     this.readDBFileSync(this._defaultDBPath);
-    this.setSelectedKey('default');
+    // this.setSelectedKey('default');
   }
 
   public static getInstance(): HomeService {
@@ -110,13 +110,13 @@ class HomeService {
     return this._dbData;
   }
 
-  public getSelectedKey() {
-    return this._selectedKey;
-  }
+  // public getSelectedKey() {
+  //   return this._selectedKey;
+  // }
 
-  public setSelectedKey(targetKey: string) {
-    this._selectedKey = targetKey;
-  }
+  // public setSelectedKey(targetKey: string) {
+  //   this._selectedKey = targetKey;
+  // }
 
   public updateDBData(targetKey: string, payload: IHomeData | null) {
     if (payload === null) {
@@ -159,18 +159,18 @@ class HomeService {
     this.updateDBData(targetKey, dbData);
   }
 
-  public getLayout() {
-    const targetData = this._dbData[this._selectedKey] || {};
+  public getLayout(key: string) {
+    const targetData = this._dbData[key] || {};
     return targetData.layout;
   }
 
-  public getHead() {
-    const targetData = this._dbData[this._selectedKey] || {};
+  public getHead(key: string) {
+    const targetData = this._dbData[key] || {};
     return targetData.layout?.head;
   }
 
-  public getCards() {
-    const targetData = this._dbData[this._selectedKey] || {};
+  public getCards(key: string) {
+    const targetData = this._dbData[key] || {};
     return targetData.dataSource;
   }
 

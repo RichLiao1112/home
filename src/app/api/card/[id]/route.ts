@@ -13,7 +13,7 @@ export async function DELETE(req: NextRequest, context: { params: TParams }) {
     if (!key) throw new Error('缺少key');
     if (!id) throw new Error('缺少id');
     const cards: ICard[] = JSON.parse(
-      JSON.stringify(HomeService.getCards() || [])
+      JSON.stringify(HomeService.getCards(key) || [])
     );
     const result = cards.filter((it) => String(it.id) !== String(id));
 

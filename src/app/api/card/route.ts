@@ -7,7 +7,7 @@ export async function PUT(req: NextRequest) {
     const { data } = body;
     if (!data.key) throw new Error('缺少参数key');
     const cards: ICard[] = JSON.parse(
-      JSON.stringify(HomeService.getCards() || [])
+      JSON.stringify(HomeService.getCards(data.key) || [])
     );
     const cardDTOIndex = cards.findIndex((it) => it.id === data.id);
     let dto: ICard;

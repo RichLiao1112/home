@@ -6,7 +6,6 @@ export async function GET() {
     return NextResponse.json({
       data: {
         all: HomeService.queryConfigKeys(),
-        current: HomeService.getSelectedKey(),
       },
       success: true,
       message: '',
@@ -72,14 +71,14 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { data } = body;
-    const { key } = data;
-    HomeService.setSelectedKey(key);
-    return NextResponse.json({ data: key, success: true, message: '' });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, message: err?.message });
-  }
-}
+// export async function POST(req: NextRequest) {
+//   try {
+//     const body = await req.json();
+//     const { data } = body;
+//     const { key } = data;
+//     HomeService.setSelectedKey(key);
+//     return NextResponse.json({ data: key, success: true, message: '' });
+//   } catch (err: any) {
+//     return NextResponse.json({ success: false, message: err?.message });
+//   }
+// }

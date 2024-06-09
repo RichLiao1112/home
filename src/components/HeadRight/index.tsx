@@ -10,7 +10,12 @@ import EditForm from '../EditForm';
 import { ICard, ILayout } from '@/services/home';
 import { apiQueryDBFiles, apiUpdateUI, apiUpsertCard } from '@/requests';
 import SettingForm from '../SettingForm';
-import { getLinkJumpMode, jumpMode, setLinkJumpMode } from '@/common';
+import {
+  getLinkJumpMode,
+  getSelectedKey,
+  jumpMode,
+  setLinkJumpMode,
+} from '@/common';
 import { NetIconLan, NetIconWan } from '../NetIcon';
 import DBSelect, { TFileOptions } from '../DBSelect';
 import Iconify from '../Iconify';
@@ -102,11 +107,12 @@ const HeadRight = (props: IProps) => {
   };
 
   const fetchDBFiles = () => {
+    setCurrent(getSelectedKey());
+
     return apiQueryDBFiles().then((res) => {
       const { data } = res;
-      const { all, current } = data;
+      const { all } = data;
       const dbConfigs = all.map((it: string) => ({ label: it, value: it }));
-      setCurrent(current);
       setOptions(dbConfigs);
       return dbConfigs;
     });

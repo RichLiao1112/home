@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const { data } = body;
   try {
     if (!data.key) throw new Error('缺少参数key');
-    const layout = HomeService.getLayout();
+    const layout = HomeService.getLayout(data.key);
     const cardListStyle = JSON.parse(
       JSON.stringify(
         layout.cardListStyle || {
