@@ -1,30 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Input, Modal, Select, Space, Tooltip, message } from 'antd';
-import {
-  apiQueryDBFiles,
-  apitUpsertDBFile,
-  apiDeleteDBFile,
-  apiSelectDBFile,
-} from '@/requests';
+import { apitUpsertDBFile, apiDeleteDBFile, apiSelectDBFile } from '@/requests';
 import styles from './index.module.css';
-import { useRouter } from 'next/navigation';
 import Iconify from '../Iconify';
 
 export interface IProps {
-  onChange?: (value?: string) => void;
-  value?: string;
+  hideButtions?: boolean;
+  selectStyle?: any;
+  onChange: () => Promise<void>;
+  value: string | undefined;
+  options: TFileOptions;
 }
 export type TFileOptions = Array<{
   label: string;
   value: string;
 }>;
 
-export default function DBSelect(props: IProps) {
-  const router = useRouter();
-  const [options, setOptions] = useState<TFileOptions>([]);
-  const [current, setCurrent] = useState<string>();
+const DBSelect = (props: IProps) => {
   const [open, setOpen] = useState(false);
   const [addFileName, setAddFileName] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -34,17 +28,11 @@ export default function DBSelect(props: IProps) {
     setOpen(true);
   };
 
-  const labelSplit = (label: string) => {
-    return label;
-    // return label.slice(0, label.length - 5);
-  };
-
   const onAdd = async () => {
     if (addFileName) {
       setLoading(true);
       try {
         const res = await apitUpsertDBFile({ key: addFileName });
-        const files = await fetchDBFiles();
         if (res.success) {
           message.success('新增成功');
           setOpen(false);
@@ -61,17 +49,6 @@ export default function DBSelect(props: IProps) {
     }
   };
 
-  const fetchDBFiles = () => {
-    return apiQueryDBFiles().then((res) => {
-      const { data } = res;
-      const { all, current } = data;
-      const dbConfigs = all.map((it: string) => ({ label: it, value: it }));
-      setCurrent(current);
-      setOptions(dbConfigs);
-      return dbConfigs;
-    });
-  };
-
   const onDeleteClick = (filename: string) => {
     Modal.confirm({
       title: `删除后不可恢复，确定删除 ${filename} ？`,
@@ -82,10 +59,10 @@ export default function DBSelect(props: IProps) {
           .then((res) => {
             if (res.success) {
               message.success('删除成功');
-              if (current === filename) {
+              if (props.value === filename) {
                 onSelect('default');
               } else {
-                fetchDBFiles();
+                props.onChange();
               }
             } else {
               message.error('删除失败');
@@ -93,20 +70,20 @@ export default function DBSelect(props: IProps) {
           })
           .catch((err: any) => {
             message.error(err?.message);
-            fetchDBFiles();
+            props.onChange();
           });
       },
     });
   };
 
   const onSelect = (value: string) => {
-    setCurrent(value);
     apiSelectDBFile({
       key: value,
     })
-      .then(() => router.refresh())
-      .catch((err) => console.log(err))
-      .finally(() => fetchDBFiles());
+      .then(() => {
+        props.onChange?.();
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleDownload = async () => {
@@ -128,17 +105,16 @@ export default function DBSelect(props: IProps) {
     }
   };
 
-  useEffect(() => {
-    fetchDBFiles();
-  }, []);
-
   return (
     <div>
       <Select
-        options={options}
-        style={{ width: '100%' }}
-        value={current}
+        defaultActiveFirstOption
+        filterOption={false}
+        options={props.options}
+        style={{ width: '100%', ...props.selectStyle }}
+        value={props.value}
         onChange={(value) => onSelect(value)}
+        notFoundContent={null}
         optionRender={(option) => {
           return (
             <div className={styles.option}>
@@ -172,16 +148,18 @@ export default function DBSelect(props: IProps) {
           );
         }}
       />
-      <div className={styles.btns}>
-        <Space>
-          <Button size='small' type='primary' onClick={handleDownload}>
-            下载配置
-          </Button>
-          <Button size='small' type='primary' onClick={onShowAddModal}>
-            新增配置
-          </Button>
-        </Space>
-      </div>
+      {props.hideButtions ? null : (
+        <div className={styles.btns}>
+          <Space>
+            <Button size='small' type='primary' onClick={handleDownload}>
+              下载配置
+            </Button>
+            <Button size='small' type='primary' onClick={onShowAddModal}>
+              新增配置
+            </Button>
+          </Space>
+        </div>
+      )}
       <Modal
         title='新增配置'
         open={open}
@@ -199,4 +177,6 @@ export default function DBSelect(props: IProps) {
       </Modal>
     </div>
   );
-}
+};
+
+export default DBSelect;

@@ -1,30 +1,19 @@
 'use client';
 
 import styles from './index.module.css';
-import {
-  Button,
-  Tooltip,
-  Modal,
-  Form,
-  Drawer,
-  Typography,
-  message,
-  Space,
-} from 'antd';
+import { Button, Tooltip, Modal, Form, Drawer, message, Space } from 'antd';
 import { useContext, useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { PageContext } from '@/context/page.context';
 import EditForm from '../EditForm';
 import { ICard, ILayout } from '@/services/home';
-import { apiUpdateUI, apiUpsertCard } from '@/requests';
+import { apiQueryDBFiles, apiUpdateUI, apiUpsertCard } from '@/requests';
 import SettingForm from '../SettingForm';
 import { getLinkJumpMode, jumpMode, setLinkJumpMode } from '@/common';
 import { NetIconLan, NetIconWan } from '../NetIcon';
-import DBSelect from '../DBSelect';
+import DBSelect, { TFileOptions } from '../DBSelect';
 import Iconify from '../Iconify';
-
-const { Title } = Typography;
 
 export interface IProps {
   layout: ILayout;
@@ -50,6 +39,10 @@ const HeadRight = (props: IProps) => {
   const [settingForm] = Form.useForm<ILayout>();
   const [fetching, setFetching] = useState(false);
   const [, startTransition] = useTransition();
+
+  // 配置表
+  const [options, setOptions] = useState<TFileOptions>([]);
+  const [current, setCurrent] = useState<string>();
 
   const onCancelModal = () => {
     setEditModalData?.(undefined);
@@ -108,10 +101,29 @@ const HeadRight = (props: IProps) => {
     setLinkMode?.(mode);
   };
 
+  const fetchDBFiles = () => {
+    return apiQueryDBFiles().then((res) => {
+      const { data } = res;
+      const { all, current } = data;
+      const dbConfigs = all.map((it: string) => ({ label: it, value: it }));
+      setCurrent(current);
+      setOptions(dbConfigs);
+      return dbConfigs;
+    });
+  };
+
+  const onDBSelectChange = () => {
+    return fetchDBFiles().then(() => router.refresh());
+  };
+
   useEffect(() => {
     const mode = getLinkJumpMode();
     setLinkMode?.(mode || jumpMode.wan);
   }, [setLinkMode]);
+
+  useEffect(() => {
+    fetchDBFiles();
+  }, []);
 
   return (
     <div className={styles.right}>
@@ -134,6 +146,7 @@ const HeadRight = (props: IProps) => {
         open={editDrawerData?.open}
         title={editDrawerData?.title}
         onClose={onCancelDrawer}
+        destroyOnClose
       >
         <>
           <div className={styles.title}>外观</div>
@@ -153,11 +166,22 @@ const HeadRight = (props: IProps) => {
           <div className={styles.title}>
             配置<span className={styles.tips}>设置多份配置，切换使用</span>
           </div>
-          <DBSelect />
+          <DBSelect
+            onChange={onDBSelectChange}
+            value={current}
+            options={options}
+          />
         </>
       </Drawer>
 
       <Space>
+        <DBSelect
+          hideButtions
+          selectStyle={{ width: '6rem', fontSize: '.6rem' }}
+          onChange={onDBSelectChange}
+          value={current}
+          options={options}
+        />
         {linkMode === jumpMode.wan ? (
           <NetIconWan handleClick={() => modifyLinkJumpMode(jumpMode.lan)} />
         ) : (
