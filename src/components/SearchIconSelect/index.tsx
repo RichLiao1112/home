@@ -24,18 +24,25 @@ export default function SearchIconSelect(props: IProps) {
   const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
   const [loading, setLoading] = useState(false);
 
-  const onIconSearch = debounce((value) => {
+  const onIconSearch = debounce(async (value) => {
     if (isHttpSource(value)) {
       return setRemoteIconList([{ id: value }]);
     }
     if (value) {
       setLoading(true);
-      Promise.all([handleMatchImage(value), handleSearchFromAPI(value)])
-        .then(([matchImages, iconify]) => {
-          setRemoteIconList([...matchImages, ...iconify]);
-        })
-        .catch((err) => console.log('[onIconSearch]', err))
-        .finally(() => setLoading(false));
+      const matchImg = await handleMatchImage(value);
+      setRemoteIconList(matchImg);
+      const icons = await handleSearchFromAPI(value);
+      setRemoteIconList((prev) => {
+        return [...prev, ...icons];
+      });
+      setLoading(false);
+      // Promise.all([handleMatchImage(value), handleSearchFromAPI(value)])
+      //   .then(([matchImages, iconify]) => {
+      //     setRemoteIconList([...matchImages, ...iconify]);
+      //   })
+      //   .catch((err) => console.log('[onIconSearch]', err))
+      //   .finally(() => setLoading(false));
     }
   }, 300);
 
@@ -68,9 +75,9 @@ export default function SearchIconSelect(props: IProps) {
       label: (
         <div className={styles.option} style={{ color: color ?? '#000000' }}>
           {isImg ? (
-            <img alt="" src={payload.id} className={styles.img} />
+            <img alt='' src={payload.id} className={styles.img} />
           ) : (
-            <Iconify width="1.5rem" height="1.5rem" icon={payload.id} />
+            <Iconify width='1.5rem' height='1.5rem' icon={payload.id} />
           )}
           &nbsp;
           <span style={{ color: '#000000' }}>{payload.id}</span>
@@ -92,12 +99,12 @@ export default function SearchIconSelect(props: IProps) {
       showSearch
       filterOption={false}
       onSearch={onIconSearch}
-      placeholder="输入关键字搜索图片"
+      placeholder='输入关键字搜索图片'
       options={remoteIconList.map((icon) => renderSelectOption(icon))}
       onChange={(value) => onChange?.(value || '')}
       value={value}
       loading={loading}
-      notFoundContent={loading ? <Spin size="small" /> : null}
+      notFoundContent={loading ? <Spin size='small' /> : null}
     />
   );
 }
