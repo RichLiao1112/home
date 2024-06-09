@@ -10,20 +10,22 @@ export async function POST(req: NextRequest) {
     if (!data.key) throw new Error('缺少参数key');
     const layout = HomeService.getLayout();
     const cardListStyle = JSON.parse(
-      JSON.stringify(layout.cardListStyle || {})
+      JSON.stringify(
+        layout.cardListStyle || {
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          alignContent: 'flex-start',
+        }
+      )
     );
     const head = JSON.parse(JSON.stringify(layout.head || {}));
     if (data.cardListStyle) {
       cardListStyle.justifyContent =
-        data.cardListStyle.justifyContent ??
-        cardListStyle.justifyContent ??
-        'center';
+        data.cardListStyle.justifyContent ?? cardListStyle.justifyContent;
       cardListStyle.alignItems =
-        data.cardListStyle.alignItems ?? cardListStyle.alignItems ?? 'center';
+        data.cardListStyle.alignItems ?? cardListStyle.alignItems;
       cardListStyle.alignContent =
-        data.cardListStyle.alignContent ??
-        cardListStyle.alignContent ??
-        'center';
+        data.cardListStyle.alignContent ?? cardListStyle.alignContent;
     }
     HomeService.updateLayout(data.key, {
       ...layout,
