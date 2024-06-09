@@ -7,6 +7,7 @@ import {
   apitUpsertDBFile,
   apiDeleteDBFile,
   apiSelectDBFile,
+  apiGetAllDBData,
 } from '@/requests';
 import styles from './index.module.css';
 import { useRouter } from 'next/navigation';
@@ -28,15 +29,11 @@ export default function DBSelect(props: IProps) {
   const [open, setOpen] = useState(false);
   const [addFileName, setAddFileName] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const onShowAddModal = () => {
     setAddFileName('');
     setOpen(true);
-  };
-
-  const labelSplit = (label: string) => {
-    return label;
-    // return label.slice(0, label.length - 5);
   };
 
   const onAdd = async () => {
@@ -111,8 +108,10 @@ export default function DBSelect(props: IProps) {
 
   const handleDownload = async () => {
     try {
-      const jsonData = await import('../../../home.json');
-      const blob = new Blob([JSON.stringify(jsonData.default || {}, null, 2)], {
+      setDownloading(true);
+      const res = await apiGetAllDBData();
+      const jsonData = res.data;
+      const blob = new Blob([JSON.stringify(jsonData || {}, null, 2)], {
         type: 'application/json',
       });
       const url = URL.createObjectURL(blob);
@@ -121,10 +120,14 @@ export default function DBSelect(props: IProps) {
       link.download = 'home.json'; // 指定下载的文件名
       document.body.appendChild(link);
       link.click();
+      message.info('已触发下载，请关注浏览器下载状况');
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
+      message.error(err.message);
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -174,7 +177,12 @@ export default function DBSelect(props: IProps) {
       />
       <div className={styles.btns}>
         <Space>
-          <Button size='small' type='primary' onClick={handleDownload}>
+          <Button
+            size='small'
+            type='primary'
+            onClick={handleDownload}
+            loading={downloading}
+          >
             下载配置
           </Button>
           <Button size='small' type='primary' onClick={onShowAddModal}>

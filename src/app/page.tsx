@@ -3,7 +3,6 @@ import HomeService from '@/services/home';
 import Head from '@/components/Head';
 import { PageContextProvider } from '@/context/page.context';
 import CardList from '@/components/CardList';
-import { apiQueryDBFiles } from '@/requests';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +16,7 @@ const readHomeData = () => {
 };
 
 export default async function Home() {
-  const res = await readHomeData();
+  const res = readHomeData();
   const { configKey, dbData } = res;
   const { dataSource = [], layout } = dbData?.[configKey] || {};
   const { cardListStyle } = layout || {};
