@@ -39,12 +39,14 @@ const SettingForm = (props: IProps) => {
         backgroundImage: originData?.head?.backgroundImage || '',
         logoColor: originData?.head?.logoColor || '',
       },
-      cardListStyle: JSON.stringify(originData?.cardListStyle),
+      cardListStyle: originData?.cardListStyle
+        ? JSON.stringify(originData?.cardListStyle)
+        : '',
     });
   }, [form, originData]);
 
   return (
-    <Form layout="vertical" variant="outlined" form={form}>
+    <Form layout='vertical' variant='outlined' form={form}>
       <Form.Item shouldUpdate noStyle>
         {() => (
           <Form.Item
@@ -87,11 +89,11 @@ const SettingForm = (props: IProps) => {
         label={renderLabel('背景图', '页面的背景图')}
         name={['head', 'backgroundImage']}
       >
-        <Input placeholder="背景图地址" />
+        <Input placeholder='背景图地址' />
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name="cardListStyle"
+        name='cardListStyle'
       >
         <Select
           options={[

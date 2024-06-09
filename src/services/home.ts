@@ -93,7 +93,14 @@ class HomeService {
       }
 
       if (!v.layout) {
-        v.layout = {};
+        v.layout = {
+          cardListStyle: {
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+          },
+          head: {},
+        };
       }
     });
     this._dbData = result;

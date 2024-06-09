@@ -24,18 +24,25 @@ export default function SearchIconSelect(props: IProps) {
   const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
   const [loading, setLoading] = useState(false);
 
-  const onIconSearch = debounce((value) => {
+  const onIconSearch = debounce(async (value) => {
     if (isHttpSource(value)) {
       return setRemoteIconList([{ id: value }]);
     }
     if (value) {
       setLoading(true);
-      Promise.all([handleMatchImage(value), handleSearchFromAPI(value)])
-        .then(([matchImages, iconify]) => {
-          setRemoteIconList([...matchImages, ...iconify]);
-        })
-        .catch((err) => console.log('[onIconSearch]', err))
-        .finally(() => setLoading(false));
+      const matchImg = await handleMatchImage(value);
+      setRemoteIconList(matchImg);
+      const icons = await handleSearchFromAPI(value);
+      setRemoteIconList((prev) => {
+        return [...prev, ...icons];
+      });
+      setLoading(false);
+      // Promise.all([handleMatchImage(value), handleSearchFromAPI(value)])
+      //   .then(([matchImages, iconify]) => {
+      //     setRemoteIconList([...matchImages, ...iconify]);
+      //   })
+      //   .catch((err) => console.log('[onIconSearch]', err))
+      //   .finally(() => setLoading(false));
     }
   }, 300);
 

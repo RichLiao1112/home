@@ -98,3 +98,11 @@ export const apiSelectDBFile = (payload: { key: string }) => {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiUpsertCard]', err));
 };
+
+export const apiGetAllDBData = () => {
+  return fetch(`/api/db/all`, {
+    method: 'GET',
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiGetAllDBData]', err));
+};

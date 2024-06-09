@@ -15,11 +15,15 @@ export async function POST(req: NextRequest) {
     const head = JSON.parse(JSON.stringify(layout.head || {}));
     if (data.cardListStyle) {
       cardListStyle.justifyContent =
-        data.cardListStyle.justifyContent ?? cardListStyle.justifyContent;
+        data.cardListStyle.justifyContent ??
+        cardListStyle.justifyContent ??
+        'center';
       cardListStyle.alignItems =
-        data.cardListStyle.alignItems ?? cardListStyle.alignItems;
+        data.cardListStyle.alignItems ?? cardListStyle.alignItems ?? 'center';
       cardListStyle.alignContent =
-        data.cardListStyle.alignContent ?? cardListStyle.alignContent;
+        data.cardListStyle.alignContent ??
+        cardListStyle.alignContent ??
+        'center';
     }
     HomeService.updateLayout(data.key, {
       ...layout,
