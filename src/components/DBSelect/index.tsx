@@ -17,6 +17,7 @@ export interface IProps {
   onChange: () => Promise<void>;
   value: string | undefined;
   options: TFileOptions;
+  hideDelete?: boolean;
 }
 export type TFileOptions = Array<{
   label: string;
@@ -132,28 +133,31 @@ const DBSelect = (props: IProps) => {
             <div className={styles.option}>
               <span>{option.label}</span>
               <Space>
-                {option.label !== 'default' && (
-                  <Tooltip title='删除配置'>
-                    <Button
-                      type='text'
-                      shape='circle'
-                      icon={
-                        <span style={{ color: 'red' }}>
-                          <Iconify
-                            icon='mdi:minus-circle'
-                            width='1.2rem'
-                            height='1.2rem'
-                          />
-                        </span>
-                      }
-                      size='small'
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onDeleteClick(option.data.label);
-                      }}
-                    />
-                  </Tooltip>
+                {option.label !== 'default' && props.hideDelete !== true && (
+                  <Button
+                    type='text'
+                    shape='circle'
+                    // icon={
+                    //   <span style={{ color: 'red' }}>
+                    //     <Iconify
+                    //       icon='mdi:minus-circle'
+                    //       width='1.2rem'
+                    //       height='1.2rem'
+                    //     />
+                    //   </span>
+                    // }
+                    icon={
+                      <span style={{ color: 'red', fontSize: '.7rem' }}>
+                        删
+                      </span>
+                    }
+                    size='small'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onDeleteClick(option.data.label);
+                    }}
+                  ></Button>
                 )}
               </Space>
             </div>

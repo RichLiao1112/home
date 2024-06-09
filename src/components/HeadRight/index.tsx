@@ -175,13 +175,16 @@ const HeadRight = (props: IProps) => {
       </Drawer>
 
       <Space>
-        <DBSelect
-          hideButtions
-          selectStyle={{ width: '6rem', fontSize: '.6rem' }}
-          onChange={onDBSelectChange}
-          value={current}
-          options={options}
-        />
+        {options.length > 1 && (
+          <DBSelect
+            hideDelete
+            hideButtions
+            selectStyle={{ width: '6rem', fontSize: '.6rem' }}
+            onChange={onDBSelectChange}
+            value={current}
+            options={options}
+          />
+        )}
         {linkMode === jumpMode.wan ? (
           <NetIconWan handleClick={() => modifyLinkJumpMode(jumpMode.lan)} />
         ) : (
