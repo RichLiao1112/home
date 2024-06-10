@@ -57,3 +57,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: error?.message, success: false });
   }
 }
+
+export async function GET() {
+  MediaService.scanAllMedia();
+  return NextResponse.json({
+    message: '',
+    success: true,
+  });
+}

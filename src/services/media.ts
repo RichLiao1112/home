@@ -86,13 +86,13 @@ class MediaService {
   queryMedia = (payload: ISearchIcon) => {
     if (!payload.q) return [];
     const pngs = this.mediaPngList.filter((media) =>
-      media.name.includes(payload.q.toLowerCase())
+      media.path.includes(payload.q.toLowerCase())
     );
     const svgs = this.mediaSvgList.filter((media) =>
-      media.name.includes(payload.q.toLowerCase())
+      media.path.includes(payload.q.toLowerCase())
     );
     const custom = this.mediaCustomList.filter((media) =>
-      media.name.includes(payload.q.toLowerCase())
+      media.path.includes(payload.q.toLowerCase())
     );
     return [...custom, ...pngs, ...svgs];
   };

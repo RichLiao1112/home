@@ -106,3 +106,11 @@ export const apiGetAllDBData = () => {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiGetAllDBData]', err));
 };
+
+export const apiRefreshMediaDir = () => {
+  return fetch(`/api/upload`, {
+    method: 'GET',
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiRefreshMediaDir]', err));
+};

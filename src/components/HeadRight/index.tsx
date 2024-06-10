@@ -8,7 +8,12 @@ import { useRouter } from 'next/navigation';
 import { PageContext } from '@/context/page.context';
 import EditForm from '../EditForm';
 import { ICard, ILayout } from '@/services/home';
-import { apiQueryDBFiles, apiUpdateUI, apiUpsertCard } from '@/requests';
+import {
+  apiQueryDBFiles,
+  apiRefreshMediaDir,
+  apiUpdateUI,
+  apiUpsertCard,
+} from '@/requests';
 import SettingForm from '../SettingForm';
 import {
   getLinkJumpMode,
@@ -123,6 +128,10 @@ const HeadRight = (props: IProps) => {
     return fetchDBFiles().then(() => router.refresh());
   };
 
+  const refreshCustomDir = () => {
+    return apiRefreshMediaDir().then((res) => message.success('刷新成功'));
+  };
+
   useEffect(() => {
     const mode = getLinkJumpMode();
     setLinkMode?.(mode || jumpMode.wan);
@@ -170,15 +179,6 @@ const HeadRight = (props: IProps) => {
             </Button>
           </div>
           <div className={styles.blank}></div>
-          <div className={styles.title}>上传图片</div>
-          <div className={styles.label}>
-            上传后可在logo、背景图、应用图标中直接填写图片路径或搜索文件名选择使用
-          </div>
-          <div className={styles.label}>
-            避免文件丢失，建议挂载文件夹“/app/public/custom”至本地文件夹，并放开文件夹读写权限
-          </div>
-          <CustomUpload />
-          <div className={styles.blank}></div>
           <div className={styles.title}>
             配置<span className={styles.tips}>设置多份配置，切换使用</span>
           </div>
@@ -187,6 +187,25 @@ const HeadRight = (props: IProps) => {
             value={current}
             options={options}
           />
+          <div className={styles.blank}></div>
+          <div className={styles.title}>上传图片</div>
+          <div className={styles.label}>
+            <span>1. 本地新建任意文件夹（如: /assets)，需放开“可读”权限</span>
+            <br />
+            <span>2. 挂载该文件夹至容器的“/app/public/custom”目录</span>
+            <br />
+            <span>3. 复制图片至该文件夹内，再点此刷新图片目录</span>
+            <br />
+            <span>
+              3.
+              可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
+            </span>
+            <br />
+          </div>
+          {/* <CustomUpload /> */}
+          <Button type='primary' onClick={() => refreshCustomDir()}>
+            刷新图片目录
+          </Button>
         </>
       </Drawer>
 
