@@ -1,5 +1,5 @@
 import { defaultDBFile } from '@/common';
-import { readFileSync, writeFileSync } from 'fs';
+import { chmodSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
 export interface ICard {
@@ -50,11 +50,8 @@ class HomeService {
 
   private _dbData: IDBData = {};
 
-  // private _selectedKey: string = '';
-
   private constructor() {
     this.readDBFileSync(this._defaultDBPath);
-    // this.setSelectedKey('default');
   }
 
   public static getInstance(): HomeService {
@@ -69,6 +66,10 @@ class HomeService {
   }
 
   private readDBFileSync = async (dbPath: string) => {
+    if (!existsSync(dbPath)) {
+      writeFileSync(dbPath, JSON.stringify({}), 'utf-8');
+    }
+    chmodSync(dbPath, '777');
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
     let result: IDBData = parseData;
@@ -109,14 +110,6 @@ class HomeService {
   public getDBData() {
     return this._dbData;
   }
-
-  // public getSelectedKey() {
-  //   return this._selectedKey;
-  // }
-
-  // public setSelectedKey(targetKey: string) {
-  //   this._selectedKey = targetKey;
-  // }
 
   public updateDBData(targetKey: string, payload: IHomeData | null) {
     if (payload === null) {
