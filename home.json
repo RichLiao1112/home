@@ -1,1 +1,18 @@
-{}
+{
+  "default": {
+    "layout": {
+      "cardListStyle": {
+        "justifyContent": "center",
+        "alignItems": "center",
+        "alignContent": "center"
+      },
+      "head": {
+        "logo": "",
+        "name": "",
+        "logoColor": "",
+        "backgroundImage": "/custom/background.jpg"
+      }
+    }
+  }
+}
+
