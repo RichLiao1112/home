@@ -24,6 +24,7 @@ import {
 import { NetIconLan, NetIconWan } from '../NetIcon';
 import DBSelect, { TFileOptions } from '../DBSelect';
 import Iconify from '../Iconify';
+import CustomUpload from '../CustomUpload';
 // import CustomUpload from '../CustomUpload';
 
 export interface IProps {
@@ -190,6 +191,9 @@ const HeadRight = (props: IProps) => {
           <div className={styles.blank}></div>
           <div className={styles.title}>上传图片</div>
           <div className={styles.label}>
+            可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
+          </div>
+          {/* <div className={styles.label}>
             <span>1. 本地新建任意文件夹（如: /assets)，需放开“可读”权限</span>
             <br />
             <span>2. 挂载该文件夹至容器的“/app/public/custom”目录</span>
@@ -201,11 +205,11 @@ const HeadRight = (props: IProps) => {
               可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
             </span>
             <br />
-          </div>
-          {/* <CustomUpload /> */}
-          <Button type='primary' onClick={() => refreshCustomDir()}>
+          </div> */}
+          <CustomUpload />
+          {/* <Button type='primary' onClick={() => refreshCustomDir()}>
             刷新图片目录
-          </Button>
+          </Button> */}
         </>
       </Drawer>
 
