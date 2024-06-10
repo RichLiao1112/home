@@ -24,7 +24,7 @@ import {
 import { NetIconLan, NetIconWan } from '../NetIcon';
 import DBSelect, { TFileOptions } from '../DBSelect';
 import Iconify from '../Iconify';
-import CustomUpload from '../CustomUpload';
+// import CustomUpload from '../CustomUpload';
 
 export interface IProps {
   layout: ILayout;
