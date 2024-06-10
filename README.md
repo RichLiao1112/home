@@ -1,7 +1,9 @@
-## Deploy
+## 部署准备
 
-启动容器需要挂载 home.json 文件至 /app/home.json
+新建本地文件（名字随意取)，如： home.json
+新建本地文件夹（名字随意取） 如：/assets
 
-### 群晖启动
+### 启动容器
 
-在“存储空间设置”时，选择群晖本地文件 home.json 装载路径填写 /app/home.json
+挂载本地文件 home.json 至 /app/home.json
+挂载文件夹 /assets 至 /app/public
