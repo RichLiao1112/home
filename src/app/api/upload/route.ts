@@ -3,6 +3,7 @@ import MediaService from '@/services/media';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import { allowedMimeTypes, maxFileSize, maxFileSizeMB } from '@/common';
+import { chmodSync } from 'fs';
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -36,10 +37,9 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const filename = Date.now() + '_' + file.name.replaceAll(' ', '_');
   try {
-    await writeFile(
-      path.join(MediaService.getMediaCustomPath, filename),
-      buffer
-    );
+    const assetPath = path.join(MediaService.getMediaCustomPath, filename);
+    await writeFile(assetPath, buffer);
+    chmodSync(assetPath, 777);
     MediaService.scanAllMedia();
     return NextResponse.json({
       message: '',
