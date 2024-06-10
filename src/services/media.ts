@@ -45,11 +45,14 @@ class MediaService {
   }
 
   private checkCustomDir() {
-    console.log('media custom', existsSync(this.mediaCustomPath));
-    if (!existsSync(this.mediaCustomPath)) {
-      mkdirSync(this.mediaCustomPath, { recursive: true });
+    try {
+      if (!existsSync(this.mediaCustomPath)) {
+        mkdirSync(this.mediaCustomPath, { recursive: true });
+      }
+      chmodSync(this.mediaCustomPath, 664);
+    } catch (err: any) {
+      console.log(err?.message);
     }
-    chmodSync(this.mediaCustomPath, '777');
   }
 
   get getMediaPngList() {

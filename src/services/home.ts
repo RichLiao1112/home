@@ -69,7 +69,11 @@ class HomeService {
     if (!existsSync(dbPath)) {
       writeFileSync(dbPath, JSON.stringify({}), 'utf-8');
     }
-    chmodSync(dbPath, '777');
+    try {
+      chmodSync(dbPath, 664);
+    } catch (err: any) {
+      console.log(err?.message);
+    }
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
     let result: IDBData = parseData;

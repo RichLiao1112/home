@@ -39,7 +39,11 @@ export async function POST(req: NextRequest) {
   try {
     const assetPath = path.join(MediaService.getMediaCustomPath, filename);
     await writeFile(assetPath, buffer);
-    chmodSync(assetPath, 777);
+    try {
+      chmodSync(assetPath, 664);
+    } catch (err: any) {
+      console.log(err?.message);
+    }
     MediaService.scanAllMedia();
     return NextResponse.json({
       message: '',
