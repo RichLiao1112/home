@@ -6,4 +6,4 @@
 ### 启动容器
 
 挂载本地文件 home.json 至 /app/home.json
-挂载文件夹 /assets 至 /app/public
+挂载文件夹 /assets 至 /app/public/custom
