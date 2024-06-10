@@ -56,3 +56,7 @@ export const getSelectedKey = () => {
   }
   return 'default';
 };
+
+export const maxFileSizeMB = 200; // MB
+export const maxFileSize = maxFileSizeMB * 1024 * 1024;
+export const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];

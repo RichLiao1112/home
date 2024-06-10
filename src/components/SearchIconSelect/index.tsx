@@ -19,7 +19,7 @@ export interface IProps {
   color?: string;
 }
 
-export default function SearchIconSelect(props: IProps) {
+const SearchIconSelect = (props: IProps) => {
   const { onChange, value, color } = props;
   const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
   const [loading, setLoading] = useState(false);
@@ -99,7 +99,7 @@ export default function SearchIconSelect(props: IProps) {
       showSearch
       filterOption={false}
       onSearch={onIconSearch}
-      placeholder='输入关键字搜索图片'
+      placeholder='关键字搜索应用图片 或 填写http开头的图片地址'
       options={remoteIconList.map((icon) => renderSelectOption(icon))}
       onChange={(value) => onChange?.(value || '')}
       value={value}
@@ -107,4 +107,6 @@ export default function SearchIconSelect(props: IProps) {
       notFoundContent={loading ? <Spin size='small' /> : null}
     />
   );
-}
+};
+
+export default SearchIconSelect;

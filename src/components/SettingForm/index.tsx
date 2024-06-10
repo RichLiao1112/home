@@ -52,7 +52,7 @@ const SettingForm = (props: IProps) => {
           <Form.Item
             label={renderLabel(
               'logo',
-              '关键字搜索应用图片 或 填写http开头的图片地址'
+              '关键字搜索图片 或 填写http开头的图片地址'
             )}
             name={['head', 'logo']}
           >
@@ -86,10 +86,13 @@ const SettingForm = (props: IProps) => {
         <Input />
       </Form.Item>
       <Form.Item
-        label={renderLabel('背景图', '页面的背景图')}
+        label={renderLabel(
+          '背景图',
+          '关键字搜索图片 或 填写http开头的图片地址'
+        )}
         name={['head', 'backgroundImage']}
       >
-        <Input placeholder='背景图地址' />
+        <SearchIconSelect />
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}

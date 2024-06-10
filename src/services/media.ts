@@ -11,15 +11,36 @@ export interface IMediaSource {
 }
 
 class MediaService {
-  mediaPngPath = path.join(process.cwd(), 'public', 'media', 'imgs', 'png');
-  mediaSvgPath = path.join(process.cwd(), 'public', 'media', 'imgs', 'svg');
-
+  private static instance: MediaService;
+  private basePath = process.cwd();
+  private mediaPngPath = path.join(
+    this.basePath,
+    'public',
+    'media',
+    'imgs',
+    'png'
+  );
+  private mediaSvgPath = path.join(
+    this.basePath,
+    'public',
+    'media',
+    'imgs',
+    'svg'
+  );
+  private mediaCustomPath = path.join(this.basePath, 'public', 'custom');
   private mediaPngList: IMediaSource[] = [];
   private mediaSvgList: IMediaSource[] = [];
+  private mediaCustomList: IMediaSource[] = [];
 
-  constructor() {
-    this.mediaPngList = this.readMediaFiles(this.mediaPngPath, 'png');
-    this.mediaSvgList = this.readMediaFiles(this.mediaSvgPath, 'svg');
+  public static getInstance(): MediaService {
+    if (!MediaService.instance) {
+      MediaService.instance = new MediaService();
+    }
+    return MediaService.instance;
+  }
+
+  private constructor() {
+    this.scanAllMedia();
   }
 
   get getMediaPngList() {
@@ -28,6 +49,14 @@ class MediaService {
 
   get getMediaSvgList() {
     return this.mediaSvgList;
+  }
+
+  get getCustomList() {
+    return this.mediaCustomList;
+  }
+
+  get getMediaCustomPath() {
+    return this.mediaCustomPath;
   }
 
   searchIcon = (payload: ISearchIcon) => {
@@ -50,18 +79,35 @@ class MediaService {
     const svgs = this.mediaSvgList.filter((media) =>
       media.name.includes(payload.q.toLowerCase())
     );
-    return [...pngs, ...svgs];
+    const custom = this.mediaCustomList.filter((media) =>
+      media.name.includes(payload.q.toLowerCase())
+    );
+    return [...custom, ...pngs, ...svgs];
   };
 
-  readMediaFiles = (path: string, type: 'png' | 'svg') => {
+  readMediaFiles = (path: string) => {
     const files = readdirSync(path, {
       withFileTypes: true,
     });
-    return files.map((f) => ({
+    return files;
+  };
+
+  scanAllMedia = () => {
+    this.mediaCustomList = this.readMediaFiles(this.mediaCustomPath).map(
+      (f) => ({
+        name: f.name,
+        path: `/custom/${f.name}`,
+      })
+    );
+    this.mediaPngList = this.readMediaFiles(this.mediaPngPath).map((f) => ({
       name: f.name,
-      path: `/media/imgs/${type}/${f.name}`,
+      path: `/media/imgs/png/${f.name}`,
+    }));
+    this.mediaSvgList = this.readMediaFiles(this.mediaSvgPath).map((f) => ({
+      name: f.name,
+      path: `/media/imgs/svg/${f.name}`,
     }));
   };
 }
 
-export default new MediaService();
+export default MediaService.getInstance();

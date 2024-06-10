@@ -65,7 +65,7 @@ const EditForm = (props: IProps) => {
         </Form.Item>
       )}
       <Form.Item
-        label={renderLabel('应用名称', '用于在面板上显示应用。')}
+        label={renderLabel('应用名称', '用于在面板上显示应用')}
         required
         name='title'
         rules={[{ required: true, message: '' }]}
@@ -77,7 +77,7 @@ const EditForm = (props: IProps) => {
           <Form.Item
             label={renderLabel(
               '应用图标',
-              '关键字搜索应用图片 或 填写http开头的图片地址'
+              '关键字搜索图片 或 填写http开头的图片地址。可在“右上角-设置”中上传'
             )}
             name='cover'
           >
