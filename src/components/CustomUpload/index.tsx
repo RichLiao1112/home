@@ -26,6 +26,9 @@ const CustomUpload = () => {
       if (info.file.status === 'done' && info.file.response.success) {
         message.success(`上传成功： ${info.file.response.data.filename}`);
       }
+      if (info.file.response && info.file.response.success === false) {
+        message.error(info.file.response.message);
+      }
       let newFileList = [...info.fileList];
       newFileList = newFileList.map((file) => {
         if (file.response) {

@@ -172,10 +172,10 @@ const HeadRight = (props: IProps) => {
           <div className={styles.blank}></div>
           <div className={styles.title}>上传图片</div>
           <div className={styles.label}>
-            上传后可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
+            上传后可在logo、背景图、应用图标中直接填写图片路径或搜索文件名选择使用
           </div>
           <div className={styles.label}>
-            避免文件丢失，建议挂载目录“/app/public”至本地文件夹
+            避免文件丢失，建议挂载文件夹“/app/public/custom”至本地文件夹，并放开文件夹读写权限
           </div>
           <CustomUpload />
           <div className={styles.blank}></div>

@@ -50,6 +50,6 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: any) {
-    return NextResponse.json({ message: error?.message, success: true });
+    return NextResponse.json({ message: error?.message, success: false });
   }
 }

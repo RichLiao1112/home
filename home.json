@@ -10,9 +10,9 @@
         "logo": "",
         "name": "",
         "logoColor": "",
-        "backgroundImage": "/custom/background.jpg"
+        "backgroundImage": "/background.jpg"
       }
-    }
+    },
+    "dataSource": []
   }
 }
-
