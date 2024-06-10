@@ -1,5 +1,5 @@
 import { defaultDBFile } from '@/common';
-import { chmodSync, existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
 export interface ICard {
@@ -69,11 +69,11 @@ class HomeService {
     if (!existsSync(dbPath)) {
       writeFileSync(dbPath, JSON.stringify({}), 'utf-8');
     }
-    try {
-      chmodSync(dbPath, 664);
-    } catch (err: any) {
-      console.log(err?.message);
-    }
+    // try {
+    //   chmodSync(dbPath, 664);
+    // } catch (err: any) {
+    //   console.log(err?.message);
+    // }
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
     let result: IDBData = parseData;

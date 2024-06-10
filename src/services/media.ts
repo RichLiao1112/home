@@ -1,4 +1,4 @@
-import { chmodSync, existsSync, mkdirSync, readdirSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
 
 export interface ISearchIcon {
@@ -49,7 +49,7 @@ class MediaService {
       if (!existsSync(this.mediaCustomPath)) {
         mkdirSync(this.mediaCustomPath, { recursive: true });
       }
-      chmodSync(this.mediaCustomPath, 664);
+      // chmodSync(this.mediaCustomPath, 664);
     } catch (err: any) {
       console.log(err?.message);
     }
