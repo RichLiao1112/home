@@ -19,7 +19,6 @@ const CustomUpload = () => {
 
   const handleChange: UploadProps['onChange'] = (info) => {
     try {
-      console.log(info);
       if (info.file.status === 'error') {
         message.error(info.file.response?.message || info.file.error);
       }
@@ -33,7 +32,7 @@ const CustomUpload = () => {
       newFileList = newFileList.map((file) => {
         if (file.response) {
           file.url = file.response.data.link;
-          file.name = file.response.data.filename || file.name;
+          file.name = file.response.data.link || file.name;
         }
         return file;
       });

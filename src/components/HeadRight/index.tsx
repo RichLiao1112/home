@@ -25,7 +25,6 @@ import { NetIconLan, NetIconWan } from '../NetIcon';
 import DBSelect, { TFileOptions } from '../DBSelect';
 import Iconify from '../Iconify';
 import CustomUpload from '../CustomUpload';
-// import CustomUpload from '../CustomUpload';
 
 export interface IProps {
   layout: ILayout;
@@ -55,6 +54,8 @@ const HeadRight = (props: IProps) => {
   // 配置表
   const [options, setOptions] = useState<TFileOptions>([]);
   const [current, setCurrent] = useState<string>();
+
+  const [refreshDirLoading, setRefreshDirLoading] = useState(false);
 
   const onCancelModal = () => {
     setEditModalData?.(undefined);
@@ -130,7 +131,10 @@ const HeadRight = (props: IProps) => {
   };
 
   const refreshCustomDir = () => {
-    return apiRefreshMediaDir().then((res) => message.success('刷新成功'));
+    setRefreshDirLoading(true);
+    return apiRefreshMediaDir()
+      .then((res) => message.success('刷新成功'))
+      .finally(() => setRefreshDirLoading(false));
   };
 
   useEffect(() => {
@@ -189,27 +193,57 @@ const HeadRight = (props: IProps) => {
             options={options}
           />
           <div className={styles.blank}></div>
-          <div className={styles.title}>上传图片</div>
+          <div
+            className={styles.title}
+            style={{ justifyContent: 'space-between' }}
+          >
+            上传图片
+            <Tooltip
+              title={
+                <div className={styles.label}>
+                  <span>
+                    挂载图片目录，防止docker容器删除时导致上传的图片丢失，同时方便图片资源维护
+                  </span>
+                  <br />
+                  <br />
+                  <span>
+                    1. 创建文件夹：本地新建任意文件夹（如:
+                    /assets)，需放开“可读”权限
+                  </span>
+                  <br />
+                  <br />
+                  <span>
+                    2.
+                    挂载文件夹：挂载该文件夹（/assets）至容器的“/app/assets”目录
+                  </span>
+                  <br />
+                  <br />
+                  <span>
+                    3.
+                    图片维护：可在该文件夹内进行图片的增删，再点此刷新图片目录
+                  </span>
+                  <br />
+                  <br />
+                  <span>
+                    3.
+                    刷新后即可在logo、背景图、应用图标中，通过文件名搜索出该图片以选择使用
+                  </span>
+                </div>
+              }
+            >
+              <Button
+                onClick={() => refreshCustomDir()}
+                size='small'
+                loading={refreshDirLoading}
+              >
+                刷新目录
+              </Button>
+            </Tooltip>
+          </div>
           <div className={styles.label}>
             可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
           </div>
-          {/* <div className={styles.label}>
-            <span>1. 本地新建任意文件夹（如: /assets)，需放开“可读”权限</span>
-            <br />
-            <span>2. 挂载该文件夹至容器的“/app/public/custom”目录</span>
-            <br />
-            <span>3. 复制图片至该文件夹内，再点此刷新图片目录</span>
-            <br />
-            <span>
-              3.
-              可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
-            </span>
-            <br />
-          </div> */}
           <CustomUpload />
-          {/* <Button type='primary' onClick={() => refreshCustomDir()}>
-            刷新图片目录
-          </Button> */}
         </>
       </Drawer>
 

@@ -17,6 +17,10 @@
   font-size: 1.2rem;
   font-weight: 600;
   padding-bottom: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .tips {

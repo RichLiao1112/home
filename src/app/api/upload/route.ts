@@ -3,7 +3,6 @@ import MediaService from '@/services/media';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import { allowedMimeTypes, maxFileSize, maxFileSizeMB } from '@/common';
-// import { chmodSync } from 'fs';
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -37,20 +36,20 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const filename = Date.now() + '_' + file.name.replaceAll(' ', '_');
   try {
-    const assetPath = path.join(MediaService.getMediaCustomPath, filename);
+    const assetPath = path.join(MediaService.mediaCustomPath, filename);
     await writeFile(assetPath, buffer);
     // try {
     //   chmodSync(assetPath, 664);
     // } catch (err: any) {
     //   console.log(err?.message);
     // }
-    MediaService.scanAllMedia();
+    MediaService.scanCustomMedia();
     return NextResponse.json({
       message: '',
       success: true,
       data: {
         filename,
-        link: `/custom/${filename}`,
+        link: `${MediaService.mediaCustomPathRead}${filename}`,
       },
     });
   } catch (error: any) {
@@ -59,7 +58,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  MediaService.scanAllMedia();
+  MediaService.scanCustomMedia();
   return NextResponse.json({
     message: '',
     success: true,

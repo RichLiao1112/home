@@ -14,6 +14,7 @@
     "antd": "^5.17.3",
     "classnames": "^2.5.1",
     "lodash": "^4.17.21",
+    "mime-types": "^2.1.35",
     "multer": "^1.4.5-lts.1",
     "next": "14.2.3",
     "react": "^18",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.4",
+    "@types/mime-types": "^2.1.4",
     "@types/multer": "^1.4.11",
     "@types/node": "^20",
     "@types/react": "^18",

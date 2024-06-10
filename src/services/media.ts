@@ -27,7 +27,8 @@ class MediaService {
     'imgs',
     'svg'
   );
-  private mediaCustomPath = path.join(this.basePath, 'public', 'custom');
+  private _mediaCustomPathWrite = path.join(this.basePath, 'assets');
+  private _mediaCustomPathRead = '/api/assets/';
   private mediaPngList: IMediaSource[] = [];
   private mediaSvgList: IMediaSource[] = [];
   private mediaCustomList: IMediaSource[] = [];
@@ -46,10 +47,9 @@ class MediaService {
 
   private checkCustomDir() {
     try {
-      if (!existsSync(this.mediaCustomPath)) {
-        mkdirSync(this.mediaCustomPath, { recursive: true });
+      if (!existsSync(this._mediaCustomPathWrite)) {
+        mkdirSync(this._mediaCustomPathWrite, { recursive: true });
       }
-      // chmodSync(this.mediaCustomPath, 664);
     } catch (err: any) {
       console.log(err?.message);
     }
@@ -67,8 +67,12 @@ class MediaService {
     return this.mediaCustomList;
   }
 
-  get getMediaCustomPath() {
-    return this.mediaCustomPath;
+  get mediaCustomPath() {
+    return this._mediaCustomPathWrite;
+  }
+
+  get mediaCustomPathRead() {
+    return this._mediaCustomPathRead;
   }
 
   searchIcon = (payload: ISearchIcon) => {
@@ -105,12 +109,7 @@ class MediaService {
   };
 
   scanAllMedia = () => {
-    this.mediaCustomList = this.readMediaFiles(this.mediaCustomPath).map(
-      (f) => ({
-        name: f.name,
-        path: `/custom/${f.name}`,
-      })
-    );
+    this.scanCustomMedia();
     this.mediaPngList = this.readMediaFiles(this.mediaPngPath).map((f) => ({
       name: f.name,
       path: `/media/imgs/png/${f.name}`,
@@ -119,6 +118,15 @@ class MediaService {
       name: f.name,
       path: `/media/imgs/svg/${f.name}`,
     }));
+  };
+
+  scanCustomMedia = () => {
+    this.mediaCustomList = this.readMediaFiles(this._mediaCustomPathWrite).map(
+      (f) => ({
+        name: f.name,
+        path: `${this.mediaCustomPathRead}${f.name}`,
+      })
+    );
   };
 }
 
