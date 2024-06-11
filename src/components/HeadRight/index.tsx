@@ -193,7 +193,7 @@ const HeadRight = (props: IProps) => {
             options={options}
           />
           <div className={styles.blank}></div>
-          <div
+          {/* <div
             className={styles.title}
             style={{ justifyContent: 'space-between' }}
           >
@@ -243,7 +243,7 @@ const HeadRight = (props: IProps) => {
           <div className={styles.label}>
             可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
           </div>
-          <CustomUpload />
+          <CustomUpload /> */}
         </>
       </Drawer>
 
