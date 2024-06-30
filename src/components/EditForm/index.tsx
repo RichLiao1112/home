@@ -11,7 +11,7 @@ import Iconify from '../Iconify';
 
 export interface IProps {
   form: FormInstance;
-  originData?: ICard;
+  originData?: Partial<ICard>;
 }
 
 const EditForm = (props: IProps) => {

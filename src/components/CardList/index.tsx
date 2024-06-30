@@ -5,6 +5,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import styles from './index.module.css';
 import Drag from '../Drag';
 import { useEffect, useRef, useState } from 'react';
+import { apiMoveCard } from '@/requests';
+import { useRouter } from 'next/navigation';
 
 export interface IProps {
   dataSource: ICard[];
@@ -13,25 +15,46 @@ export interface IProps {
 }
 
 const CardList = (props: IProps) => {
+  const router = useRouter();
   const { dataSource, cardListStyle, configKey } = props;
-
-  const [list, setList] = useState(dataSource);
-  const listRef = useRef(dataSource);
+  const [vIndex, setVIndex] = useState<number>(-1);
 
   const moveItem = (currentIndex: number, targetIndex: number) => {
-    console.log(currentIndex, targetIndex);
-    // setList((prev) => {});
-    listRef.current?.splice(targetIndex, 0, dataSource[currentIndex]);
-    setList(listRef.current);
+    if (vIndex !== targetIndex) {
+      setVIndex(targetIndex);
+    }
+  };
+
+  const onEnd = (card: ICard & { index: number }) => {
+    setVIndex(-1);
+    const sourceCardIndex = dataSource.findIndex((item) => item.id === card.id);
+    if (sourceCardIndex !== card.index) {
+      apiMoveCard({
+        id: card.id,
+        index: card.index,
+        key: configKey ?? '',
+      }).then(() => router.refresh());
+    }
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.flex} style={cardListStyle}>
-        {list.map((item, index) => {
+        {dataSource.map((item, index) => {
           return (
-            <Drag item={item} index={index} key={item.id} moveItem={moveItem}>
-              <Card payload={item} configKey={configKey} />
+            <Drag
+              item={item}
+              index={index}
+              key={item.id}
+              moveItem={moveItem}
+              onEnd={onEnd}
+            >
+              <div className={styles.move}>
+                {vIndex === index ? (
+                  <div className={styles.placeholder}>+</div>
+                ) : null}
+                <Card payload={item} configKey={configKey} />
+              </div>
             </Drag>
           );
         })}

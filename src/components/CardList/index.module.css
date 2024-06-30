@@ -11,3 +11,21 @@
   box-sizing: border-box;
   padding: 1rem;
 }
+
+.move {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder {
+  width: 7rem;
+  height: 7rem;
+  border: .1rem dashed rgba(0, 0, 0, .1);
+  border-radius: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}

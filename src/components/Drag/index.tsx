@@ -9,15 +9,17 @@ export interface IProps {
   item: any;
   index: number;
   moveItem: (currentIndex: number, targetIndex: number) => void;
+  onEnd: (item: any) => void;
 }
 const Drag = (props: IProps) => {
   const ref = useRef(null);
 
-  const { item, index, moveItem } = props;
+  const { item, index, moveItem, onEnd } = props;
 
   const [, drop] = useDrop({
     accept: 'DRAG',
     hover: (draggedItem: ICard & { index: number }) => {
+      console.log(draggedItem.index, index);
       if (draggedItem.index !== index) {
         if (moveItem) {
           moveItem(draggedItem.index, index);
@@ -34,7 +36,8 @@ const Drag = (props: IProps) => {
       isDragging: monitor.isDragging(),
     }),
     end: (v, mo) => {
-      console.log(v, mo);
+      // console.log(v, mo);
+      onEnd?.(v);
     },
   });
 

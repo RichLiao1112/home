@@ -114,3 +114,21 @@ export const apiRefreshMediaDir = () => {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiRefreshMediaDir]', err));
 };
+
+export const apiMoveCard = (payload: {
+  id: ICard['id'];
+  key: string;
+  index: number;
+}) => {
+  return fetch(
+    `/api/card/${payload.id}?key=${payload.key}&index=${payload.index}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    }
+  )
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiMoveCard]', err));
+};
