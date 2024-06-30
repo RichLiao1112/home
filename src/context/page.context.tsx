@@ -16,7 +16,7 @@ export interface IPageContext {
   editModalData: {
     open: boolean;
     title: string;
-    data: ICard;
+    data: Partial<ICard>;
   };
   setEditModalData: (
     payload: IPageContext['editModalData'] | undefined

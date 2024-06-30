@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 export interface IFile {
   filename: string;
   // type: 'default' | 'custom';
@@ -60,3 +62,7 @@ export const getSelectedKey = () => {
 export const maxFileSizeMB = 200; // MB
 export const maxFileSize = maxFileSizeMB * 1024 * 1024;
 export const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+export const genUUID = () => {
+  return randomUUID();
+};

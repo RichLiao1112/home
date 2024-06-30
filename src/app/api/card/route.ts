@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService, { ICard } from '@/services/home';
+import { genUUID } from '@/common';
 
 export async function PUT(req: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function PUT(req: NextRequest) {
       dto.openInNewWindow = data.openInNewWindow ?? dto.autoSelectLink;
       dto.coverColor = data.coverColor ?? dto.coverColor;
     } else {
-      dto = { ...data, id: `${cards.length}` };
+      dto = { ...data, id: genUUID() };
       cards.push(dto);
     }
 

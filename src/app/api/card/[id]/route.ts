@@ -17,10 +17,6 @@ export async function DELETE(req: NextRequest, context: { params: TParams }) {
     );
     const result = cards.filter((it) => String(it.id) !== String(id));
 
-    result.forEach((item, index) => {
-      item.id = `${index}`;
-      return item;
-    });
     HomeService.updateCards(key, result);
     const saveResult = HomeService.writeDBFile(
       HomeService.getDefaultDBPath(),

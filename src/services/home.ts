@@ -1,4 +1,4 @@
-import { defaultDBFile } from '@/common';
+import { defaultDBFile, genUUID } from '@/common';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
@@ -9,7 +9,7 @@ export interface ICard {
   lanLink?: string;
   autoSelectLink?: boolean;
   openInNewWindow?: boolean;
-  id?: string;
+  id: string;
   coverColor?: string;
 }
 
@@ -89,9 +89,8 @@ class HomeService {
     // 数据检查
     Object.entries(result).forEach(([k, v]) => {
       if (v.dataSource && v.dataSource instanceof Array) {
-        v.dataSource.map((card, index) => {
-          card.id = `${index}`;
-          return card;
+        v.dataSource.forEach((card, index) => {
+          card.id = card.id?.includes('-') ? card.id : genUUID();
         });
       } else {
         v.dataSource = [];

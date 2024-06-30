@@ -5,7 +5,7 @@ import styles from './index.module.css';
 import { useContext } from 'react';
 import { PageContext } from '@/context/page.context';
 import classNames from 'classnames';
-import { Badge, Button, Modal, Tooltip } from 'antd';
+import { Badge, Button, Modal, Tooltip, message } from 'antd';
 import { apiDeleteCard } from '@/requests';
 import { useRouter } from 'next/navigation';
 import Iconify from '../Iconify';
@@ -14,7 +14,7 @@ import { getLinkJumpMode, isHttpSource, jumpMode } from '@/common';
 export type TType = 'normal' | 'add';
 
 export interface IProps {
-  payload: ICard;
+  payload: Partial<ICard>;
   type?: TType;
   configKey?: string;
 }
@@ -57,11 +57,14 @@ const Card = (props: IProps) => {
     }
   };
 
-  const onClickDelete = (payload: ICard) => {
+  const onClickDelete = (payload: Partial<ICard>) => {
+    if (!payload.id) {
+      return message.warning('数据错误，缺少ID');
+    }
     Modal.confirm({
       title: `确定删除 ${payload.title} ？`,
       onOk: () =>
-        apiDeleteCard({ id: payload.id, key: configKey }).finally(() =>
+        apiDeleteCard({ id: payload.id ?? '', key: configKey }).finally(() =>
           router.refresh()
         ),
     });
@@ -78,7 +81,7 @@ const Card = (props: IProps) => {
         </div>
       );
     }
-    return <div className={styles.cover}>{payload.title[0]}</div>;
+    return <div className={styles.cover}>{payload.title?.[0]}</div>;
   };
 
   const renderDelete = () => {
