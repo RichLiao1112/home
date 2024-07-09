@@ -66,3 +66,13 @@ export const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
 export const genUUID = () => {
   return randomUUID();
 };
+
+export const ensureProtocol = (url: string) => {
+  try {
+    const parsedUrl = new URL(url); // 如果没有协议会抛出错误
+    return parsedUrl.href;
+  } catch (_) {
+    // 默认协议为 https，如果需要使用 http 则修改为 'http://'
+    return 'http://' + url;
+  }
+};
