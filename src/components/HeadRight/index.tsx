@@ -29,10 +29,11 @@ import CustomUpload from '../CustomUpload';
 export interface IProps {
   layout: ILayout;
   configKey: string | undefined;
+  env?: IEnv;
 }
 
 const HeadRight = (props: IProps) => {
-  const { layout, configKey } = props;
+  const { layout, configKey, env } = props;
   const router = useRouter();
 
   const {
@@ -193,57 +194,61 @@ const HeadRight = (props: IProps) => {
             options={options}
           />
           <div className={styles.blank}></div>
-          {/* <div
-            className={styles.title}
-            style={{ justifyContent: 'space-between' }}
-          >
-            上传图片
-            <Tooltip
-              title={
-                <div className={styles.label}>
-                  <span>
-                    挂载图片目录，防止docker容器删除时导致上传的图片丢失，同时方便图片资源维护
-                  </span>
-                  <br />
-                  <br />
-                  <span>
-                    1. 创建文件夹：本地新建任意文件夹（如:
-                    /assets)，需放开“可读”权限
-                  </span>
-                  <br />
-                  <br />
-                  <span>
-                    2.
-                    挂载文件夹：挂载该文件夹（/assets）至容器的“/app/assets”目录
-                  </span>
-                  <br />
-                  <br />
-                  <span>
-                    3.
-                    图片维护：可在该文件夹内进行图片的增删，再点此刷新图片目录
-                  </span>
-                  <br />
-                  <br />
-                  <span>
-                    3.
-                    刷新后即可在logo、背景图、应用图标中，通过文件名搜索出该图片以选择使用
-                  </span>
-                </div>
-              }
-            >
-              <Button
-                onClick={() => refreshCustomDir()}
-                size='small'
-                loading={refreshDirLoading}
+          {env?.ALLOW_UPLOAD_IMAGE === 'yes' ? (
+            <>
+              <div
+                className={styles.title}
+                style={{ justifyContent: 'space-between' }}
               >
-                刷新目录
-              </Button>
-            </Tooltip>
-          </div>
-          <div className={styles.label}>
-            可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
-          </div>
-          <CustomUpload /> */}
+                上传图片
+                <Tooltip
+                  title={
+                    <div className={styles.label}>
+                      <span>
+                        挂载图片目录，防止docker容器删除时导致上传的图片丢失，同时方便图片资源维护
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        1. 创建文件夹：本地新建任意文件夹（如:
+                        /assets)，需放开“可读”权限
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        2.
+                        挂载文件夹：挂载该文件夹（/assets）至容器的“/app/assets”目录
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        3.
+                        图片维护：可在该文件夹内进行图片的增删，再点此刷新图片目录
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        3.
+                        刷新后即可在logo、背景图、应用图标中，通过文件名搜索出该图片以选择使用
+                      </span>
+                    </div>
+                  }
+                >
+                  <Button
+                    onClick={() => refreshCustomDir()}
+                    size="small"
+                    loading={refreshDirLoading}
+                  >
+                    刷新目录
+                  </Button>
+                </Tooltip>
+              </div>
+              <div className={styles.label}>
+                可在logo、背景图、应用图标中，直接填写图片路径或搜索文件名选择使用
+              </div>
+              <CustomUpload />
+            </>
+          ) : null}
         </>
       </Drawer>
 

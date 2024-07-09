@@ -51,6 +51,3 @@ const Main = (props: IProps) => {
 };
 
 export default Main;
-function setEditCardMode(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}

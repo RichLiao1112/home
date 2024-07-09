@@ -57,7 +57,19 @@ const Card = (props: IProps) => {
       if (url) {
         url = ensureProtocol(url);
       }
-      window.open(url, openInNewWindow ? '_blank' : '_self');
+
+      try {
+        let newWindow = window.open(url, openInNewWindow ? '_blank' : '_self');
+        if (
+          !newWindow ||
+          newWindow.closed ||
+          typeof newWindow.closed === 'undefined'
+        ) {
+          throw new Error('Failed to open the URL.');
+        }
+      } catch (e: any) {
+        message.error(e.message);
+      }
     }
   };
 

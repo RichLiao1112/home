@@ -11,18 +11,25 @@ export interface IProps {
   configKey?: string;
 }
 
+const readEnv = (): IEnv => {
+  return {
+    ALLOW_UPLOAD_IMAGE: process.env.ALLOW_UPLOAD_IMAGE || 'no',
+  };
+};
+
 const Head = (props: IProps) => {
   const { layout = {}, configKey } = props;
   const { head = {} } = layout;
+  const env = readEnv();
 
   const renderCover = (source?: string, logoColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt='' className={styles.logo} />;
+      return <img src={source} alt="" className={styles.logo} />;
     }
     if (source) {
       return (
         <div className={styles.logo} style={{ color: logoColor }}>
-          <Iconify icon={source} width='100%' height='100%' />
+          <Iconify icon={source} width="100%" height="100%" />
         </div>
       );
     }
@@ -35,7 +42,7 @@ const Head = (props: IProps) => {
         <div className={styles.name}>{head.name}</div>
       </div>
       <div className={styles.right}>
-        <HeadRight layout={layout} configKey={configKey} />
+        <HeadRight layout={layout} configKey={configKey} env={env} />
       </div>
     </div>
   );
