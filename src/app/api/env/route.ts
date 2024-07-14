@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
+import HomeService from '@/services/home';
 
 export async function GET() {
-  const selfSetENV: Record<string, any> = {};
-  Object.entries(process.env).forEach(([k, v]) => {
-    if (k.startsWith('HH_')) {
-      selfSetENV[k] = v;
-    }
-  });
+  const selfSetENV: Record<string, any> = HomeService.getHHEnv();
   return NextResponse.json({
     message: '',
     success: true,
