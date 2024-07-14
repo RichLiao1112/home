@@ -132,3 +132,11 @@ export const apiMoveCard = (payload: {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiMoveCard]', err));
 };
+
+export const apiGetHHENV = () => {
+  return fetch(`/api/env`, {
+    method: 'GET',
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiGetHHENV]', err));
+};

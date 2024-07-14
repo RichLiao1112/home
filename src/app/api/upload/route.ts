@@ -4,10 +4,10 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 import { allowedMimeTypes, maxFileSize, maxFileSizeMB } from '@/common';
 
-const ALLOW_UPLOAD_IMAGE = process.env.ALLOW_UPLOAD_IMAGE;
+const HH_ALLOW_UPLOAD_IMAGE = process.env.HH_ALLOW_UPLOAD_IMAGE;
 
 export async function POST(req: NextRequest) {
-  if (ALLOW_UPLOAD_IMAGE !== 'yes') {
+  if (HH_ALLOW_UPLOAD_IMAGE !== 'yes') {
     return NextResponse.json(
       {
         message: `不支持的请求`,
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  if (ALLOW_UPLOAD_IMAGE !== 'yes') {
+  if (HH_ALLOW_UPLOAD_IMAGE !== 'yes') {
     return NextResponse.json(
       {
         message: `不支持的请求`,

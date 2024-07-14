@@ -158,7 +158,7 @@ const HeadRight = (props: IProps) => {
           loading: fetching,
           disabled: fetching,
         }}
-        okText="保存"
+        okText='保存'
         destroyOnClose
       >
         <EditForm form={form} originData={editModalData?.data} />
@@ -175,11 +175,11 @@ const HeadRight = (props: IProps) => {
           <SettingForm form={settingForm} originData={layout} />
           <div className={styles.btns}>
             <Button
-              type="primary"
+              type='primary'
               onClick={onSubmitSettingForm}
               loading={fetching}
               disabled={fetching}
-              size="small"
+              size='small'
             >
               保存
             </Button>
@@ -194,7 +194,7 @@ const HeadRight = (props: IProps) => {
             options={options}
           />
           <div className={styles.blank}></div>
-          {env?.ALLOW_UPLOAD_IMAGE === 'yes' ? (
+          {env?.HH_ALLOW_UPLOAD_IMAGE === 'yes' ? (
             <>
               <div
                 className={styles.title}
@@ -236,7 +236,7 @@ const HeadRight = (props: IProps) => {
                 >
                   <Button
                     onClick={() => refreshCustomDir()}
-                    size="small"
+                    size='small'
                     loading={refreshDirLoading}
                   >
                     刷新目录
@@ -269,28 +269,28 @@ const HeadRight = (props: IProps) => {
           <NetIconLan handleClick={() => modifyLinkJumpMode(jumpMode.wan)} />
         )}
         {editCardMode === false ? (
-          <Tooltip title="编辑">
+          <Tooltip title='编辑'>
             <Button
-              icon={<Iconify icon="uil:edit-alt" width="1rem" height="1rem" />}
-              type="default"
+              icon={<Iconify icon='uil:edit-alt' width='1rem' height='1rem' />}
+              type='default'
               onClick={() => setEditCardMode?.(true)}
             />
           </Tooltip>
         ) : (
-          <Tooltip title="结束或按Esc">
+          <Tooltip title='结束或按Esc'>
             <Button
-              icon={<Iconify icon="ep:finished" width="1rem" height="1rem" />}
-              type="default"
+              icon={<Iconify icon='ep:finished' width='1rem' height='1rem' />}
+              type='default'
               onClick={() => setEditCardMode?.(false)}
             />
           </Tooltip>
         )}
-        <Tooltip title="设置">
+        <Tooltip title='设置'>
           <Button
             icon={
-              <Iconify icon="iconamoon:settings" width="1rem" height="1rem" />
+              <Iconify icon='iconamoon:settings' width='1rem' height='1rem' />
             }
-            type="default"
+            type='default'
             onClick={onShowDrawer}
           />
         </Tooltip>

@@ -173,6 +173,16 @@ class HomeService {
   public queryConfigKeys() {
     return Object.keys(this._dbData);
   }
+
+  public getHHEnv() {
+    const selfSetENV: Record<string, any> = {};
+    Object.entries(process.env).forEach(([k, v]) => {
+      if (k.startsWith('HH_')) {
+        selfSetENV[k] = v;
+      }
+    });
+    return selfSetENV;
+  }
 }
 
 export default HomeService.getInstance();

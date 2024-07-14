@@ -39,8 +39,6 @@ COPY --from=builder /app/assets ./assets
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/writeENV.js ./writeENV.js
-COPY --from=builder /app/env.json ./env.json
 
 # USER nextjs
 
@@ -53,4 +51,4 @@ ENV PORT 3000
 # Uncomment the following line in case you want to disable telemetry.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD node ./writeENV.js && node_modules/.bin/next start
+CMD ["node_modules/.bin/next", "start"]
