@@ -69,10 +69,11 @@ export const genUUID = () => {
 
 export const ensureProtocol = (url: string) => {
   try {
-    const parsedUrl = new URL(url); // 如果没有协议会抛出错误
-    return parsedUrl.href;
+    if (url.includes('//')) {
+      return url;
+    }
+    return 'http://' + url;
   } catch (_) {
-    // 默认协议为 https，如果需要使用 http 则修改为 'http://'
     return 'http://' + url;
   }
 };
