@@ -10,6 +10,7 @@ import { PageContext } from '@/context/page.context';
 
 export interface IProps {
   dbData: IDBData;
+  env: IEnv;
 }
 
 const Main = (props: IProps) => {
@@ -40,7 +41,7 @@ const Main = (props: IProps) => {
         backgroundImage: `url(${head?.backgroundImage || ''})`,
       }}
     >
-      <Head layout={layout} configKey={configKey} />
+      <Head layout={layout} configKey={configKey} env={props.env} />
       <CardList
         dataSource={dataSource}
         cardListStyle={cardListStyle}

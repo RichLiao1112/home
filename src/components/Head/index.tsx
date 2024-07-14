@@ -3,24 +3,18 @@ import HeadRight from '@/components/HeadRight';
 import styles from './index.module.css';
 import Iconify from '../Iconify';
 import { isHttpSource } from '@/common';
-import HomeService from '@/services/home';
 
 export const dynamic = 'force-dynamic';
 
 export interface IProps {
   layout?: ILayout;
   configKey?: string;
+  env?: IEnv;
 }
 
-const readEnv = (): IEnv => {
-  const env = HomeService.getHHEnv();
-  return env;
-};
-
 const Head = (props: IProps) => {
-  const { layout = {}, configKey } = props;
+  const { layout = {}, configKey, env } = props;
   const { head = {} } = layout;
-  const env = readEnv();
 
   const renderCover = (source?: string, logoColor?: string) => {
     if (isHttpSource(source)) {

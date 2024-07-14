@@ -50,8 +50,17 @@ class HomeService {
 
   private _dbData: IDBData = {};
 
+  private _hhenv: IEnv = {};
+
   private constructor() {
     this.readDBFileSync(this._defaultDBPath);
+    const selfSetENV: Record<string, any> = {};
+    Object.entries(process.env).forEach(([k, v]) => {
+      if (k.startsWith('HH_')) {
+        selfSetENV[k] = v;
+      }
+    });
+    this._hhenv = selfSetENV;
   }
 
   public static getInstance(): HomeService {
@@ -175,13 +184,7 @@ class HomeService {
   }
 
   public getHHEnv() {
-    const selfSetENV: Record<string, any> = {};
-    Object.entries(process.env).forEach(([k, v]) => {
-      if (k.startsWith('HH_')) {
-        selfSetENV[k] = v;
-      }
-    });
-    return selfSetENV;
+    return this._hhenv;
   }
 }
 

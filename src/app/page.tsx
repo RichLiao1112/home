@@ -8,18 +8,20 @@ const Main = dynamicImport(() => import('@/components/Main'), { ssr: false });
 
 const readHomeData = () => {
   const dbData = HomeService.getDBData();
+  const env = HomeService.getHHEnv();
   return {
     dbData,
+    env,
   };
 };
 
 export default async function Home() {
   const res = readHomeData();
-  const { dbData } = res;
+  const { dbData, env } = res;
 
   return (
     <PageContextProvider>
-      <Main dbData={dbData} />
+      <Main dbData={dbData} env={env} />
     </PageContextProvider>
   );
 }
