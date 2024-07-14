@@ -30,7 +30,6 @@ ENV NODE_ENV production
 
 # RUN addgroup -g 1001 -S nodejs
 # RUN adduser -S nextjs -u 1001
-RUN echo "" > ./env.json
 
 # You only need to copy next.config.js if you are NOT using the default configuration
 # COPY --from=builder /app/next.config.js ./
@@ -41,6 +40,7 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/writeENV.js ./writeENV.js
+COPY --from=builder /app/env.json ./env.json
 
 # USER nextjs
 
