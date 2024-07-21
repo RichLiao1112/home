@@ -1,4 +1,4 @@
-import HomeService from '@/services/home';
+import HomeService, { ICard, ICategory, IDBData } from '@/services/home';
 import { PageContextProvider } from '@/context/page.context';
 import dynamicImport from 'next/dynamic';
 

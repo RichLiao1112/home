@@ -8,22 +8,34 @@ export interface IProps {
   children?: ReactNode;
   item: any;
   index: number;
-  moveItem: (currentIndex: number, targetIndex: number) => void;
+  moveItem: (
+    current: { index: number; item: any },
+    target: { index: number; item: any }
+  ) => void;
   onEnd: (item: any) => void;
 }
 const Drag = (props: IProps) => {
   const ref = useRef(null);
-
   const { item, index, moveItem, onEnd } = props;
 
   const [, drop] = useDrop({
     accept: 'DRAG',
     hover: (draggedItem: ICard & { index: number }) => {
-      console.log(draggedItem.index, index);
       if (draggedItem.index !== index) {
         if (moveItem) {
-          moveItem(draggedItem.index, index);
+          moveItem(
+            {
+              item: draggedItem,
+              index: draggedItem.index,
+            },
+            {
+              item: item,
+              index: index,
+            }
+          );
         }
+        draggedItem.categoryId = item.categoryId;
+        draggedItem.sort = item.sort - 100;
         draggedItem.index = index;
       }
     },
@@ -35,10 +47,7 @@ const Drag = (props: IProps) => {
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    end: (v, mo) => {
-      // console.log(v, mo);
-      onEnd?.(v);
-    },
+    end: (v) => onEnd?.(v),
   });
 
   drag(drop(ref));

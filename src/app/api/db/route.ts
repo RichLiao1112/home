@@ -26,7 +26,10 @@ export async function PUT(req: NextRequest) {
     if (allConfigKeys.find((it) => it === key)) {
       throw new Error('命名重复');
     }
-    HomeService.updateDBData(key, { dataSource: [], layout: {} });
+    HomeService.updateDBData(key, {
+      layout: {},
+      categories: [],
+    });
 
     const saveResult = HomeService.writeDBFile(
       HomeService.getDefaultDBPath(),

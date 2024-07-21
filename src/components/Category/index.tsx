@@ -33,12 +33,6 @@ const Category = (props: IProps) => {
             });
           }}
         />
-        {/* <Iconify
-          icon='tdesign:add'
-          width='1rem'
-          height='1rem'
-          className={styles.add}
-        /> */}
       </div>
     </div>
   );

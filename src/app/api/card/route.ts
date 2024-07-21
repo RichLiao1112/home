@@ -7,9 +7,10 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const { data } = body;
     if (!data.key) throw new Error('缺少参数key');
-    const cards: ICard[] = JSON.parse(
-      JSON.stringify(HomeService.getCards(data.key) || [])
-    );
+    const categories = HomeService.getCategories(data.key);
+    const category =
+      categories.find((it) => it.id === data.categoryId) || categories[0];
+    const cards: ICard[] = JSON.parse(JSON.stringify(category?.cards || []));
     const cardDTOIndex = cards.findIndex((it) => it.id === data.id);
     let dto: ICard;
     if (data.id && cardDTOIndex >= 0) {
@@ -26,8 +27,9 @@ export async function PUT(req: NextRequest) {
       dto = { ...data, id: genUUID() };
       cards.push(dto);
     }
+    category.cards = cards;
 
-    HomeService.updateCards(data.key, cards);
+    HomeService.updateCategories(data.key, categories);
     const saveResult = HomeService.writeDBFile(
       HomeService.getDefaultDBPath(),
       HomeService.getDBData()

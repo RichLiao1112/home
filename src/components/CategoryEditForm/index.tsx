@@ -23,7 +23,6 @@ const CategoryEditForm = (props: IProps) => {
   };
 
   useEffect(() => {
-    console.log('originData', originData);
     form.setFieldsValue(originData);
   }, [form, originData]);
 

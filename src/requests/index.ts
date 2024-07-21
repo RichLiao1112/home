@@ -1,7 +1,9 @@
 import { ICard, ICategory, ILayout } from '@/services/home';
 import { ISearchIcon } from '@/services/media';
 
-export const apiUpsertCard = (payload: ICard & { key?: string }) => {
+export const apiUpsertCard = (
+  payload: ICard & { key?: string; categoryId: string }
+) => {
   return fetch('/api/card', {
     method: 'PUT',
     headers: {
@@ -84,7 +86,7 @@ export const apiDeleteDBFile = (payload: { key: string }) => {
     body: JSON.stringify({ data: payload }),
   })
     .then((res) => res.json())
-    .catch((err) => console.warn('[apiUpsertCard]', err));
+    .catch((err) => console.warn('[apiDeleteDBFile]', err));
 };
 
 // export const apiSelectDBFile = (payload: { key: string }) => {
@@ -96,7 +98,7 @@ export const apiDeleteDBFile = (payload: { key: string }) => {
 //     body: JSON.stringify({ data: payload }),
 //   })
 //     .then((res) => res.json())
-//     .catch((err) => console.warn('[apiUpsertCard]', err));
+//     .catch((err) => console.warn('[apiSelectDBFile]', err));
 // };
 
 export const apiGetAllDBData = () => {
@@ -119,9 +121,12 @@ export const apiMoveCard = (payload: {
   id: ICard['id'];
   key: string;
   index: number;
+  categoryId?: string;
 }) => {
   return fetch(
-    `/api/card/${payload.id}?key=${payload.key}&index=${payload.index}`,
+    `/api/card/${payload.id}?key=${payload.key}&index=${
+      payload.index
+    }&categoryId=${payload.categoryId || ''}`,
     {
       method: 'PUT',
       headers: {

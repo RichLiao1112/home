@@ -34,7 +34,7 @@ export interface ILayout {
 }
 
 export interface IHomeData {
-  dataSource: ICard[];
+  // dataSource: ICard[];
   layout: ILayout;
   categories: ICategory[];
 }
@@ -44,10 +44,11 @@ export interface IDBData {
 }
 
 export interface ICategory {
-  id?: string;
+  id: string;
   title?: string;
   style?: string;
   key?: keyof IDBData; // configKey
+  cards?: ICard[];
 }
 
 /**
@@ -109,30 +110,36 @@ class HomeService {
 
     // 数据检查
     Object.entries(result).forEach(([k, v]) => {
+      const defaultCagegory: ICategory = {
+        title: '默认分类',
+        key: k,
+        id: genUUID(),
+        cards: [],
+      };
       if (
         (v.categories instanceof Array && v.categories.length === 0) ||
         !v.categories
       ) {
-        v.categories = [
-          {
-            title: '默认分类',
-            key: k,
-            id: genUUID(),
-          },
-        ];
+        // 添加默认分类
+        v.categories = [defaultCagegory];
       }
+
+      // @ts-ignore 历史数据兼容
       if (v.dataSource && v.dataSource instanceof Array) {
+        // TODO delete
+        // @ts-ignore 历史数据兼容
         v.dataSource.forEach((card) => {
           card.id = card.id?.includes('-') ? card.id : genUUID();
           if (
             v.categories.find((category) => category.id === card.categoryId)
           ) {
           } else {
+            // 设置默认分类
             card.categoryId = v.categories?.[0]?.id;
           }
         });
-      } else {
-        v.dataSource = [];
+        // @ts-ignore 历史数据兼容
+        defaultCagegory.cards = JSON.parse(JSON.stringify(v.dataSource));
       }
 
       if (!v.layout) {
@@ -185,12 +192,13 @@ class HomeService {
     this.updateDBData(targetKey, dbData);
   }
 
-  public updateCards(targetKey: string, payload: ICard[]) {
+  public updateCards(targetKey: string, categoryId: string, payload: ICard[]) {
     const targetData = this._dbData[targetKey] || {};
-    const dbData = {
-      ...targetData,
-      dataSource: payload,
-    };
+    const category = targetData.categories.find((it) => it.id === categoryId);
+    if (category) {
+      category.cards = payload;
+    }
+    const dbData = targetData;
     this.updateDBData(targetKey, dbData);
   }
 
@@ -213,9 +221,31 @@ class HomeService {
     return targetData.layout?.head;
   }
 
-  public getCards(key: string) {
+  public getCards(key: string, categoryId: string) {
     const targetData = this._dbData[key] || {};
-    return targetData.dataSource;
+    return (
+      targetData.categories.find((it) => it.id === categoryId)?.cards || []
+    );
+  }
+  public getCategoryFromCardId(cardId: string, key: string) {
+    // TODO
+    if (key) {
+      const targetData = this._dbData[key] || {};
+      const categories = targetData.categories;
+      let category: ICategory | undefined;
+      let cards: ICard[] = [];
+      categories.some((it) => {
+        cards = it.cards || [];
+        const card = cards?.find((v) => v.id === cardId);
+        if (card) {
+          category = it;
+          return true;
+        }
+        return false;
+      });
+      return category;
+    }
+    return undefined;
   }
 
   public getCategories(key: string) {
@@ -229,6 +259,41 @@ class HomeService {
 
   public getHHEnv() {
     return this._hhenv;
+  }
+
+  public getCategoryCards(key: string, categoryId: string) {
+    const dbData = this._dbData[key] || {};
+    return dbData.categories.find((it) => it.id === categoryId)?.cards || [];
+    // const result: Record<
+    //   keyof IDBData,
+    //   Array<ICategory & { cards?: ICard[] }>
+    // > = {};
+    // Object.entries(dbData).forEach(([k, v]) => {
+    //   if (key && k !== key) return;
+    //   const resultFromCategory: Array<ICategory & { cards?: ICard[] }> = [];
+    //   const categoryId2Index: Record<any, number> = {};
+    //   v.categories.forEach((c, i) => {
+    //     if (!c.id) {
+    //       c.id = genUUID();
+    //     }
+    //     resultFromCategory.push({
+    //       ...c,
+    //       cards: [],
+    //     });
+    //     categoryId2Index[c.id] = resultFromCategory.length - 1;
+    //   });
+    //   v.dataSource.forEach((card) => {
+    //     if (card.categoryId) {
+    //       const categoryIndex = categoryId2Index[card.categoryId];
+    //       resultFromCategory[categoryIndex].cards?.push(card);
+    //     }
+    //   });
+    //   result[k] = resultFromCategory;
+    // });
+    // if (key && result[key]) {
+    //   return result[key];
+    // }
+    // return result;
   }
 }
 
