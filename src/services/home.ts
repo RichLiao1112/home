@@ -11,6 +11,8 @@ export interface ICard {
   openInNewWindow?: boolean;
   id: string;
   coverColor?: string;
+  categoryId?: ICategory['id'];
+  key?: keyof IDBData; // configKey
 }
 
 export interface IHead {
@@ -34,10 +36,18 @@ export interface ILayout {
 export interface IHomeData {
   dataSource: ICard[];
   layout: ILayout;
+  categories: ICategory[];
 }
 
 export interface IDBData {
   [key: string]: IHomeData;
+}
+
+export interface ICategory {
+  id?: string;
+  title?: string;
+  style?: string;
+  key?: keyof IDBData; // configKey
 }
 
 /**
@@ -54,13 +64,7 @@ class HomeService {
 
   private constructor() {
     this.readDBFileSync(this._defaultDBPath);
-    const selfSetENV: Record<string, any> = {};
-    Object.entries(process.env).forEach(([k, v]) => {
-      if (k.startsWith('HH_')) {
-        selfSetENV[k] = v;
-      }
-    });
-    this._hhenv = selfSetENV;
+    this.initEnvData();
   }
 
   public static getInstance(): HomeService {
@@ -74,32 +78,58 @@ class HomeService {
     return this._defaultDBPath;
   }
 
+  private initEnvData = () => {
+    const selfSetENV: Record<string, any> = {};
+    Object.entries(process.env).forEach(([k, v]) => {
+      if (k.startsWith('HH_')) {
+        selfSetENV[k] = v;
+      }
+    });
+    this._hhenv = selfSetENV;
+  };
+
   private readDBFileSync = async (dbPath: string) => {
     if (!existsSync(dbPath)) {
       writeFileSync(dbPath, JSON.stringify({}), 'utf-8');
     }
-    // try {
-    //   chmodSync(dbPath, 664);
-    // } catch (err: any) {
-    //   console.log(err?.message);
-    // }
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData = JSON.parse(data || '{}');
     let result: IDBData = parseData;
-    if (parseData && !parseData.default) {
+    if (parseData) {
       // 兼容历史版本的配置数据
-      result = {
-        default: {
-          ...parseData,
-        },
-      };
+      if (!parseData.default) {
+        // 设置默认配置"default"
+        result = {
+          default: {
+            ...parseData,
+          },
+        };
+      }
     }
 
     // 数据检查
     Object.entries(result).forEach(([k, v]) => {
+      if (
+        (v.categories instanceof Array && v.categories.length === 0) ||
+        !v.categories
+      ) {
+        v.categories = [
+          {
+            title: '默认分类',
+            key: k,
+            id: genUUID(),
+          },
+        ];
+      }
       if (v.dataSource && v.dataSource instanceof Array) {
-        v.dataSource.forEach((card, index) => {
+        v.dataSource.forEach((card) => {
           card.id = card.id?.includes('-') ? card.id : genUUID();
+          if (
+            v.categories.find((category) => category.id === card.categoryId)
+          ) {
+          } else {
+            card.categoryId = v.categories?.[0]?.id;
+          }
         });
       } else {
         v.dataSource = [];
@@ -164,6 +194,15 @@ class HomeService {
     this.updateDBData(targetKey, dbData);
   }
 
+  public updateCategories(targetKey: string, payload: ICategory[]) {
+    const targetData = this._dbData[targetKey] || {};
+    const dbData = {
+      ...targetData,
+      categories: payload,
+    };
+    this.updateDBData(targetKey, dbData);
+  }
+
   public getLayout(key: string) {
     const targetData = this._dbData[key] || {};
     return targetData.layout;
@@ -177,6 +216,11 @@ class HomeService {
   public getCards(key: string) {
     const targetData = this._dbData[key] || {};
     return targetData.dataSource;
+  }
+
+  public getCategories(key: string) {
+    const targetData = this._dbData[key] || {};
+    return targetData.categories;
   }
 
   public queryConfigKeys() {

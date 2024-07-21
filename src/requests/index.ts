@@ -1,4 +1,4 @@
-import { ICard, ILayout } from '@/services/home';
+import { ICard, ICategory, ILayout } from '@/services/home';
 import { ISearchIcon } from '@/services/media';
 
 export const apiUpsertCard = (payload: ICard & { key?: string }) => {
@@ -21,7 +21,7 @@ export const apiDeleteCard = (payload: { id: ICard['id']; key?: string }) => {
     },
   })
     .then((res) => res.json())
-    .catch((err) => console.warn('[apiUpsertCard]', err));
+    .catch((err) => console.warn('[apiDeleteCard]', err));
 };
 
 export const apiUpdateUI = (payload: ILayout & { key?: string }) => {
@@ -139,4 +139,30 @@ export const apiGetHHENV = () => {
   })
     .then((res) => res.json())
     .catch((err) => console.warn('[apiGetHHENV]', err));
+};
+
+export const apiUpsertCategory = (payload: ICategory & { key?: string }) => {
+  return fetch('/api/category', {
+    method: 'PUT',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify({ data: payload }),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiUpsertCategory]', err));
+};
+
+export const apiDeleteCategory = (payload: {
+  id: ICategory['id'];
+  key?: string;
+}) => {
+  return fetch(`/api/category/${payload.id}?key=${payload.key}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiDeleteCategory]', err));
 };

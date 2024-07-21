@@ -7,12 +7,13 @@ import { useRouter } from 'next/navigation';
 
 import { PageContext } from '@/context/page.context';
 import EditForm from '../EditForm';
-import { ICard, ILayout } from '@/services/home';
+import { ICard, ICategory, ILayout } from '@/services/home';
 import {
   apiQueryDBFiles,
   apiRefreshMediaDir,
   apiUpdateUI,
   apiUpsertCard,
+  apiUpsertCategory,
 } from '@/requests';
 import SettingForm from '../SettingForm';
 import {
@@ -25,6 +26,7 @@ import { NetIconLan, NetIconWan } from '../NetIcon';
 import DBSelect, { TFileOptions } from '../DBSelect';
 import Iconify from '../Iconify';
 import CustomUpload from '../CustomUpload';
+import CategoryEditForm from '../CategoryEditForm';
 
 export interface IProps {
   layout: ILayout;
@@ -45,10 +47,13 @@ const HeadRight = (props: IProps) => {
     setEditDrawerData,
     linkMode,
     setLinkMode,
+    editCategory,
+    setEditCategory,
   } = useContext(PageContext);
 
   const [form] = Form.useForm<ICard>();
   const [settingForm] = Form.useForm<ILayout>();
+  const [categoryForm] = Form.useForm<ICategory>();
   const [fetching, setFetching] = useState(false);
   const [, startTransition] = useTransition();
 
@@ -136,6 +141,28 @@ const HeadRight = (props: IProps) => {
     return apiRefreshMediaDir()
       .then((res) => message.success('刷新成功'))
       .finally(() => setRefreshDirLoading(false));
+  };
+
+  const onCancelCategoryModal = () => {
+    setEditCategory?.(undefined);
+  };
+
+  const onSubmitCategoryForm = async () => {
+    try {
+      setFetching(true);
+      const data = await categoryForm.validateFields();
+      const res = await apiUpsertCategory({ ...data, key: configKey });
+      if (res.success) {
+        onCancelCategoryModal();
+      } else {
+        message.error(res.message);
+      }
+    } catch (err) {
+      console.log('[err]', err);
+    } finally {
+      setFetching(false);
+      startTransition(() => router.refresh());
+    }
   };
 
   useEffect(() => {
@@ -251,6 +278,21 @@ const HeadRight = (props: IProps) => {
           ) : null}
         </>
       </Drawer>
+
+      <Modal
+        open={editCategory?.open}
+        title={editCategory?.title}
+        onCancel={onCancelCategoryModal}
+        onOk={onSubmitCategoryForm}
+        okButtonProps={{
+          loading: fetching,
+          disabled: fetching,
+        }}
+        okText='保存'
+        destroyOnClose
+      >
+        <CategoryEditForm form={categoryForm} originData={editCategory?.data} />
+      </Modal>
 
       <Space>
         {options.length > 1 && (

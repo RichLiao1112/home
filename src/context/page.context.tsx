@@ -1,7 +1,7 @@
 'use client';
 
 import { jumpMode } from '@/common';
-import { ICard, ILayout } from '@/services/home';
+import { ICard, ILayout, ICategory } from '@/services/home';
 import React, {
   createContext,
   useState,
@@ -31,6 +31,12 @@ export interface IPageContext {
   ) => void;
   linkMode: string | null;
   setLinkMode: (payload: string) => void;
+  editCategory: {
+    open: boolean;
+    title: string;
+    data: Partial<ICategory>;
+  };
+  setEditCategory: (payload: IPageContext['editCategory'] | undefined) => void;
 }
 
 export const PageContext = createContext<Partial<IPageContext>>({});
@@ -42,23 +48,27 @@ export const PageContextProvider: FC<any> = (props) => {
   const [editDrawerData, modifyEditDrawerData] =
     useState<IPageContext['editDrawerData']>();
   const [linkMode, modifyLinkMode] = useState<string>(jumpMode.wan);
+  const [editCategory, modifyEditCategory] =
+    useState<IPageContext['editCategory']>();
 
-  const setEditCardMode = useCallback(
-    (payload: boolean) => modifyEditCardMode(payload),
+  const setEditCardMode = useCallback<IPageContext['setEditCardMode']>(
+    (payload) => modifyEditCardMode(payload),
     []
   );
-  const setEditModalData = useCallback(
-    (payload: IPageContext['editModalData'] | undefined) =>
-      modifyEditModalData(payload),
+  const setEditModalData = useCallback<IPageContext['setEditModalData']>(
+    (payload) => modifyEditModalData(payload),
     []
   );
-  const setEditDrawerData = useCallback(
-    (payload: IPageContext['editDrawerData'] | undefined) =>
-      modifyEditDrawerData(payload),
+  const setEditDrawerData = useCallback<IPageContext['setEditDrawerData']>(
+    (payload) => modifyEditDrawerData(payload),
     []
   );
   const setLinkMode = useCallback(
     (payload: string) => modifyLinkMode(payload),
+    []
+  );
+  const setEditCategory = useCallback<IPageContext['setEditCategory']>(
+    (payload) => modifyEditCategory(payload),
     []
   );
 
@@ -72,8 +82,10 @@ export const PageContextProvider: FC<any> = (props) => {
       setEditDrawerData,
       linkMode,
       setLinkMode,
+      editCategory,
+      setEditCategory,
     };
-  }, [editCardMode, editModalData, editDrawerData, linkMode]);
+  }, [editCardMode, editModalData, editDrawerData, linkMode, editCategory]);
 
   return (
     <PageContext.Provider value={value}>{props.children}</PageContext.Provider>

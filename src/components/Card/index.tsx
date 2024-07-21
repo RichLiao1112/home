@@ -16,7 +16,7 @@ import {
   jumpMode,
 } from '@/common';
 
-export type TType = 'normal' | 'add';
+export type TType = 'normal' | 'add' | 'addCategory';
 
 export interface IProps {
   payload: Partial<ICard>;
@@ -26,8 +26,9 @@ export interface IProps {
 
 const Card = (props: IProps) => {
   const router = useRouter();
-  const { payload, type, configKey } = props;
-  const { editCardMode, setEditModalData, linkMode } = useContext(PageContext);
+  const { payload, type = 'normal', configKey } = props;
+  const { editCardMode, setEditModalData, linkMode, setEditCategory } =
+    useContext(PageContext);
 
   const onCardClick = () => {
     if (type === 'add') {
@@ -39,6 +40,15 @@ const Card = (props: IProps) => {
           cover: '',
           wanLink: '',
           lanLink: '',
+        },
+      });
+    } else if (type === 'addCategory') {
+      setEditCategory?.({
+        open: true,
+        title: '新增分类',
+        data: {
+          title: '',
+          style: '',
         },
       });
     } else if (editCardMode === true) {
@@ -88,12 +98,16 @@ const Card = (props: IProps) => {
 
   const renderCover = (source?: string, coverColor?: string) => {
     if (isHttpSource(source)) {
-      return <img src={source} alt="" className={styles.cover} />;
+      return (
+        <div className={styles.cover}>
+          <img src={source} alt='' />
+        </div>
+      );
     }
     if (source) {
       return (
         <div className={styles.cover} style={{ color: coverColor }}>
-          <Iconify icon={source} width="100%" height="100%" />
+          <Iconify icon={source} width='100%' height='100%' />
         </div>
       );
     }
@@ -101,20 +115,20 @@ const Card = (props: IProps) => {
   };
 
   const renderDelete = () => {
-    if (type === 'add') {
+    if (type !== 'normal') {
       return null;
     }
     if (editCardMode === true) {
       return (
         <div className={styles.delete}>
           <Button
-            type="text"
+            type='text'
             icon={
               <span style={{ color: 'red' }}>
                 <Iconify
-                  icon="mdi:minus-circle"
-                  width="1.2rem"
-                  height="1.2rem"
+                  icon='mdi:minus-circle'
+                  width='1.2rem'
+                  height='1.2rem'
                 />
               </span>
             }
@@ -131,9 +145,9 @@ const Card = (props: IProps) => {
     if (payload.wanLink) {
       if (linkMode === jumpMode.wan || !payload.lanLink) {
         return (
-          <Tooltip title="跳转公网地址">
+          <Tooltip title='跳转公网地址'>
             <div className={styles['status-lan']}>
-              <Badge status="processing" text="" />
+              <Badge status='processing' text='' />
             </div>
           </Tooltip>
         );
@@ -148,12 +162,11 @@ const Card = (props: IProps) => {
       <div
         className={classNames(
           styles.card,
-          editCardMode === true && type !== 'add' ? styles.shake : ''
+          editCardMode === true && type === 'normal' ? styles.shake : ''
         )}
         onClick={onCardClick}
       >
         {renderWanBadge()}
-        <div className={styles.mask}></div>
         {renderCover(payload.cover, payload.coverColor)}
         <div className={styles.title}>
           <span>{payload.title}</span>

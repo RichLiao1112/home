@@ -21,6 +21,7 @@ export async function PUT(req: NextRequest) {
       dto.autoSelectLink = data.autoSelectLink ?? dto.autoSelectLink;
       dto.openInNewWindow = data.openInNewWindow ?? dto.autoSelectLink;
       dto.coverColor = data.coverColor ?? dto.coverColor;
+      dto.categoryId = data.categoryId ?? dto.categoryId;
     } else {
       dto = { ...data, id: genUUID() };
       cards.push(dto);

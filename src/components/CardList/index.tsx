@@ -58,14 +58,6 @@ const CardList = (props: IProps) => {
             </Drag>
           );
         })}
-        <Card
-          type='add'
-          payload={{
-            title: '新增',
-            cover: 'material-symbols:add',
-            coverColor: '#eab308',
-          }}
-        />
       </div>
     </DndProvider>
   );
