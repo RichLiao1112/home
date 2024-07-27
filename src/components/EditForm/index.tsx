@@ -10,13 +10,13 @@ import {
   Tag,
 } from 'antd';
 import styles from './index.module.css';
-import { ICard } from '@/services/home';
-import { useEffect } from 'react';
+import { ICard, ICategory } from '@/services/home';
+import { useEffect, useState } from 'react';
 import SearchIconSelect from '../SearchIconSelect';
 import SelcetColor from '../SelectColor';
 import { isHttpSource } from '@/common';
 import Iconify from '../Iconify';
-import useCategories from '@/hooks/useCategories';
+import { apiQueryCategories } from '@/requests';
 
 export interface IProps {
   form: FormInstance;
@@ -26,7 +26,8 @@ export interface IProps {
 
 const EditForm = (props: IProps) => {
   const { form, originData, configKey } = props;
-  const [keyMapCategory] = useCategories();
+  const [keyMapCategory, setKeyMapCategory] =
+    useState<Record<string, Array<Omit<ICategory, 'cards'>>>>();
   const options = keyMapCategory?.[configKey || ''] || [];
 
   const renderLabel = (label: string, tips?: string) => {
@@ -38,6 +39,13 @@ const EditForm = (props: IProps) => {
     );
   };
 
+  const fetchCategories = () => {
+    apiQueryCategories().then((res) => {
+      const { data } = res;
+      setKeyMapCategory(data);
+    });
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       ...originData,
@@ -45,6 +53,10 @@ const EditForm = (props: IProps) => {
       openInNewWindow: originData?.openInNewWindow === false ? false : true,
     });
   }, [form, originData]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <Form
