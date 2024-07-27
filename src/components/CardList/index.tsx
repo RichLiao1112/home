@@ -30,7 +30,6 @@ const CardList = (props: IProps) => {
   const [vIndex, setVIndex] = useState<number>(-1);
 
   const moveItem: IDrag['moveItem'] = (current, target) => {
-    console.log(current, target);
     if (showPlaceholder !== true) setShowPlaceholder(true);
     if (showPlaceholder === false) setShowPlaceholder(true);
     if (vIndex !== target.index) setVIndex(target.index);
