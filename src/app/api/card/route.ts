@@ -22,7 +22,6 @@ export async function PUT(req: NextRequest) {
       // 新增
       dto = { ...data, id: genUUID() };
       cards.push(dto);
-      category.cards = cards;
     } else {
       dto.id = data.id;
       dto.title = data.title ?? dto.title;
@@ -52,9 +51,9 @@ export async function PUT(req: NextRequest) {
         // 修改卡片类目id为新的类目id
         dto.categoryId = data.categoryId;
         cards.push(dto);
-        category.cards = cards;
       }
     }
+    category.cards = cards;
 
     HomeService.updateCategories(data.key, categories);
     const saveResult = HomeService.writeDBFile(
@@ -71,4 +70,3 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ success: false, message: err?.message });
   }
 }
-
