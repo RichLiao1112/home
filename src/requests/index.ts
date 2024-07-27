@@ -2,7 +2,7 @@ import { ICard, ICategory, ILayout } from '@/services/home';
 import { ISearchIcon } from '@/services/media';
 
 export const apiUpsertCard = (
-  payload: ICard & { key?: string; categoryId: string }
+  payload: ICard & { key?: string; categoryId?: string }
 ) => {
   return fetch('/api/card', {
     method: 'PUT',
@@ -171,3 +171,15 @@ export const apiDeleteCategory = (payload: {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiDeleteCategory]', err));
 };
+
+export const apiQueryCategories = () => {
+  return fetch(`/api/category`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiDeleteCategory]', err));
+};
+

@@ -43,10 +43,14 @@ export interface IDBData {
   [key: string]: IHomeData;
 }
 
+export interface IStyle {
+  color?: string;
+}
+
 export interface ICategory {
   id: string;
   title?: string;
-  style?: string;
+  style?: IStyle;
   key?: keyof IDBData; // configKey
   cards?: ICard[];
 }
@@ -115,6 +119,9 @@ class HomeService {
         key: k,
         id: genUUID(),
         cards: [],
+        style: {
+          color: '#000',
+        },
       };
       if (
         (v.categories instanceof Array && v.categories.length === 0) ||
@@ -140,6 +147,8 @@ class HomeService {
         });
         // @ts-ignore 历史数据兼容
         defaultCagegory.cards = JSON.parse(JSON.stringify(v.dataSource));
+        // @ts-ignore 历史数据兼容
+        v.dataSource = [];
       }
 
       if (!v.layout) {
@@ -264,37 +273,8 @@ class HomeService {
   public getCategoryCards(key: string, categoryId: string) {
     const dbData = this._dbData[key] || {};
     return dbData.categories.find((it) => it.id === categoryId)?.cards || [];
-    // const result: Record<
-    //   keyof IDBData,
-    //   Array<ICategory & { cards?: ICard[] }>
-    // > = {};
-    // Object.entries(dbData).forEach(([k, v]) => {
-    //   if (key && k !== key) return;
-    //   const resultFromCategory: Array<ICategory & { cards?: ICard[] }> = [];
-    //   const categoryId2Index: Record<any, number> = {};
-    //   v.categories.forEach((c, i) => {
-    //     if (!c.id) {
-    //       c.id = genUUID();
-    //     }
-    //     resultFromCategory.push({
-    //       ...c,
-    //       cards: [],
-    //     });
-    //     categoryId2Index[c.id] = resultFromCategory.length - 1;
-    //   });
-    //   v.dataSource.forEach((card) => {
-    //     if (card.categoryId) {
-    //       const categoryIndex = categoryId2Index[card.categoryId];
-    //       resultFromCategory[categoryIndex].cards?.push(card);
-    //     }
-    //   });
-    //   result[k] = resultFromCategory;
-    // });
-    // if (key && result[key]) {
-    //   return result[key];
-    // }
-    // return result;
   }
 }
 
 export default HomeService.getInstance();
+

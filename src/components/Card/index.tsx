@@ -22,11 +22,17 @@ export interface IProps {
   payload: Partial<ICard>;
   type?: TType;
   configKey?: string;
+  addCardNormalCategoryId?: string;
 }
 
 const Card = (props: IProps) => {
   const router = useRouter();
-  const { payload, type = 'normal', configKey } = props;
+  const {
+    payload,
+    type = 'normal',
+    configKey,
+    addCardNormalCategoryId,
+  } = props;
   const { editCardMode, setEditModalData, linkMode, setEditCategory } =
     useContext(PageContext);
 
@@ -40,6 +46,7 @@ const Card = (props: IProps) => {
           cover: '',
           wanLink: '',
           lanLink: '',
+          categoryId: addCardNormalCategoryId,
         },
       });
     } else if (type === 'addCategory') {
@@ -177,3 +184,4 @@ const Card = (props: IProps) => {
 };
 
 export default Card;
+

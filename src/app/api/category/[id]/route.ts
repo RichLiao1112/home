@@ -12,9 +12,7 @@ export async function DELETE(req: NextRequest, context: { params: TParams }) {
     const key = query.get('key');
     if (!key) throw new Error('缺少key');
     if (!id) throw new Error('缺少id');
-    const categories: ICategory[] = JSON.parse(
-      JSON.stringify(HomeService.getCategories(key) || [])
-    );
+    const categories: ICategory[] = HomeService.getCategories(key) || [];
     const result = categories.filter((it) => String(it.id) !== String(id));
 
     HomeService.updateCategories(key, result);
@@ -32,3 +30,4 @@ export async function DELETE(req: NextRequest, context: { params: TParams }) {
     return NextResponse.json({ success: false, message: err?.message });
   }
 }
+

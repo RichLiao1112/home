@@ -2,7 +2,7 @@ import { ICard, ICardListStyle } from '@/services/home';
 import Card from '@/components/Card';
 import styles from './index.module.css';
 import Drag, { IProps as IDrag } from '../Drag';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { apiMoveCard } from '@/requests';
 import { useRouter } from 'next/navigation';
 
@@ -11,8 +11,9 @@ export interface IProps {
   cardListStyle: ICardListStyle | undefined;
   configKey?: string;
   categoryId?: string;
-  moveToCategoryId: string;
-  onMoveCategoryChange: (categoryId: string) => void;
+  showPlaceholder: boolean;
+  setShowPlaceholder: (bool: boolean) => void;
+  renderSuffix?: ReactNode;
 }
 
 const CardList = (props: IProps) => {
@@ -21,32 +22,33 @@ const CardList = (props: IProps) => {
     dataSource,
     cardListStyle,
     configKey,
-    // categoryId,
-    // moveToCategoryId,
-    // onMoveCategoryChange,
+    categoryId,
+    showPlaceholder,
+    setShowPlaceholder,
+    renderSuffix,
   } = props;
   const [vIndex, setVIndex] = useState<number>(-1);
 
   const moveItem: IDrag['moveItem'] = (current, target) => {
-    // console.log(target.item.categoryId, moveToCategoryId);
-    // onMoveCategoryChange(target.item.categoryId);
-
-    if (vIndex !== target.index) {
-      setVIndex(target.index);
-    }
+    if (showPlaceholder !== true) setShowPlaceholder(true);
+    if (showPlaceholder === false) setShowPlaceholder(true);
+    if (vIndex !== target.index) setVIndex(target.index);
   };
 
   const onEnd = (card: ICard & { index: number }) => {
     setVIndex(-1);
-    // onMoveCategoryChange('');
+    setShowPlaceholder(false);
     const sourceCardIndex = dataSource.findIndex((item) => item.id === card.id);
-    if (sourceCardIndex !== card.index) {
+    if (
+      sourceCardIndex !== card.index ||
+      dataSource[sourceCardIndex].categoryId !== card.categoryId
+    ) {
       apiMoveCard({
         id: card.id,
         index: card.index,
         categoryId: card.categoryId,
         key: configKey ?? '',
-      }).then(() => router.refresh());
+      }).finally(() => router.refresh());
     }
   };
 
@@ -62,7 +64,7 @@ const CardList = (props: IProps) => {
             onEnd={onEnd}
           >
             <div className={styles.move}>
-              {vIndex === index ? (
+              {vIndex === index && showPlaceholder ? (
                 <div className={styles.placeholder}>+</div>
               ) : null}
               <Card payload={item} configKey={configKey} />
@@ -70,7 +72,9 @@ const CardList = (props: IProps) => {
           </Drag>
         );
       })}
+      {renderSuffix}
     </div>
   );
 };
 export default CardList;
+

@@ -21,7 +21,7 @@ const Drag = (props: IProps) => {
   const [, drop] = useDrop({
     accept: 'DRAG',
     hover: (draggedItem: ICard & { index: number }) => {
-      if (draggedItem.index !== index) {
+      if (draggedItem.id !== item.id) {
         if (moveItem) {
           moveItem(
             {
@@ -34,9 +34,8 @@ const Drag = (props: IProps) => {
             }
           );
         }
-        draggedItem.categoryId = item.categoryId;
-        draggedItem.sort = item.sort - 100;
         draggedItem.index = index;
+        draggedItem.categoryId = item.categoryId;
       }
     },
   });
@@ -59,3 +58,4 @@ const Drag = (props: IProps) => {
   );
 };
 export default Drag;
+

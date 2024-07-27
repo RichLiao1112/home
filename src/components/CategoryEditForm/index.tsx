@@ -1,9 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Form, FormInstance, Input } from 'antd';
 import styles from './index.module.css';
 import { ICategory } from '@/services/home';
-import { useEffect } from 'react';
+import SelcetColor from '../SelectColor';
 
 export interface IProps {
   form: FormInstance;
@@ -46,8 +47,17 @@ const CategoryEditForm = (props: IProps) => {
       >
         <Input />
       </Form.Item>
+      <Form.Item
+        label={renderLabel('名称颜色')}
+        required
+        name={['style', 'color']}
+        rules={[{ required: true, message: '' }]}
+      >
+        <SelcetColor />
+      </Form.Item>
     </Form>
   );
 };
 
 export default CategoryEditForm;
+

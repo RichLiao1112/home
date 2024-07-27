@@ -14,7 +14,7 @@ const Category = (props: IProps) => {
 
   return (
     <div className={styles.category}>
-      <div>
+      <div style={style}>
         <span className={styles.title}>{title}</span>
         <Iconify
           icon='uil:edit-alt'
@@ -39,3 +39,4 @@ const Category = (props: IProps) => {
 };
 
 export default Category;
+

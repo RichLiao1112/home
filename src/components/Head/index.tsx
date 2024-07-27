@@ -1,4 +1,4 @@
-import { ILayout } from '@/services/home';
+import { ICategory, ILayout } from '@/services/home';
 import HeadRight from '@/components/HeadRight';
 import styles from './index.module.css';
 import Iconify from '../Iconify';
@@ -43,3 +43,4 @@ const Head = (props: IProps) => {
 };
 
 export default Head;
+

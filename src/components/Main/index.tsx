@@ -21,7 +21,6 @@ import Card from '../Card';
 export interface IProps {
   dbData: IDBData;
   env: IEnv;
-  // categoryCards: Record<keyof IDBData, Array<ICategory & { cards?: ICard[] }>>;
 }
 
 const Main = (props: IProps) => {
@@ -30,8 +29,7 @@ const Main = (props: IProps) => {
   const selectedConfig = props.dbData?.[configKey];
   const { layout, categories = [] } = selectedConfig || {};
   const { cardListStyle, head } = layout || {};
-
-  const [moveToCategoryId, setMoveToCategoryId] = useState('');
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   const onKeydown = useCallback((e: any) => {
     if (e && e.keyCode === 27) {
@@ -47,50 +45,35 @@ const Main = (props: IProps) => {
     };
   }, [onKeydown]);
 
-  // const cardSortResult = useMemo(() => {
-  //   const resultFromCategory: Array<ICategory & { cards?: ICard[] }> = [];
-  //   const categoryId2Index: Record<any, number> = {};
-  //   categories.forEach((v, i) => {
-  //     if (v.id) {
-  //       resultFromCategory.push({
-  //         ...v,
-  //         cards: [],
-  //       });
-  //       categoryId2Index[v.id] = resultFromCategory.length - 1;
-  //     }
-  //   });
-  //   dataSource.forEach((card) => {
-  //     if (card.categoryId) {
-  //       const categoryIndex = categoryId2Index[card.categoryId];
-  //       resultFromCategory[categoryIndex].cards?.push(card);
-  //     }
-  //   });
-  //   return resultFromCategory;
-  // }, [JSON.stringify(categories || []), JSON.stringify(dataSource || [])]);
-
-  const handleChangeMovePlaceholder = useCallback((categoryId: string) => {
-    setMoveToCategoryId(categoryId);
-  }, []);
-
-  const renderEditCard = () => {
+  const renderEditCard = (payload: {
+    categoryId?: string;
+    showCardType: string[];
+  }) => {
+    const { categoryId, showCardType } = payload;
     return (
       <div className={styles.editMode}>
-        <Card
-          type='add'
-          payload={{
-            title: '新增应用',
-            cover: 'material-symbols:add',
-            coverColor: '#eab308',
-          }}
-        />
-        <Card
-          type='addCategory'
-          payload={{
-            title: '新增分类',
-            cover: 'material-symbols:add',
-            coverColor: '#ea580c',
-          }}
-        />
+        {showCardType.includes('add') && (
+          <Card
+            type='add'
+            payload={{
+              title: '新增应用',
+              cover: 'material-symbols:add',
+              coverColor: '#eab308',
+            }}
+            addCardNormalCategoryId={categoryId}
+          />
+        )}
+
+        {showCardType.includes('addCategory') && (
+          <Card
+            type='addCategory'
+            payload={{
+              title: '新增分类',
+              cover: 'material-symbols:add',
+              coverColor: '#ea580c',
+            }}
+          />
+        )}
       </div>
     );
   };
@@ -98,6 +81,7 @@ const Main = (props: IProps) => {
   const renderCards = () => {
     return categories.map((item) => {
       const { cards, ...category } = item;
+      const dataSource = cards || [];
       return (
         <div key={category.id} className={styles.category}>
           <Category
@@ -108,13 +92,20 @@ const Main = (props: IProps) => {
           />
 
           <CardList
-            dataSource={cards || []}
+            key={`${category.id}-card-list`}
+            dataSource={dataSource}
             cardListStyle={cardListStyle}
             configKey={configKey}
             categoryId={category.id}
-            moveToCategoryId={moveToCategoryId}
-            onMoveCategoryChange={(categoryId) =>
-              handleChangeMovePlaceholder(categoryId)
+            showPlaceholder={showPlaceholder}
+            setShowPlaceholder={setShowPlaceholder}
+            renderSuffix={
+              dataSource.length === 0 || editCardMode === true
+                ? renderEditCard({
+                    categoryId: category?.id,
+                    showCardType: ['add'],
+                  })
+                : null
             }
           />
         </div>
@@ -130,39 +121,15 @@ const Main = (props: IProps) => {
       }}
     >
       <Head layout={layout} configKey={configKey} env={props.env} />
-      {/* {categories.map((it) => (
-        <Category title={it.title} key={it.id} style={it.style} />
-      ))}
-      <CardList
-        dataSource={dataSource}
-        cardListStyle={cardListStyle}
-        configKey={configKey}
-      /> */}
-
-      {/* {dataSource.length === 0 || editCardMode === true ? (
-        <div className={styles.editMode}>
-          <Card
-            type='add'
-            payload={{
-              title: '新增应用',
-              cover: 'material-symbols:add',
-              coverColor: '#eab308',
-            }}
-          />
-          <Card
-            type='addCategory'
-            payload={{
-              title: '新增分类',
-              cover: 'material-symbols:add',
-              coverColor: '#ea580c',
-            }}
-          />
-        </div>
-      ) : null} */}
-      {editCardMode === true && renderEditCard()}
       <DndProvider backend={HTML5Backend}>{renderCards()}</DndProvider>
+      {editCardMode === true &&
+        renderEditCard({
+          categoryId: categories?.[0]?.id,
+          showCardType: ['addCategory'],
+        })}
     </main>
   );
 };
 
 export default Main;
+

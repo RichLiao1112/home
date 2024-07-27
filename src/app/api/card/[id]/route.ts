@@ -81,12 +81,6 @@ export async function PUT(req: NextRequest, context: { params: TParams }) {
       throw new Error('卡片原类目不存在');
     }
 
-    // 所有key下的类目中的卡片
-    // const configCards = HomeService.getCategoryCards(key, );
-    // const categoryCards: Array<ICategory & { cards?: ICard[] }> = JSON.parse(
-    //   JSON.stringify(configCards || [])
-    // );
-
     const targetCategory = categories.find((it) => it.id === categoryId);
     // 目标类目的卡片列表
     const targetCards = targetCategory?.cards || [];
@@ -94,8 +88,6 @@ export async function PUT(req: NextRequest, context: { params: TParams }) {
       throw new Error('目标分类已被删除');
     }
 
-    // currentIndex = targetCards.findIndex((it) => it.id === currentCard?.id);
-    // const card = targetCards[currentIndex];
     // 新位子插入数据
     targetCards.splice(Number(targetIndex), 0, currentCard);
 
@@ -103,25 +95,22 @@ export async function PUT(req: NextRequest, context: { params: TParams }) {
     if (currentCard.categoryId === categoryId) {
       // 删除原位子数据
       const result = targetCards.filter((it, i) => {
-        if (i === Number(targetIndex)) {
+        if (i === Number(targetIndex) || it.id !== currentCard?.id) {
           return true;
         }
-        return it.id !== id;
+        return false;
       });
       targetCategory.cards = result;
     } else {
       // 当前卡片和移动目的位子不在同一个类目
       // 修改卡片类目
       currentCard.categoryId = targetCategory.id;
-      const sourceCategoryCards = targetCategory.cards || [];
+      const sourceCategoryCards = currentCategory.cards || [];
       // 删除原位子数据
-      const result = sourceCategoryCards.filter((it, i) => {
-        if (i === Number(currentIndex)) {
-          return true;
-        }
-        return it.id !== id;
-      });
-      targetCategory.cards = result;
+      const result = sourceCategoryCards.filter(
+        (it, i) => it.categoryId === currentCategory?.id
+      );
+      currentCategory.cards = result;
     }
 
     HomeService.updateCategories(key, categories);
@@ -139,3 +128,4 @@ export async function PUT(req: NextRequest, context: { params: TParams }) {
     return NextResponse.json({ success: false, message: err?.message });
   }
 }
+

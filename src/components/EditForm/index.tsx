@@ -1,6 +1,14 @@
 'use client';
 
-import { Form, FormInstance, Input, InputNumber, Switch, Tag } from 'antd';
+import {
+  Form,
+  FormInstance,
+  Input,
+  InputNumber,
+  Select,
+  Switch,
+  Tag,
+} from 'antd';
 import styles from './index.module.css';
 import { ICard } from '@/services/home';
 import { useEffect } from 'react';
@@ -8,32 +16,18 @@ import SearchIconSelect from '../SearchIconSelect';
 import SelcetColor from '../SelectColor';
 import { isHttpSource } from '@/common';
 import Iconify from '../Iconify';
+import useCategories from '@/hooks/useCategories';
 
 export interface IProps {
   form: FormInstance;
   originData?: Partial<ICard>;
+  configKey?: string;
 }
 
 const EditForm = (props: IProps) => {
-  const { form, originData } = props;
-
-  const customizeRequiredMark = (
-    label: React.ReactNode,
-    { required }: { required: boolean }
-  ) => (
-    <>
-      {required ? (
-        <Tag color='error' style={{ fontSize: '.6rem' }}>
-          必填
-        </Tag>
-      ) : (
-        <Tag color='warning' style={{ fontSize: '.6rem' }}>
-          可选
-        </Tag>
-      )}
-      {label}
-    </>
-  );
+  const { form, originData, configKey } = props;
+  const [keyMapCategory] = useCategories();
+  const options = keyMapCategory?.[configKey || ''] || [];
 
   const renderLabel = (label: string, tips?: string) => {
     return (
@@ -71,6 +65,21 @@ const EditForm = (props: IProps) => {
         rules={[{ required: true, message: '' }]}
       >
         <Input />
+      </Form.Item>
+      <Form.Item
+        label={renderLabel('所属分类', '将应用归属至指定分类下')}
+        required
+        name='categoryId'
+        rules={[{ required: true, message: '' }]}
+      >
+        <Select
+          options={options.map((it) => ({
+            label: it.title,
+            value: it.id,
+            key: it.id,
+            title: it.title,
+          }))}
+        />
       </Form.Item>
       <Form.Item shouldUpdate noStyle>
         {() => (
@@ -149,3 +158,4 @@ const EditForm = (props: IProps) => {
 };
 
 export default EditForm;
+
