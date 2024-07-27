@@ -16,19 +16,16 @@ import SearchIconSelect from '../SearchIconSelect';
 import SelcetColor from '../SelectColor';
 import { isHttpSource } from '@/common';
 import Iconify from '../Iconify';
-import { apiQueryCategories } from '@/requests';
 
 export interface IProps {
   form: FormInstance;
   originData?: Partial<ICard>;
   configKey?: string;
+  categoryOptions?: Array<{ label: string; value: string }>;
 }
 
 const EditForm = (props: IProps) => {
-  const { form, originData, configKey } = props;
-  const [keyMapCategory, setKeyMapCategory] =
-    useState<Record<string, Array<Omit<ICategory, 'cards'>>>>();
-  const options = keyMapCategory?.[configKey || ''] || [];
+  const { form, originData, configKey, categoryOptions } = props;
 
   const renderLabel = (label: string, tips?: string) => {
     return (
@@ -39,13 +36,6 @@ const EditForm = (props: IProps) => {
     );
   };
 
-  const fetchCategories = () => {
-    apiQueryCategories().then((res) => {
-      const { data } = res;
-      setKeyMapCategory(data);
-    });
-  };
-
   useEffect(() => {
     form.setFieldsValue({
       ...originData,
@@ -53,10 +43,6 @@ const EditForm = (props: IProps) => {
       openInNewWindow: originData?.openInNewWindow === false ? false : true,
     });
   }, [form, originData]);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   return (
     <Form
@@ -84,14 +70,7 @@ const EditForm = (props: IProps) => {
         name='categoryId'
         rules={[{ required: true, message: '' }]}
       >
-        <Select
-          options={options.map((it) => ({
-            label: it.title,
-            value: it.id,
-            key: it.id,
-            title: it.title,
-          }))}
-        />
+        <Select options={categoryOptions} />
       </Form.Item>
       <Form.Item shouldUpdate noStyle>
         {() => (

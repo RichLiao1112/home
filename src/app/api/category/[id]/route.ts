@@ -35,4 +35,3 @@ export async function DELETE(req: NextRequest, context: { params: TParams }) {
     return NextResponse.json({ success: false, message: err?.message });
   }
 }
-

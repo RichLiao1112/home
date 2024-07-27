@@ -32,10 +32,11 @@ export interface IProps {
   layout: ILayout;
   configKey: string | undefined;
   env?: IEnv;
+  categoryOptions?: Array<{ label: string; value: string }>;
 }
 
 const HeadRight = (props: IProps) => {
-  const { layout, configKey, env } = props;
+  const { layout, configKey, env, categoryOptions } = props;
   const router = useRouter();
 
   const {
@@ -188,13 +189,12 @@ const HeadRight = (props: IProps) => {
         okText='保存'
         destroyOnClose
       >
-        {editModalData?.open && (
-          <EditForm
-            form={form}
-            originData={editModalData?.data}
-            configKey={configKey}
-          />
-        )}
+        <EditForm
+          form={form}
+          originData={editModalData?.data}
+          configKey={configKey}
+          categoryOptions={categoryOptions}
+        />
       </Modal>
 
       <Drawer

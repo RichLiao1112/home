@@ -29,6 +29,10 @@ const Main = (props: IProps) => {
   const selectedConfig = props.dbData?.[configKey];
   const { layout, categories = [] } = selectedConfig || {};
   const { cardListStyle, head } = layout || {};
+  const categoryOptions = categories.map((it) => ({
+    label: it.title || '',
+    value: it.id,
+  }));
   const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   const onKeydown = useCallback((e: any) => {
@@ -121,7 +125,12 @@ const Main = (props: IProps) => {
         backgroundImage: `url(${head?.backgroundImage || ''})`,
       }}
     >
-      <Head layout={layout} configKey={configKey} env={props.env} />
+      <Head
+        layout={layout}
+        configKey={configKey}
+        env={props.env}
+        categoryOptions={categoryOptions}
+      />
       <DndProvider backend={HTML5Backend}>{renderCards()}</DndProvider>
       {editCardMode === true &&
         renderEditCard({
@@ -133,4 +142,3 @@ const Main = (props: IProps) => {
 };
 
 export default Main;
-

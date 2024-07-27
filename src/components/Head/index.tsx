@@ -10,10 +10,11 @@ export interface IProps {
   layout?: ILayout;
   configKey?: string;
   env?: IEnv;
+  categoryOptions?: Array<{ label: string; value: string }>;
 }
 
 const Head = (props: IProps) => {
-  const { layout = {}, configKey, env } = props;
+  const { layout = {}, configKey, env, categoryOptions } = props;
   const { head = {} } = layout;
 
   const renderCover = (source?: string, logoColor?: string) => {
@@ -36,11 +37,15 @@ const Head = (props: IProps) => {
         <div className={styles.name}>{head.name}</div>
       </div>
       <div className={styles.right}>
-        <HeadRight layout={layout} configKey={configKey} env={env} />
+        <HeadRight
+          layout={layout}
+          configKey={configKey}
+          env={env}
+          categoryOptions={categoryOptions}
+        />
       </div>
     </div>
   );
 };
 
 export default Head;
-

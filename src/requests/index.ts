@@ -171,14 +171,3 @@ export const apiDeleteCategory = (payload: {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiDeleteCategory]', err));
 };
-
-export const apiQueryCategories = () => {
-  return fetch(`/api/category/all`, {
-    method: 'GET',
-    headers: {
-      'Content-type': 'application/json',
-    },
-  })
-    .then((res) => res.json())
-    .catch((err) => console.warn('[apiDeleteCategory]', err));
-};
