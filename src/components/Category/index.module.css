@@ -1,6 +1,12 @@
 .category {
   padding-left: 1rem;
   display: block;
+
+  &:hover {
+    .icons {
+      display: inline;
+    }
+  }
 }
 
 .title {
@@ -8,7 +14,11 @@
   font-size: 1.6rem;
 }
 
-.edit {
+.icons {
+  display: none;
+}
+
+.icon {
   opacity: 0.45;
   margin-left: 0.5rem;
   cursor: pointer;

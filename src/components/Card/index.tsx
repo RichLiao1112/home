@@ -55,7 +55,9 @@ const Card = (props: IProps) => {
         title: '新增分类',
         data: {
           title: '',
-          style: '',
+          style: {
+            color: '#000',
+          },
         },
       });
     } else if (editCardMode === true) {

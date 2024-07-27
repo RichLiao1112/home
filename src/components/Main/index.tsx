@@ -89,6 +89,7 @@ const Main = (props: IProps) => {
             title={category.title}
             key={category.id}
             style={category.style}
+            configKey={configKey}
           />
 
           <CardList
