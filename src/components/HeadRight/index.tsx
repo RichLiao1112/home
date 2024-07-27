@@ -188,11 +188,13 @@ const HeadRight = (props: IProps) => {
         okText='保存'
         destroyOnClose
       >
-        <EditForm
-          form={form}
-          originData={editModalData?.data}
-          configKey={configKey}
-        />
+        {editModalData?.open && (
+          <EditForm
+            form={form}
+            originData={editModalData?.data}
+            configKey={configKey}
+          />
+        )}
       </Modal>
 
       <Drawer
@@ -346,4 +348,3 @@ const HeadRight = (props: IProps) => {
 };
 
 export default HeadRight;
-
