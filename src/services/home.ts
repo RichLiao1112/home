@@ -124,12 +124,13 @@ class HomeService {
         };
       }
     });
-    this._dbData = parseData;
 
-    const saveResult = this.writeDBFile(this._defaultDBPath, this._dbData);
-    if (saveResult.success !== true) {
-      throw Error(saveResult.message);
-    }
+    this._dbData = parseData;
+    // const saveResult = this.writeDBFile(this._defaultDBPath, parseData);
+    // if (saveResult.success !== true) {
+    //   console.log('init error', saveResult);
+    //   throw saveResult;
+    // }
   };
 
   public getDBData() {
