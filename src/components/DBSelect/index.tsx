@@ -97,7 +97,7 @@ const DBSelect = (props: IProps) => {
       link.download = 'home.json'; // 指定下载的文件名
       document.body.appendChild(link);
       link.click();
-      message.info('已触发下载，请关注浏览器下载状况');
+      message.info('已触发下载，请关注浏览器下载情况');
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (err: any) {

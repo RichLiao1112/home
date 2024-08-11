@@ -31,11 +31,12 @@
   overflow: hidden;
   margin: 1rem;
   box-sizing: border-box;
-  padding: 0.5rem 0;
+  padding: 0 .1rem .3rem;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.8);
-  width: 5rem;
-  height: 6rem;
+  width: 5.5rem;
+  height: 6.5rem;
+  overflow: hidden;
 
   &:hover {
     box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.35);
@@ -46,7 +47,7 @@
     }
 
     .title {
-      font-weight: bold;
+      color: rgba(0, 0, 0, 1)
     }
   }
 }
@@ -59,12 +60,15 @@
 .cover {
   width: 3rem;
   height: 3rem;
-  margin: 0.5rem;
+  /* margin: 0.5rem; */
+  margin-top: 1.1rem;
   transition: all 0.2s linear;
   font-size: 3rem;
-  text-align: center;
   line-height: 3rem;
-  /* color: rgb(253, 201, 68); */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .cover > img {
@@ -73,12 +77,18 @@
   object-fit: contain;
 }
 
+.cover > span {
+  vertical-align: top;
+}
+
 .title {
-  font-size: 0.6rem;
+  font-size: .8rem;
   width: 100%;
   word-wrap: break-word;
   text-align: center;
   transition: all 0.2s linear;
+  color: rgba(0, 0, 0, .75);
+  margin-top: .2rem;
 }
 
 .delete {

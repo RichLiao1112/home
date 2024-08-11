@@ -98,22 +98,9 @@ class HomeService {
       writeFileSync(dbPath, JSON.stringify({}), 'utf-8');
     }
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
-    const parseData = JSON.parse(data || '{}');
-    let result: IDBData = parseData;
-    if (parseData) {
-      // 兼容历史版本的配置数据
-      if (!parseData.default) {
-        // 设置默认配置"default"
-        result = {
-          default: {
-            ...parseData,
-          },
-        };
-      }
-    }
-
+    const parseData: IDBData = JSON.parse(data || '{}');
     // 数据检查
-    Object.entries(result).forEach(([k, v]) => {
+    Object.entries(parseData).forEach(([k, v]) => {
       const defaultCagegory: ICategory = {
         title: '默认分类',
         key: k,
@@ -131,33 +118,13 @@ class HomeService {
         v.categories = [defaultCagegory];
       }
 
-      // @ts-ignore 历史数据兼容
-      if (v.dataSource && v.dataSource instanceof Array) {
-        // TODO delete
-        // @ts-ignore 历史数据兼容
-        v.dataSource.forEach((card) => {
-          card.id = card.id?.includes('-') ? card.id : genUUID();
-          if (
-            v.categories.find((category) => category.id === card.categoryId)
-          ) {
-          } else {
-            // 设置默认分类
-            card.categoryId = v.categories?.[0]?.id;
-          }
-        });
-        // @ts-ignore 历史数据兼容
-        defaultCagegory.cards = JSON.parse(JSON.stringify(v.dataSource));
-        // @ts-ignore 历史数据兼容
-        v.dataSource = [];
-      }
-
       if (!v.layout) {
         v.layout = {
           head: {},
         };
       }
     });
-    this._dbData = result;
+    this._dbData = parseData;
 
     const saveResult = this.writeDBFile(this._defaultDBPath, this._dbData);
     if (saveResult.success !== true) {
@@ -277,4 +244,3 @@ class HomeService {
 }
 
 export default HomeService.getInstance();
-

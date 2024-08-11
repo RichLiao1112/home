@@ -120,7 +120,11 @@ const Card = (props: IProps) => {
         </div>
       );
     }
-    return <div className={styles.cover}>{payload.title?.[0]}</div>;
+    return (
+      <div className={styles.cover}>
+        <span>{payload.title?.[0]}</span>
+      </div>
+    );
   };
 
   const renderDelete = () => {
@@ -186,4 +190,3 @@ const Card = (props: IProps) => {
 };
 
 export default Card;
-
