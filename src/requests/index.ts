@@ -171,3 +171,22 @@ export const apiDeleteCategory = (payload: {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiDeleteCategory]', err));
 };
+
+export const apiUnsplashCollectionList = () => {
+  return fetch(`/api/unsplash/collections`, {
+    method: 'GET',
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiUnsplashCollectionList]', err));
+};
+
+export const apiUnsplashCollectionPhotos = (payload: {
+  collectionId: string;
+}) => {
+  return fetch(`/api/unsplash/collections`, {
+    method: 'POST',
+    body: JSON.stringify({ data: payload }),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiUnsplashCollectionPhotos]', err));
+};

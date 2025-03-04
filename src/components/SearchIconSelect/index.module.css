@@ -10,3 +10,10 @@
   height: 1.5rem;
   object-fit: contain;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}

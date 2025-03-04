@@ -30,6 +30,7 @@ const SettingForm = (props: IProps) => {
   };
 
   useEffect(() => {
+    console.log('[OROGINDATA]', originData);
     form.setFieldsValue({
       ...originData,
       head: {
@@ -46,7 +47,7 @@ const SettingForm = (props: IProps) => {
   }, [form, originData]);
 
   return (
-    <Form layout='vertical' variant='outlined' form={form}>
+    <Form layout="vertical" variant="outlined" form={form}>
       <Form.Item shouldUpdate noStyle>
         {() => (
           <Form.Item
@@ -85,18 +86,44 @@ const SettingForm = (props: IProps) => {
       >
         <Input />
       </Form.Item>
+
       <Form.Item
-        label={renderLabel(
-          '背景图',
-          '关键字搜索图片 或 填写http开头的图片地址'
-        )}
-        name={['head', 'backgroundImage']}
+        label={renderLabel('Unsplash收藏夹ID', '填写Unsplash收藏夹ID')}
+        name={['head', 'unsplashCollectionId']}
       >
-        <SearchIconSelect />
+        <Input />
+      </Form.Item>
+      <Form.Item
+        shouldUpdate={(prevValues, curValues) => {
+          return (
+            prevValues?.head?.unsplashCollectionId !==
+            curValues?.head?.unsplashCollectionId
+          );
+        }}
+        noStyle
+      >
+        {() => {
+          return (
+            <Form.Item
+              label={renderLabel(
+                '背景图',
+                '关键字搜索图片 或 填写http开头的图片地址'
+              )}
+              name={['head', 'backgroundImage']}
+            >
+              <SearchIconSelect
+                unsplashCollectionId={form.getFieldValue([
+                  'head',
+                  'unsplashCollectionId',
+                ])}
+              />
+            </Form.Item>
+          );
+        }}
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}
-        name='cardListStyle'
+        name="cardListStyle"
       >
         <Select
           options={[
