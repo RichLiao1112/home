@@ -20,6 +20,7 @@ export interface IHead {
   name?: string;
   backgroundImage?: string;
   logoColor?: string;
+  backgroundBlur?: number;
 }
 
 export interface ICardListStyle {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, FormInstance, Input, Select, Tag } from 'antd';
+import { Form, FormInstance, Input, Select, Slider } from 'antd';
 import styles from './index.module.css';
 import { ILayout } from '@/services/home';
 import { useEffect } from 'react';
@@ -45,6 +45,13 @@ const SettingForm = (props: IProps) => {
         : '',
     });
   }, [form, originData]);
+
+  const onFilterBlurChange = (blur: number) => {
+    document.documentElement.style.setProperty(
+      '--backgorund-blur',
+      `${blur}px`
+    );
+  };
 
   return (
     <Form layout="vertical" variant="outlined" form={form}>
@@ -120,6 +127,12 @@ const SettingForm = (props: IProps) => {
             </Form.Item>
           );
         }}
+      </Form.Item>
+      <Form.Item
+        label={renderLabel('模糊度', '背景图的模糊度')}
+        name={['head', 'backgroundBlur']}
+      >
+        <Slider onChange={onFilterBlurChange} />
       </Form.Item>
       <Form.Item
         label={renderLabel('应用卡片排版', '应用的整体排列')}

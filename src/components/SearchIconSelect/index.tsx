@@ -28,7 +28,6 @@ const SearchIconSelect = (props: IProps) => {
   const { onChange, value, color, unsplashCollectionId } = props;
   const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
   const [loading, setLoading] = useState(false);
-  console.log('SearchIconSelect', props);
   const searchUnsplashPhotos = async (collectionId: string) => {
     if (!collectionId) return;
     try {

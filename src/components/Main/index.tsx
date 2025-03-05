@@ -49,6 +49,13 @@ const Main = (props: IProps) => {
     };
   }, [onKeydown]);
 
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--backgorund-blur',
+      `${head?.backgroundBlur || 0}px`
+    );
+  }, [head?.backgroundBlur]);
+
   const renderEditCard = (payload: {
     categoryId?: string;
     showCardType: string[];
@@ -138,6 +145,15 @@ const Main = (props: IProps) => {
           backgroundImage: `url(${head?.backgroundImage || ''})`,
         }}
       />
+      <div className={styles.interface}>
+        <div
+          className={styles.blur}
+          style={{
+            backgroundImage: `url(${head?.backgroundImage || ''})`,
+            filter: `blur(var(--backgorund-blur))`,
+          }}
+        />
+      </div>
     </main>
   );
 };
