@@ -58,7 +58,7 @@ const Main = (props: IProps) => {
       <div className={styles.editMode}>
         {showCardType.includes('add') && (
           <Card
-            type='add'
+            type="add"
             payload={{
               title: '新增应用',
               cover: 'material-symbols:add',
@@ -70,7 +70,7 @@ const Main = (props: IProps) => {
 
         {showCardType.includes('addCategory') && (
           <Card
-            type='addCategory'
+            type="addCategory"
             payload={{
               title: '新增分类',
               cover: 'material-symbols:add',
@@ -119,12 +119,7 @@ const Main = (props: IProps) => {
   };
 
   return (
-    <main
-      className={styles.main}
-      style={{
-        backgroundImage: `url(${head?.backgroundImage || ''})`,
-      }}
-    >
+    <main className={styles.main}>
       <Head
         layout={layout}
         configKey={configKey}
@@ -137,6 +132,12 @@ const Main = (props: IProps) => {
           categoryId: categories?.[0]?.id,
           showCardType: ['addCategory'],
         })}
+      <div
+        className="interface-mask"
+        style={{
+          backgroundImage: `url(${head?.backgroundImage || ''})`,
+        }}
+      />
     </main>
   );
 };
