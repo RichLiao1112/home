@@ -203,6 +203,7 @@ const HeadRight = (props: IProps) => {
         onClose={onCancelDrawer}
         mask={false}
         destroyOnClose
+        width={600}
       >
         <>
           <div className={styles.title}>外观</div>
