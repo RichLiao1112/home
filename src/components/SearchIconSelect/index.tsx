@@ -151,7 +151,7 @@ const SearchIconSelect = (props: IProps) => {
         ) : null}
       </div>
 
-      {remoteIconList?.length > 0 ? (
+      {unsplashCollectionId && remoteIconList?.length > 0 ? (
         <div className={styles.row}>
           <div className={styles.scroll}>
             {remoteIconList.map((it) => (
