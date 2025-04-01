@@ -167,6 +167,34 @@ const SettingForm = (props: IProps) => {
           ]}
         />
       </Form.Item>
+
+      <Form.Item
+        label={renderLabel('类目名称排版', '')}
+        name={['head', 'categoryNameStyle']}
+      >
+        <Select
+          options={[
+            {
+              label: '左=>右',
+              value: JSON.stringify({
+                textAlign: 'left',
+              }),
+            },
+            {
+              label: '居中',
+              value: JSON.stringify({
+                textAlign: 'center',
+              }),
+            },
+            {
+              label: '右=>左',
+              value: JSON.stringify({
+                textAlign: 'right',
+              }),
+            },
+          ]}
+        />
+      </Form.Item>
     </Form>
   );
 };

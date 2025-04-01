@@ -1,6 +1,7 @@
 .category {
-  padding-left: 1rem;
+  padding: 0 1rem;
   display: block;
+  position: relative;
 
   &:hover {
     .icons {
@@ -29,4 +30,3 @@
     transition: all 0.2s;
   }
 }
-

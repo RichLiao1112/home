@@ -34,6 +34,7 @@ const Main = (props: IProps) => {
     value: it.id,
   }));
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const categoryNameStyle = JSON.parse(head?.categoryNameStyle || '{}');
 
   const onKeydown = useCallback((e: any) => {
     if (e && e.keyCode === 27) {
@@ -106,8 +107,11 @@ const Main = (props: IProps) => {
             id={category.id}
             title={category.title}
             key={category.id}
-            style={category.style}
             configKey={configKey}
+            style={{
+              ...category.style,
+              ...(categoryNameStyle || {}),
+            }}
           />
 
           <CardList

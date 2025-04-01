@@ -21,6 +21,7 @@ export interface IHead {
   backgroundImage?: string;
   logoColor?: string;
   backgroundBlur?: number;
+  categoryNameStyle?: string;
 }
 
 export interface ICardListStyle {
