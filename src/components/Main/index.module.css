@@ -4,10 +4,11 @@
   min-height: 100vh;
   box-sizing: border-box;
   padding: 0 1rem;
+  position: relative;
 }
 
 .category {
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
 }
 
 .editMode {

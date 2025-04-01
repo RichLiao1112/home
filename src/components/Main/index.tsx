@@ -56,6 +56,13 @@ const Main = (props: IProps) => {
     );
   }, [head?.backgroundBlur]);
 
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--background-image',
+      `url(${head?.backgroundImage || ''})`
+    );
+  }, [head?.backgroundImage]);
+
   const renderEditCard = (payload: {
     categoryId?: string;
     showCardType: string[];
@@ -139,12 +146,6 @@ const Main = (props: IProps) => {
           categoryId: categories?.[0]?.id,
           showCardType: ['addCategory'],
         })}
-      <div
-        className="interface-mask"
-        style={{
-          backgroundImage: `url(${head?.backgroundImage || ''})`,
-        }}
-      />
       <div className={styles.interface}>
         <div
           className={styles.blur}
