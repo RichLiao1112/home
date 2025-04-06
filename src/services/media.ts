@@ -27,11 +27,17 @@ class MediaService {
     'imgs',
     'svg'
   );
-  private _mediaCustomPathWrite = path.join(this.basePath, 'assets');
-  private _mediaCustomPathRead = '/api/assets/';
+  private mediaCustomPath = path.join(
+    this.basePath,
+    'public',
+    'custom'
+  );
+  private _mediaAssetsPathWrite = path.join(this.basePath, 'assets');
+  private _mediaAssetsPathRead = '/api/assets/';
   private mediaPngList: IMediaSource[] = [];
   private mediaSvgList: IMediaSource[] = [];
   private mediaCustomList: IMediaSource[] = [];
+  private mediaAssetsList: IMediaSource[] = [];
 
   public static getInstance(): MediaService {
     if (!MediaService.instance) {
@@ -47,8 +53,8 @@ class MediaService {
 
   private checkCustomDir() {
     try {
-      if (!existsSync(this._mediaCustomPathWrite)) {
-        mkdirSync(this._mediaCustomPathWrite, { recursive: true });
+      if (!existsSync(this._mediaAssetsPathWrite)) {
+        mkdirSync(this._mediaAssetsPathWrite, { recursive: true });
       }
     } catch (err: any) {
       console.log(err?.message);
@@ -63,16 +69,20 @@ class MediaService {
     return this.mediaSvgList;
   }
 
+  get getAssetsList() {
+    return this.mediaAssetsList;
+  }
+
   get getCustomList() {
     return this.mediaCustomList;
   }
 
-  get mediaCustomPath() {
-    return this._mediaCustomPathWrite;
+  get mediaAssetsPath() {
+    return this._mediaAssetsPathWrite;
   }
 
-  get mediaCustomPathRead() {
-    return this._mediaCustomPathRead;
+  get mediaAssetsPathRead() {
+    return this._mediaAssetsPathRead;
   }
 
   searchIcon = (payload: ISearchIcon) => {
@@ -90,15 +100,18 @@ class MediaService {
   queryMedia = (payload: ISearchIcon) => {
     if (!payload.q) return [];
     const pngs = this.mediaPngList.filter((media) =>
-      media.path.includes(payload.q.toLowerCase())
+      media.path.toLowerCase().includes(payload.q.toLowerCase())
     );
     const svgs = this.mediaSvgList.filter((media) =>
-      media.path.includes(payload.q.toLowerCase())
+      media.path.toLowerCase().includes(payload.q.toLowerCase())
     );
     const custom = this.mediaCustomList.filter((media) =>
-      media.path.includes(payload.q.toLowerCase())
+      media.path.toLowerCase().includes(payload.q.toLowerCase())
     );
-    return [...custom, ...pngs, ...svgs];
+    const assets = this.mediaAssetsList.filter((media) =>
+      media.path.toLowerCase().includes(payload.q.toLowerCase())
+    );
+    return [...assets, ...pngs, ...svgs, ...custom];
   };
 
   readMediaFiles = (path: string) => {
@@ -109,7 +122,7 @@ class MediaService {
   };
 
   scanAllMedia = () => {
-    this.scanCustomMedia();
+    this.scanAssetsMedia();
     this.mediaPngList = this.readMediaFiles(this.mediaPngPath).map((f) => ({
       name: f.name,
       path: `/media/imgs/png/${f.name}`,
@@ -118,13 +131,17 @@ class MediaService {
       name: f.name,
       path: `/media/imgs/svg/${f.name}`,
     }));
+    this.mediaCustomList = this.readMediaFiles(this.mediaCustomPath).map((f) => ({
+      name: f.name,
+      path: `/custom/${f.name}`,
+    }));
   };
 
-  scanCustomMedia = () => {
-    this.mediaCustomList = this.readMediaFiles(this._mediaCustomPathWrite).map(
+  scanAssetsMedia = () => {
+    this.mediaAssetsList = this.readMediaFiles(this._mediaAssetsPathWrite).map(
       (f) => ({
         name: f.name,
-        path: `${this.mediaCustomPathRead}${f.name}`,
+        path: `${this.mediaAssetsPathRead}${f.name}`,
       })
     );
   };
