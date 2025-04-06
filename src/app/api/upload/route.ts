@@ -48,15 +48,15 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const filename = Date.now() + '_' + file.name.replaceAll(' ', '_');
   try {
-    const assetPath = path.join(MediaService.mediaCustomPath, filename);
+    const assetPath = path.join(MediaService.mediaAssetsPath, filename);
     await writeFile(assetPath, buffer);
-    MediaService.scanCustomMedia();
+    MediaService.scanAssetsMedia();
     return NextResponse.json({
       message: '',
       success: true,
       data: {
         filename,
-        link: `${MediaService.mediaCustomPathRead}${filename}`,
+        link: `${MediaService.mediaAssetsPathRead}${filename}`,
       },
     });
   } catch (error: any) {
@@ -75,7 +75,7 @@ export async function GET() {
       { status: 400 }
     );
   }
-  MediaService.scanCustomMedia();
+  MediaService.scanAssetsMedia();
   return NextResponse.json({
     message: '',
     success: true,
