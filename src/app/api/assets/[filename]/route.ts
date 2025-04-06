@@ -33,7 +33,7 @@ function streamToWebReadable(stream: Readable) {
 export async function GET(req: NextRequest, context: { params: TParams }) {
   const { filename } = context.params;
 
-  const filePath = path.join(MediaService.mediaCustomPath, filename);
+  const filePath = path.join(MediaService.mediaAssetsPath, filename);
   if (existsSync(filePath)) {
     const fileStream = createReadStream(filePath);
     const mimeType = mime.lookup(filePath) || 'application/octet-stream';
