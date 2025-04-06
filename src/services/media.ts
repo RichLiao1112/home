@@ -111,7 +111,7 @@ class MediaService {
     const assets = this.mediaAssetsList.filter((media) =>
       media.path.toLowerCase().includes(payload.q.toLowerCase())
     );
-    return [...assets, ...pngs, ...svgs, ...custom];
+    return [...custom, ...assets, ...pngs, ...svgs];
   };
 
   readMediaFiles = (path: string) => {
