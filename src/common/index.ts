@@ -103,3 +103,47 @@ export async function getDomainIP(domain: string) {
     throw error;
   }
 }
+
+// 判断是否为内网IP地址
+export function isPrivateIP(ip: string): boolean {
+  // 移除端口号
+  ip = ip.split(':')[0];
+
+  // 检查IP格式是否正确
+  const parts = ip.split('.');
+  if (parts.length !== 4) return false;
+
+  // 转换为数字
+  const bytes = parts.map((part) => parseInt(part, 10));
+  if (bytes.some((part) => isNaN(part) || part < 0 || part > 255)) return false;
+
+  // 判断是否为内网IP范围
+  // 10.0.0.0 - 10.255.255.255
+  if (bytes[0] === 10) return true;
+
+  // 172.16.0.0 - 172.31.255.255
+  if (bytes[0] === 172 && bytes[1] >= 16 && bytes[1] <= 31) return true;
+
+  // 192.168.0.0 - 192.168.255.255
+  if (bytes[0] === 192 && bytes[1] === 168) return true;
+
+  // localhost
+  if (ip === '127.0.0.1' || ip === 'localhost') return true;
+
+  return false;
+}
+
+// 从URL中提取主机地址（支持IP:PORT格式）
+export function extractHost(url: string): string {
+  try {
+    // 确保URL有协议前缀
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'http://' + url;
+    }
+    const urlObj = new URL(url);
+    return urlObj.host; // host 包含主机名和端口（如果有的话）
+  } catch (error) {
+    console.error('URL解析失败:', error);
+    return '';
+  }
+}

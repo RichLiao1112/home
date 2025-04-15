@@ -12,7 +12,13 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import styles from './index.module.css';
 import { ICard, ICategory, IDBData } from '@/services/home';
 import CardList from '@/components/CardList';
-import { getDomainIP, getPublicIP, getSelectedKey, jumpMode } from '@/common';
+import {
+  getDomainIP,
+  getPublicIP,
+  getSelectedKey,
+  isPrivateIP,
+  jumpMode,
+} from '@/common';
 import Head from '@/components/Head';
 import { PageContext } from '@/context/page.context';
 import Category from '../Category';
@@ -40,19 +46,26 @@ const Main = (props: IProps) => {
   const [isLocalNet, setIsLocalNet] = useState(false);
 
   useEffect(() => {
-    Promise.all([getPublicIP(), getDomainIP(location.href)])
-      .then(([res1, res2]) => {
-        console.log('当前公网IP: ', res1, '。', '当前域名公网IP:', res2);
-        if (res1 === res2) {
-          console.log(`是内网：`, res1, res2);
-          setIsLocalNet(true);
-          setLinkMode?.(jumpMode.lan);
-        } else {
-          setIsLocalNet(false);
-          setLinkMode?.(jumpMode.wan);
-        }
-      })
-      .catch(() => setIsLocalNet(false));
+    const isCurrentHostPrivate = isPrivateIP(location.href);
+    if (isCurrentHostPrivate) {
+      console.log(`当前为内网IP访问: `, location.href);
+      setIsLocalNet(true);
+      setLinkMode?.(jumpMode.lan);
+    } else {
+      Promise.all([getPublicIP(), getDomainIP(location.href)])
+        .then(([res1, res2]) => {
+          console.log('当前公网IP: ', res1, '。', '当前域名公网IP:', res2);
+          if (res1 === res2) {
+            console.log(`是内网：`, res1, res2);
+            setIsLocalNet(true);
+            setLinkMode?.(jumpMode.lan);
+          } else {
+            setIsLocalNet(false);
+            setLinkMode?.(jumpMode.wan);
+          }
+        })
+        .catch(() => setIsLocalNet(false));
+    }
   }, []);
 
   const onKeydown = useCallback((e: any) => {
