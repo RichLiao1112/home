@@ -77,3 +77,29 @@ export const ensureProtocol = (url: string) => {
     return 'http://' + url;
   }
 };
+
+export async function getPublicIP() {
+  try {
+    // 使用 ipapi.co 或 ip-api.com，这两个在国内都可以访问
+    const response = await fetch('http://ip-api.com/json/');
+    const data = await response.json();
+    return data.query; // ip-api.com 返回的IP字段名为query
+  } catch (error) {
+    console.error('获取公网IP失败:', error);
+    throw error;
+  }
+}
+
+export async function getDomainIP(domain: string) {
+  try {
+    // 从URL中提取域名
+    const hostname = new URL(domain).hostname;
+    // 使用 ip-api.com 的域名解析服务
+    const response = await fetch(`http://ip-api.com/json/${hostname}`);
+    const data = await response.json();
+    return data.query;
+  } catch (error) {
+    console.error('获取域名IP失败:', error);
+    throw error;
+  }
+}

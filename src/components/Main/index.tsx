@@ -12,7 +12,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import styles from './index.module.css';
 import { ICard, ICategory, IDBData } from '@/services/home';
 import CardList from '@/components/CardList';
-import { getSelectedKey } from '@/common';
+import { getDomainIP, getPublicIP, getSelectedKey, jumpMode } from '@/common';
 import Head from '@/components/Head';
 import { PageContext } from '@/context/page.context';
 import Category from '../Category';
@@ -24,7 +24,8 @@ export interface IProps {
 }
 
 const Main = (props: IProps) => {
-  const { setEditCardMode, editCardMode } = useContext(PageContext);
+  const { setEditCardMode, editCardMode, setLinkMode } =
+    useContext(PageContext);
   const configKey = getSelectedKey();
   const selectedConfig = props.dbData?.[configKey];
   const { layout, categories = [] } = selectedConfig || {};
@@ -35,6 +36,24 @@ const Main = (props: IProps) => {
   }));
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const categoryNameStyle = JSON.parse(head?.categoryNameStyle || '{}');
+
+  const [isLocalNet, setIsLocalNet] = useState(false);
+
+  useEffect(() => {
+    Promise.all([getPublicIP(), getDomainIP(location.href)])
+      .then(([res1, res2]) => {
+        console.log('当前公网IP: ', res1, '。', '当前域名公网IP:', res2);
+        if (res1 === res2) {
+          console.log(`是内网：`, res1, res2);
+          setIsLocalNet(true);
+          setLinkMode?.(jumpMode.lan);
+        } else {
+          setIsLocalNet(false);
+          setLinkMode?.(jumpMode.wan);
+        }
+      })
+      .catch(() => setIsLocalNet(false));
+  }, []);
 
   const onKeydown = useCallback((e: any) => {
     if (e && e.keyCode === 27) {
