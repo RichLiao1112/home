@@ -19,7 +19,7 @@ services:
       - ./assets:/app/public/custom # 用于存放图片等资源，
     restart: always
     environment:
-      - UNSPLASH_ACCESS_KEY=jM_e5xFaPxyIxfx9WmnVbyoV-RK2yqO_c-nDetFHuVs
+      - UNSPLASH_ACCESS_KEY= $
     ports:
       - 13456:3000 # 3131为你本地机器的端口
 ```
