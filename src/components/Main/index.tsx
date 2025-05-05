@@ -13,6 +13,7 @@ import styles from './index.module.css';
 import { ICard, ICategory, IDBData } from '@/services/home';
 import CardList from '@/components/CardList';
 import {
+  extractHost,
   getDomainIP,
   getPublicIP,
   getSelectedKey,
@@ -46,7 +47,8 @@ const Main = (props: IProps) => {
   const [isLocalNet, setIsLocalNet] = useState(false);
 
   useEffect(() => {
-    const isCurrentHostPrivate = isPrivateIP(location.href);
+    const isCurrentHostPrivate = isPrivateIP(extractHost(location.href));
+    console.log(isCurrentHostPrivate)
     if (isCurrentHostPrivate) {
       console.log(`当前为内网IP访问: `, location.href);
       setIsLocalNet(true);
@@ -54,7 +56,7 @@ const Main = (props: IProps) => {
     } else {
       Promise.all([getPublicIP(), getDomainIP(location.href)])
         .then(([res1, res2]) => {
-          console.log('当前公网IP: ', res1, '。', '当前域名公网IP:', res2);
+          console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
           if (res1 === res2) {
             console.log(`是内网：`, res1, res2);
             setIsLocalNet(true);

@@ -81,9 +81,9 @@ export const ensureProtocol = (url: string) => {
 export async function getPublicIP() {
   try {
     // 使用 ipapi.co 或 ip-api.com，这两个在国内都可以访问
-    const response = await fetch('http://ip-api.com/json/');
+    const response = await fetch('https://ipapi.co/json/');
     const data = await response.json();
-    return data.query; // ip-api.com 返回的IP字段名为query
+    return data.ip; // ipapi.co 返回的IP字段名为ip
   } catch (error) {
     console.error('获取公网IP失败:', error);
     throw error;
@@ -94,10 +94,10 @@ export async function getDomainIP(domain: string) {
   try {
     // 从URL中提取域名
     const hostname = new URL(domain).hostname;
-    // 使用 ip-api.com 的域名解析服务
-    const response = await fetch(`http://ip-api.com/json/${hostname}`);
+    // 使用 ipapi.co 的域名解析服务
+    const response = await fetch(`https://ipapi.co/${hostname}/json/`);
     const data = await response.json();
-    return data.query;
+    return data.ip;
   } catch (error) {
     console.error('获取域名IP失败:', error);
     throw error;
@@ -109,8 +109,12 @@ export function isPrivateIP(ip: string): boolean {
   // 移除端口号
   ip = ip.split(':')[0];
 
+  // localhost
+  if (ip === '127.0.0.1' || ip === 'localhost') return true;
+  
   // 检查IP格式是否正确
   const parts = ip.split('.');
+  console.log('[parts]', parts, ip)
   if (parts.length !== 4) return false;
 
   // 转换为数字
@@ -126,9 +130,6 @@ export function isPrivateIP(ip: string): boolean {
 
   // 192.168.0.0 - 192.168.255.255
   if (bytes[0] === 192 && bytes[1] === 168) return true;
-
-  // localhost
-  if (ip === '127.0.0.1' || ip === 'localhost') return true;
 
   return false;
 }
