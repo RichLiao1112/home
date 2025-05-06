@@ -190,3 +190,15 @@ export const apiUnsplashCollectionPhotos = (payload: {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiUnsplashCollectionPhotos]', err));
 };
+
+export const apiGetIP = () => {
+  return fetch('/api/ip', { method: 'GET' })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiGetIP]', err));
+}
+
+export const apiGetDomainIP = (payload: { domain: string }) => {
+  return fetch('/api/ip', { method: 'POST', body: JSON.stringify({ data: payload }) })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiGetIP]', err));
+}

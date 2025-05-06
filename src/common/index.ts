@@ -1,27 +1,5 @@
+import { apiGetDomainIP, apiGetIP } from '@/requests';
 import { randomUUID } from 'crypto';
-
-declare global {
-  interface Window {
-    [key: string]: any;
-  }
-}
-
-interface IPApiResponse {
-  query: string;
-  status: string;
-  country?: string;
-  countryCode?: string;
-  region?: string;
-  regionName?: string;
-  city?: string;
-  zip?: string;
-  lat?: number;
-  lon?: number;
-  timezone?: string;
-  isp?: string;
-  org?: string;
-  as?: string;
-}
 
 export interface IFile {
   filename: string;
@@ -103,32 +81,10 @@ export const ensureProtocol = (url: string) => {
 };
 
 
-function jsonp(url: string): Promise<IPApiResponse> {
-  return new Promise((resolve, reject) => {
-    const callbackName = 'jsonp_' + Math.round(Math.random() * 1000000);
-    const script = document.createElement('script');
-
-    window[callbackName] = (data: IPApiResponse) => {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      resolve(data);
-    };
-
-    script.onerror = () => {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      reject(new Error('JSONP request failed'));
-    };
-
-    script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
-    document.body.appendChild(script);
-  });
-}
-
 export async function getPublicIP() {
   try {
-    const data = await jsonp(`${location.protocol}//ip-api.com/json`);
-    return data.query;
+    const data = await apiGetDomainIP({ domain: location.hostname })
+    return data.data;
   } catch (error) {
     console.error('获取公网IP失败:', error);
     throw error;
@@ -137,9 +93,9 @@ export async function getPublicIP() {
 
 export async function getDomainIP(domain: string) {
   try {
-    const hostname = new URL(domain).hostname;
-    const data = await jsonp(`${location.protocol}//ip-api.com/json/${hostname}`);
-    return data.query;
+    const data = await apiGetIP()
+    console.log(data)
+    return data.data
   } catch (error) {
     console.error('获取域名IP失败:', error);
     throw error;
