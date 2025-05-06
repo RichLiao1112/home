@@ -48,7 +48,6 @@ const Main = (props: IProps) => {
 
   useEffect(() => {
     const isCurrentHostPrivate = isPrivateIP(extractHost(location.href));
-    console.log(isCurrentHostPrivate)
     if (isCurrentHostPrivate) {
       console.log(`当前为内网IP访问: `, location.href);
       setIsLocalNet(true);
