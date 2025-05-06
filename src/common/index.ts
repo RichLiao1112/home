@@ -127,7 +127,7 @@ function jsonp(url: string): Promise<IPApiResponse> {
 
 export async function getPublicIP() {
   try {
-    const data = await jsonp('http://ip-api.com/json');
+    const data = await jsonp(`${location.protocol}//ip-api.com/json`);
     return data.query;
   } catch (error) {
     console.error('获取公网IP失败:', error);
@@ -138,7 +138,7 @@ export async function getPublicIP() {
 export async function getDomainIP(domain: string) {
   try {
     const hostname = new URL(domain).hostname;
-    const data = await jsonp(`http://ip-api.com/json/${hostname}`);
+    const data = await jsonp(`${location.protocol}//ip-api.com/json/${hostname}`);
     return data.query;
   } catch (error) {
     console.error('获取域名IP失败:', error);
