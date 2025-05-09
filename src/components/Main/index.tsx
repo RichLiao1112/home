@@ -20,11 +20,13 @@ import {
   getSelectedKey,
   isPrivateIP,
   jumpMode,
+  setLinkJumpMode,
 } from '@/common';
 import Head from '@/components/Head';
 import { PageContext } from '@/context/page.context';
 import Category from '../Category';
 import Card from '../Card';
+import { message } from 'antd';
 
 export interface IProps {
   dbData: IDBData;
