@@ -69,7 +69,7 @@ const Card = (props: IProps) => {
     } else {
       let url = payload.wanLink || payload.lanLink;
       let openInNewWindow = payload.openInNewWindow !== false;
-      if (getLinkJumpMode() === jumpMode.lan && payload.lanLink) {
+      if (linkMode === jumpMode.lan && payload.lanLink) {
         url = payload.lanLink;
       }
 
