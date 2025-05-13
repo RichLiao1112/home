@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -19,11 +20,13 @@ import {
   getSelectedKey,
   isPrivateIP,
   jumpMode,
+  setLinkJumpMode,
 } from '@/common';
 import Head from '@/components/Head';
 import { PageContext } from '@/context/page.context';
 import Category from '../Category';
 import Card from '../Card';
+import { message } from 'antd';
 
 export interface IProps {
   dbData: IDBData;
@@ -45,6 +48,7 @@ const Main = (props: IProps) => {
   const categoryNameStyle = JSON.parse(head?.categoryNameStyle || '{}');
 
   const [isLocalNet, setIsLocalNet] = useState(false);
+  const lanChangeRef = useRef(false);
 
   useEffect(() => {
     const isCurrentHostPrivate = isPrivateIP(extractHost(location.href));
@@ -52,6 +56,11 @@ const Main = (props: IProps) => {
       console.log(`当前为内网IP访问: `, location.href);
       setIsLocalNet(true);
       setLinkMode?.(jumpMode.lan);
+      setLinkJumpMode(jumpMode.lan);
+      if (lanChangeRef.current === false) {
+        lanChangeRef.current = true;
+        message.warning('已自动切换至「内网」IP访问优先');
+      }
     } else {
       Promise.all([getPublicIP(), getDomainIP(location.href)])
         .then(([res1, res2]) => {
@@ -60,9 +69,19 @@ const Main = (props: IProps) => {
             console.log(`是内网：`, res1, res2);
             setIsLocalNet(true);
             setLinkMode?.(jumpMode.lan);
+            setLinkJumpMode(jumpMode.lan);
+            if (lanChangeRef.current === false) {
+              lanChangeRef.current = true;
+              message.warning('已自动切换至「内网」IP访问优先');
+            }
           } else {
             setIsLocalNet(false);
             setLinkMode?.(jumpMode.wan);
+            setLinkJumpMode(jumpMode.wan);
+            if (lanChangeRef.current === false) {
+              lanChangeRef.current = true;
+              message.success('已自动切换至「公网」IP访问优先');
+            }
           }
         })
         .catch(() => setIsLocalNet(false));
