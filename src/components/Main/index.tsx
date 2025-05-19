@@ -65,7 +65,7 @@ const Main = (props: IProps) => {
       Promise.all([getPublicIP(), getDomainIP(location.href)])
         .then(([res1, res2]) => {
           console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
-          if (res1 === res2) {
+          if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
             console.log(`是内网：`, res1, res2);
             setIsLocalNet(true);
             setLinkMode?.(jumpMode.lan);
