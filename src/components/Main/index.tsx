@@ -72,7 +72,7 @@ const Main = (props: IProps) => {
             setLinkJumpMode(jumpMode.lan);
             if (lanChangeRef.current === false) {
               lanChangeRef.current = true;
-              message.warning('已自动切换至「内网」IP访问优先');
+              message.warning('内网优先');
             }
           } else {
             setIsLocalNet(false);
@@ -80,7 +80,7 @@ const Main = (props: IProps) => {
             setLinkJumpMode(jumpMode.wan);
             if (lanChangeRef.current === false) {
               lanChangeRef.current = true;
-              message.success('已自动切换至「公网」IP访问优先');
+              message.success('公网优先');
             }
           }
         })
