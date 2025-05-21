@@ -78,36 +78,17 @@ const Main = (props: IProps) => {
       // }
       changeLanMode(true)
     } else {
-      getPublicIP().then(res => {
-        if (isPrivateIP(res)) {
-          changeLanMode(true)
-        } else {
-          changeLanMode(false)
-        }
-      })
-      // Promise.all([getPublicIP(), getDomainIP(location.href)])
-      //   .then(([res1, res2]) => {
-      //     console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
-      //     if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
-      //       console.log(`是内网：`, res1, res2);
-      //       setIsLocalNet(true);
-      //       setLinkMode?.(jumpMode.lan);
-      //       setLinkJumpMode(jumpMode.lan);
-      //       if (lanChangeRef.current === false) {
-      //         lanChangeRef.current = true;
-      //         message.warning('已自动切换至「内网」IP访问优先');
-      //       }
-      //     } else {
-      //       setIsLocalNet(false);
-      //       setLinkMode?.(jumpMode.wan);
-      //       setLinkJumpMode(jumpMode.wan);
-      //       if (lanChangeRef.current === false) {
-      //         lanChangeRef.current = true;
-      //         message.success('已自动切换至「公网」IP访问优先');
-      //       }
-      //     }
-      //   })
-      //   .catch(() => setIsLocalNet(false));
+      Promise.all([getPublicIP(), getDomainIP(location.href)])
+        .then(([res1, res2]) => {
+          console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
+          if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
+            console.log(`是内网：`, res1, res2);
+            changeLanMode(true)
+          } else {
+            changeLanMode(false)
+          }
+        })
+        .catch(() => setIsLocalNet(false));
     }
   }, []);
 
