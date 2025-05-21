@@ -117,7 +117,7 @@ const HeadRight = (props: IProps) => {
   };
 
   const modifyLinkJumpMode = (mode: string) => {
-    setLinkJumpMode(mode);
+    setLinkJumpMode('');
     setLinkMode?.(mode);
   };
 
@@ -166,10 +166,10 @@ const HeadRight = (props: IProps) => {
     }
   };
 
-  useEffect(() => {
-    const mode = getLinkJumpMode();
-    setLinkMode?.(mode || jumpMode.wan);
-  }, [setLinkMode]);
+  // useEffect(() => {
+  //   const mode = getLinkJumpMode();
+  //   setLinkMode?.(mode || jumpMode.wan);
+  // }, [setLinkMode]);
 
   useEffect(() => {
     fetchDBFiles();
