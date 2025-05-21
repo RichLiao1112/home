@@ -21,6 +21,7 @@ import {
   isPrivateIP,
   jumpMode,
   setLinkJumpMode,
+  getLinkJumpMode,
 } from '@/common';
 import Head from '@/components/Head';
 import { PageContext } from '@/context/page.context';
@@ -78,17 +79,23 @@ const Main = (props: IProps) => {
       // }
       changeLanMode(true)
     } else {
-      Promise.all([getPublicIP(), getDomainIP(location.href)])
-        .then(([res1, res2]) => {
-          console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
-          if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
-            console.log(`是内网：`, res1, res2);
-            changeLanMode(true)
-          } else {
-            changeLanMode(false)
-          }
-        })
-        .catch(() => setIsLocalNet(false));
+      const localLinkMode = getLinkJumpMode();
+      if (localLinkMode === jumpMode.wan) {
+        changeLanMode(false)
+      } else if (localLinkMode === jumpMode.lan) {
+        changeLanMode(true)
+      } else {
+        Promise.all([getPublicIP(), getDomainIP(location.href)])
+          .then(([res1, res2]) => {
+            console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
+            if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
+              console.log(`是内网：`, res1, res2);
+              changeLanMode(true)
+            } else {
+              changeLanMode(false)
+            }
+          })
+      }
     }
   }, []);
 
