@@ -1,28 +1,12 @@
 'use client';
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import styles from './index.module.css';
 import { ICard, ICategory, IDBData } from '@/services/home';
 import CardList from '@/components/CardList';
-import {
-  extractHost,
-  getDomainIP,
-  getPublicIP,
-  getSelectedKey,
-  isPrivateIP,
-  jumpMode,
-  setLinkJumpMode,
-  getLinkJumpMode,
-} from '@/common';
+import { extractHost, getDomainIP, getPublicIP, getSelectedKey, isPrivateIP, jumpMode, setLinkJumpMode, getLinkJumpMode } from '@/common';
 import Head from '@/components/Head';
 import { PageContext } from '@/context/page.context';
 import Category from '../Category';
@@ -35,8 +19,7 @@ export interface IProps {
 }
 
 const Main = (props: IProps) => {
-  const { setEditCardMode, editCardMode, setLinkMode } =
-    useContext(PageContext);
+  const { setEditCardMode, editCardMode, setLinkMode } = useContext(PageContext);
   const configKey = getSelectedKey();
   const selectedConfig = props.dbData?.[configKey];
   const { layout, categories = [] } = selectedConfig || {};
@@ -51,20 +34,22 @@ const Main = (props: IProps) => {
   const [isLocalNet, setIsLocalNet] = useState(false);
   const lanChangeRef = useRef(false);
 
-  const changeLanMode = (isLocal = true) => {
+  const changeLanMode = (isLocal = true, showToast = false) => {
     const mode = isLocal ? jumpMode.lan : jumpMode.wan;
     setIsLocalNet(isLocal);
     setLinkMode?.(mode);
     setLinkJumpMode(mode);
     if (lanChangeRef.current === false) {
       lanChangeRef.current = true;
-      if (isLocal) {
-        message.warning('「内网」IP访问优先');
-      } else {
-        message.success('「公网」IP访问优先');
+      if (showToast) {
+        if (isLocal) {
+          message.warning('「内网」IP访问优先');
+        } else {
+          message.success('「公网」IP访问优先');
+        }
       }
     }
-  }
+  };
 
   useEffect(() => {
     const isCurrentHostPrivate = isPrivateIP(extractHost(location.href));
@@ -77,25 +62,24 @@ const Main = (props: IProps) => {
       //   lanChangeRef.current = true;
       //   message.warning('已自动切换至「内网」IP访问优先');
       // }
-      changeLanMode(true)
+      changeLanMode(true, true);
     } else {
       const localLinkMode = getLinkJumpMode();
       if (localLinkMode === jumpMode.wan) {
-        changeLanMode(false)
+        changeLanMode(false, false);
       } else if (localLinkMode === jumpMode.lan) {
-        changeLanMode(true)
-      } else {
-        Promise.all([getPublicIP(), getDomainIP(location.href)])
-          .then(([res1, res2]) => {
-            console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
-            if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
-              console.log(`是内网：`, res1, res2);
-              changeLanMode(true)
-            } else {
-              changeLanMode(false)
-            }
-          })
+        changeLanMode(true, false);
       }
+
+      Promise.all([getPublicIP(), getDomainIP(location.href)]).then(([res1, res2]) => {
+        console.log('当前公网IP: ', res1, '。', '当前域名IP:', res2);
+        if (res1 === res2 || isPrivateIP(res2) || isPrivateIP(res1)) {
+          console.log(`是内网：`, res1, res2);
+          changeLanMode(true, true);
+        } else {
+          changeLanMode(false, true);
+        }
+      });
     }
   }, []);
 
@@ -114,29 +98,20 @@ const Main = (props: IProps) => {
   }, [onKeydown]);
 
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--backgorund-blur',
-      `${head?.backgroundBlur || 0}px`
-    );
+    document.documentElement.style.setProperty('--backgorund-blur', `${head?.backgroundBlur || 0}px`);
   }, [head?.backgroundBlur]);
 
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--background-image',
-      `url(${head?.backgroundImage || ''})`
-    );
+    document.documentElement.style.setProperty('--background-image', `url(${head?.backgroundImage || ''})`);
   }, [head?.backgroundImage]);
 
-  const renderEditCard = (payload: {
-    categoryId?: string;
-    showCardType: string[];
-  }) => {
+  const renderEditCard = (payload: { categoryId?: string; showCardType: string[] }) => {
     const { categoryId, showCardType } = payload;
     return (
       <div className={styles.editMode}>
         {showCardType.includes('add') && (
           <Card
-            type="add"
+            type='add'
             payload={{
               title: '新增应用',
               cover: 'material-symbols:add',
@@ -148,7 +123,7 @@ const Main = (props: IProps) => {
 
         {showCardType.includes('addCategory') && (
           <Card
-            type="addCategory"
+            type='addCategory'
             payload={{
               title: '新增分类',
               cover: 'material-symbols:add',
@@ -201,12 +176,7 @@ const Main = (props: IProps) => {
 
   return (
     <main className={styles.main}>
-      <Head
-        layout={layout}
-        configKey={configKey}
-        env={props.env}
-        categoryOptions={categoryOptions}
-      />
+      <Head layout={layout} configKey={configKey} env={props.env} categoryOptions={categoryOptions} />
       <DndProvider backend={HTML5Backend}>{renderCards()}</DndProvider>
       {editCardMode === true &&
         renderEditCard({
