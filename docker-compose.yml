@@ -1,8 +1,9 @@
-version: '3'
 services:
   home:
-    image: 2458006757/home:0.0.2
-  volumns:
-    - ./home.json:/app/home.json
-  ports:
-    - 13111:3000
+    image: home:latest
+    volumns:
+      - ./home.json:/app/home.json
+    ports:
+      - 13131:3000
+    environment:
+      - UNSPLASH_ACCESS_KEY=jM_e5xFaPxyIxfx9WmnVbyoV-RK2yqO_c-nDetFHuVs
