@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Input, Modal, Select, Space, Tooltip, message } from 'antd';
 import { apitUpsertDBFile, apiDeleteDBFile, apiGetAllDBData } from '@/requests';
 import styles from './index.module.css';
@@ -13,6 +13,7 @@ export interface IProps {
   value: string | undefined;
   options: TFileOptions;
   hideDelete?: boolean;
+  defaultValue?: string;
 }
 export type TFileOptions = Array<{
   label: string;
@@ -58,7 +59,7 @@ const DBSelect = (props: IProps) => {
         apiDeleteDBFile({
           key: filename,
         })
-          .then((res) => {
+          .then(res => {
             if (res.success) {
               message.success('删除成功');
               if (props.value === filename) {
@@ -108,6 +109,12 @@ const DBSelect = (props: IProps) => {
     }
   };
 
+  useEffect(() => {
+    if (props.defaultValue) {
+      onSelect(props.defaultValue);
+    }
+  }, [props.defaultValue]);
+
   return (
     <div>
       <Select
@@ -116,17 +123,17 @@ const DBSelect = (props: IProps) => {
         options={props.options}
         style={{ width: '100%', ...props.selectStyle }}
         value={props.value}
-        onChange={(value) => onSelect(value)}
+        onChange={value => onSelect(value)}
         notFoundContent={null}
-        optionRender={(option) => {
+        optionRender={option => {
           return (
             <div className={styles.option}>
               <span>{option.label}</span>
               <Space>
                 {option.label !== 'default' && props.hideDelete !== true && (
                   <Button
-                    type='text'
-                    shape='circle'
+                    type="text"
+                    shape="circle"
                     // icon={
                     //   <span style={{ color: 'red' }}>
                     //     <Iconify
@@ -136,13 +143,9 @@ const DBSelect = (props: IProps) => {
                     //     />
                     //   </span>
                     // }
-                    icon={
-                      <span style={{ color: 'red', fontSize: '.7rem' }}>
-                        删
-                      </span>
-                    }
-                    size='small'
-                    onClick={(e) => {
+                    icon={<span style={{ color: 'red', fontSize: '.7rem' }}>删</span>}
+                    size="small"
+                    onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
                       onDeleteClick(option.data.label);
@@ -158,21 +161,25 @@ const DBSelect = (props: IProps) => {
         <div className={styles.btns}>
           <Space>
             <Button
-              size='small'
-              type='primary'
+              size="small"
+              type="primary"
               onClick={handleDownload}
               loading={downloading}
             >
               下载配置
             </Button>
-            <Button size='small' type='primary' onClick={onShowAddModal}>
+            <Button
+              size="small"
+              type="primary"
+              onClick={onShowAddModal}
+            >
               新增配置
             </Button>
           </Space>
         </div>
       )}
       <Modal
-        title='新增配置'
+        title="新增配置"
         open={open}
         onOk={onAdd}
         onCancel={() => setOpen(false)}
@@ -181,8 +188,8 @@ const DBSelect = (props: IProps) => {
         }}
       >
         <Input
-          placeholder='输入配置名字（不可重复）'
-          onChange={(e) => setAddFileName(e.target.value)}
+          placeholder="输入配置名字（不可重复）"
+          onChange={e => setAddFileName(e.target.value)}
           value={addFileName}
         />
       </Modal>

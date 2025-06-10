@@ -63,6 +63,7 @@ const HeadRight = (props: IProps) => {
   const [current, setCurrent] = useState<string>();
 
   const [refreshDirLoading, setRefreshDirLoading] = useState(false);
+  const [defaultDBSelectValue, setDefaultDBSelectValue] = useState('default');
 
   const onCancelModal = () => {
     setEditModalData?.(undefined);
@@ -121,13 +122,25 @@ const HeadRight = (props: IProps) => {
     setLinkMode?.(mode);
   };
 
+  const getCParams = () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const cValue = searchParams.get('c');
+    return cValue;
+  }
+
   const fetchDBFiles = () => {
     setCurrent(getSelectedKey());
-
+    const cValue = getCParams();
     return apiQueryDBFiles().then((res) => {
       const { data } = res;
       const { all } = data;
-      const dbConfigs = all.map((it: string) => ({ label: it, value: it }));
+      const dbConfigs = all.map((it: string) => {
+        if (it === cValue) {
+          setDefaultDBSelectValue(it);
+        }
+        return { label: it, value: it };
+      });
+
       setOptions(dbConfigs);
       return dbConfigs;
     });
@@ -227,6 +240,7 @@ const HeadRight = (props: IProps) => {
             onChange={onDBSelectChange}
             value={current}
             options={options}
+            defaultValue={defaultDBSelectValue}
           />
           <div className={styles.blank}></div>
           {env?.HH_ALLOW_UPLOAD_IMAGE === 'yes' ? (
@@ -311,6 +325,7 @@ const HeadRight = (props: IProps) => {
             onChange={onDBSelectChange}
             value={current}
             options={options}
+            defaultValue={defaultDBSelectValue}
           />
         )}
         {linkMode === jumpMode.wan ? (

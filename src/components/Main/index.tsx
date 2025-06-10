@@ -31,12 +31,12 @@ const Main = (props: IProps) => {
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const categoryNameStyle = JSON.parse(head?.categoryNameStyle || '{}');
 
-  const [isLocalNet, setIsLocalNet] = useState(false);
+  // const [isLocalNet, setIsLocalNet] = useState(false);
   const lanChangeRef = useRef(false);
 
   const changeLanMode = (isLocal = true, showToast = false) => {
     const mode = isLocal ? jumpMode.lan : jumpMode.wan;
-    setIsLocalNet(isLocal);
+    // setIsLocalNet(isLocal);
     setLinkMode?.(mode);
     setLinkJumpMode(mode);
     if (lanChangeRef.current === false) {
