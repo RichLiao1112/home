@@ -9,7 +9,7 @@ import { setSelectedKey } from '@/common';
 export interface IProps {
   hideButtions?: boolean;
   selectStyle?: any;
-  onChange: () => Promise<void>;
+  onChange: (v?: string) => void;
   value: string | undefined;
   options: TFileOptions;
   hideDelete?: boolean;
@@ -65,7 +65,7 @@ const DBSelect = (props: IProps) => {
               if (props.value === filename) {
                 onSelect('default');
               } else {
-                props.onChange();
+                props.onChange?.();
               }
             } else {
               message.error('删除失败');
@@ -73,7 +73,7 @@ const DBSelect = (props: IProps) => {
           })
           .catch((err: any) => {
             message.error(err?.message);
-            props.onChange();
+            props.onChange?.();
           });
       },
     });
@@ -81,7 +81,7 @@ const DBSelect = (props: IProps) => {
 
   const onSelect = (value: string) => {
     setSelectedKey(value);
-    props.onChange?.();
+    props.onChange?.(value);
   };
 
   const handleDownload = async () => {

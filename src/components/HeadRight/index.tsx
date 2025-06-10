@@ -322,7 +322,13 @@ const HeadRight = (props: IProps) => {
             hideDelete
             hideButtions
             selectStyle={{ width: '6rem', fontSize: '.6rem' }}
-            onChange={onDBSelectChange}
+            onChange={(v?: string) => {
+              // 更新URL参数，不触发刷新
+              const url = new URL(window.location.href);
+              url.searchParams.set('c', v || 'default');
+              window.history.replaceState({}, '', url.toString());
+              onDBSelectChange()
+            }}
             value={current}
             options={options}
             defaultValue={defaultDBSelectValue}
