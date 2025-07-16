@@ -1,9 +1,9 @@
 services:
   home:
     image: home:latest
-    volumns:
+    volumes:
       - ./home.json:/app/home.json
     ports:
-      - 13131:3000
+      - 3131:80
     environment:
       - UNSPLASH_ACCESS_KEY=jM_e5xFaPxyIxfx9WmnVbyoV-RK2yqO_c-nDetFHuVs

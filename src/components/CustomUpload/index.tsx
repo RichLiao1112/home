@@ -5,7 +5,7 @@ import { Button, Upload, message } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';
 import Iconify from '../Iconify';
 
-const props: UploadProps = {
+const uploadProps: UploadProps = {
   name: 'file',
   action: '/api/upload',
   showUploadList: {
@@ -14,7 +14,7 @@ const props: UploadProps = {
   },
 };
 
-const CustomUpload = () => {
+const CustomUpload = (props: { onChange?: (path: string) => void; }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const handleChange: UploadProps['onChange'] = (info) => {
@@ -24,6 +24,7 @@ const CustomUpload = () => {
       }
       if (info.file.status === 'done' && info.file.response.success) {
         message.success(`上传成功： ${info.file.response.data.filename}`);
+        props.onChange?.(info.file.response.data.filename)
       }
       if (info.file.response && info.file.response.success === false) {
         message.error(info.file.response.message);
@@ -43,7 +44,7 @@ const CustomUpload = () => {
     }
   };
   return (
-    <Upload {...props} onChange={handleChange} fileList={fileList}>
+    <Upload {...uploadProps} onChange={handleChange} fileList={fileList}>
       <Button type='primary'>点我上传</Button>
     </Upload>
   );

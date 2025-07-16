@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  apiQueryPngSvgMedia,
-  apiSearchIcon,
-  apiUnsplashCollectionPhotos,
-} from '@/requests';
+import { apiQueryPngSvgMedia, apiSearchIcon, apiUnsplashCollectionPhotos } from '@/requests';
 import { Button, Select, Spin, Tooltip } from 'antd';
 import debounce from 'lodash/debounce';
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +8,7 @@ import styles from './index.module.css';
 import Iconify from '@/components/Iconify';
 import { isHttpSource } from '@/common';
 import { IMediaSource } from '@/services/media';
+import CustomUpload from '../CustomUpload';
 
 export type TRemoteIcon = {
   id: string;
@@ -45,7 +42,7 @@ const SearchIconSelect = (props: IProps) => {
         results.map((item: any) => ({
           id: item.urls.full,
           type: 'unsplashMedia',
-        }))
+        })),
       );
     } catch (err) {
       console.log('[apiUnsplashCollection] err', err);
@@ -54,7 +51,7 @@ const SearchIconSelect = (props: IProps) => {
     setLoading(false);
   };
 
-  const onIconSearch = debounce(async (value) => {
+  const onIconSearch = debounce(async value => {
     if (isHttpSource(value)) {
       return setRemoteIconList([{ id: value }]);
     }
@@ -64,7 +61,7 @@ const SearchIconSelect = (props: IProps) => {
       const matchImg = await handleMatchImage(value);
       setRemoteIconList(matchImg);
       const icons = await handleSearchFromAPI(value);
-      setRemoteIconList((prev) => {
+      setRemoteIconList(prev => {
         return [...prev, ...icons];
       });
       setLoading(false);
@@ -72,11 +69,9 @@ const SearchIconSelect = (props: IProps) => {
     }
   }, 300);
 
-  const handleSearchFromAPI = (
-    value: string
-  ): Promise<{ id: string; type: 'iconify' }[]> => {
+  const handleSearchFromAPI = (value: string): Promise<{ id: string; type: 'iconify' }[]> => {
     return apiSearchIcon({ q: value })
-      .then((res) => {
+      .then(res => {
         const icons = (res.data?.icons || []).map((icon: TRemoteIcon) => ({
           id: icon.id,
           type: 'iconify',
@@ -88,7 +83,7 @@ const SearchIconSelect = (props: IProps) => {
 
   const handleMatchImage = (value: string) => {
     return apiQueryPngSvgMedia({ q: value })
-      .then((res) => {
+      .then(res => {
         return res.data.map((item: IMediaSource) => ({
           id: item.path,
           type: 'selfMedia',
@@ -101,11 +96,22 @@ const SearchIconSelect = (props: IProps) => {
     const isImg = isHttpSource(payload.id);
     return {
       label: (
-        <div className={styles.option} style={{ color: color ?? '#000000' }}>
+        <div
+          className={styles.option}
+          style={{ color: color ?? '#000000' }}
+        >
           {isImg ? (
-            <img alt="" src={payload.id} className={styles.img} />
+            <img
+              alt=""
+              src={payload.id}
+              className={styles.img}
+            />
           ) : (
-            <Iconify width="1.5rem" height="1.5rem" icon={payload.id} />
+            <Iconify
+              width="1.5rem"
+              height="1.5rem"
+              icon={payload.id}
+            />
           )}
           &nbsp;
           <span style={{ color: '#000000' }}>{payload.id}</span>
@@ -130,8 +136,8 @@ const SearchIconSelect = (props: IProps) => {
           filterOption={false}
           onSearch={onIconSearch}
           placeholder="关键字搜索应用图片 或 填写http开头的图片地址"
-          options={remoteIconList.map((icon) => renderSelectOption(icon))}
-          onChange={(value) => onChange?.(value || '')}
+          options={remoteIconList.map(icon => renderSelectOption(icon))}
+          onChange={value => onChange?.(value || '')}
           value={value}
           loading={loading}
           notFoundContent={loading ? <Spin size="small" /> : null}
@@ -142,7 +148,11 @@ const SearchIconSelect = (props: IProps) => {
           <Tooltip title="刷新unsplash收藏夹中的资源">
             <Button
               icon={
-                <Iconify icon="tabler:refresh" width="1rem" height="1rem" />
+                <Iconify
+                  icon="tabler:refresh"
+                  width="1rem"
+                  height="1rem"
+                />
               }
               type="default"
               onClick={() => searchUnsplashPhotos(unsplashCollectionId || '')}
@@ -154,7 +164,7 @@ const SearchIconSelect = (props: IProps) => {
       {unsplashCollectionId && remoteIconList?.length > 0 ? (
         <div className={styles.row}>
           <div className={styles.scroll}>
-            {remoteIconList.map((it) => (
+            {remoteIconList.map(it => (
               <div
                 className={styles.prev}
                 key={it.id}
@@ -168,6 +178,15 @@ const SearchIconSelect = (props: IProps) => {
           </div>
         </div>
       ) : null}
+
+      <div style={{ marginTop: 6 }}>
+        <CustomUpload
+          onChange={p => {
+            console.log(p);
+            onChange?.(`${location.origin}/assets/${p}`)
+          }}
+        />
+      </div>
     </div>
   );
 };

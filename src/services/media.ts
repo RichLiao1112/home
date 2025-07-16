@@ -33,7 +33,7 @@ class MediaService {
     'custom'
   );
   private _mediaAssetsPathWrite = path.join(this.basePath, 'assets');
-  private _mediaAssetsPathRead = '/api/assets/';
+  private _mediaAssetsPathRead = '/assets/';
   private mediaPngList: IMediaSource[] = [];
   private mediaSvgList: IMediaSource[] = [];
   private mediaCustomList: IMediaSource[] = [];

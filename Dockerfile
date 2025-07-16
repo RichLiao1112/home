@@ -40,15 +40,25 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
+# 安装 nginx
+RUN apk add --no-cache nginx
+
+# 复制 nginx 配置
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# 创建 nginx 运行目录
+RUN mkdir -p /run/nginx
+
 # USER nextjs
 
-EXPOSE 3000
-
-ENV PORT 3000
+EXPOSE 80
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["node_modules/.bin/next", "start"]
+# 启动脚本：同时启动 nextjs 和 nginx
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
