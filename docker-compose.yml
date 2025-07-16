@@ -3,6 +3,7 @@ services:
     image: home:latest
     volumes:
       - ./home.json:/app/home.json
+      - ./assets:/app/assets
     ports:
       - 3131:80
     environment:
