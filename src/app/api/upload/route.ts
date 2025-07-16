@@ -63,21 +63,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: error?.message, success: false });
   }
 }
-
-export async function GET() {
-  // if (HH_ALLOW_UPLOAD_IMAGE !== 'yes') {
-  //   return NextResponse.json(
-  //     {
-  //       message: `不支持的请求`,
-  //       success: false,
-  //       data: {},
-  //     },
-  //     { status: 400 }
-  //   );
-  // }
-  MediaService.scanAssetsMedia();
-  return NextResponse.json({
-    message: '',
-    success: true,
-  });
-}
