@@ -17,11 +17,11 @@ const readHomeData = () => {
 
 export default async function Home() {
   const res = readHomeData();
-  const { dbData, env } = res;
+  const { dbData } = res;
 
   return (
     <PageContextProvider>
-      <Main dbData={dbData} env={env} />
+      <Main dbData={dbData} />
     </PageContextProvider>
   );
 }

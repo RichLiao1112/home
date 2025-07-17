@@ -4,10 +4,10 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 import { allowedMimeTypes, maxFileSize, maxFileSizeMB } from '@/common';
 
-const NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE = process.env.NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE;
+const HH_ALLOW_UPLOAD_IMAGE = process.env.HH_ALLOW_UPLOAD_IMAGE;
 
 export async function POST(req: NextRequest) {
-  if (NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE !== 'no') {
+  if (HH_ALLOW_UPLOAD_IMAGE !== 'no') {
   } else {
     return NextResponse.json(
       {

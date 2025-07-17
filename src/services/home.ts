@@ -88,7 +88,7 @@ class HomeService {
   private initEnvData = () => {
     const selfSetENV: Record<string, any> = {};
     Object.entries(process.env).forEach(([k, v]) => {
-      if (k.startsWith('HH_')) {
+      if (k.startsWith('HH_') || k.startsWith('NEXT_PUBLIC')) {
         selfSetENV[k] = v;
       }
     });

@@ -9,8 +9,7 @@ import Iconify from '@/components/Iconify';
 import { isHttpSource } from '@/common';
 import { IMediaSource } from '@/services/media';
 import CustomUpload from '../CustomUpload';
-
-const NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE = process.env.NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE;
+import useEnv from '@/hooks/useEnv';
 
 export type TRemoteIcon = {
   id: string;
@@ -25,6 +24,7 @@ export interface IProps {
 
 const SearchIconSelect = (props: IProps) => {
   const { onChange, value, color, unsplashCollectionId } = props;
+  const { env } = useEnv();
   const [remoteIconList, setRemoteIconList] = useState<Array<TRemoteIcon>>([]);
   const [loading, setLoading] = useState(false);
 
@@ -181,7 +181,7 @@ const SearchIconSelect = (props: IProps) => {
         </div>
       ) : null}
 
-      {NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE !== 'no' ? <div style={{ marginTop: 6 }}>
+      {env?.HH_ALLOW_UPLOAD_IMAGE !== 'no' ? <div style={{ marginTop: 6 }}>
         <CustomUpload
           onChange={p => {
             console.log(p);

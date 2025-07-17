@@ -36,7 +36,7 @@ export interface IProps {
 }
 
 const HeadRight = (props: IProps) => {
-  const { layout, configKey, env, categoryOptions } = props;
+  const { layout, configKey, categoryOptions } = props;
   const router = useRouter();
 
   const {
@@ -243,7 +243,7 @@ const HeadRight = (props: IProps) => {
             defaultValue={defaultDBSelectValue}
           />
           <div className={styles.blank}></div>
-          {/* {env?.NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE === 'yes' ? (
+          {/* {env?.HH_ALLOW_UPLOAD_IMAGE === 'yes' ? (
             <>
               <div
                 className={styles.title}

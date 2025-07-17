@@ -9,12 +9,11 @@ export const dynamic = 'force-dynamic';
 export interface IProps {
   layout?: ILayout;
   configKey?: string;
-  env?: IEnv;
   categoryOptions?: Array<{ label: string; value: string }>;
 }
 
 const Head = (props: IProps) => {
-  const { layout = {}, configKey, env, categoryOptions } = props;
+  const { layout = {}, configKey, categoryOptions } = props;
   const { head = {} } = layout;
 
   const renderCover = (source?: string, logoColor?: string) => {
@@ -40,7 +39,6 @@ const Head = (props: IProps) => {
         <HeadRight
           layout={layout}
           configKey={configKey}
-          env={env}
           categoryOptions={categoryOptions}
         />
       </div>

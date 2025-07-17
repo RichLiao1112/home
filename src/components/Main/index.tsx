@@ -15,7 +15,6 @@ import { message } from 'antd';
 
 export interface IProps {
   dbData: IDBData;
-  env: IEnv;
 }
 
 const Main = (props: IProps) => {
@@ -176,7 +175,7 @@ const Main = (props: IProps) => {
 
   return (
     <main className={styles.main}>
-      <Head layout={layout} configKey={configKey} env={props.env} categoryOptions={categoryOptions} />
+      <Head layout={layout} configKey={configKey} categoryOptions={categoryOptions} />
       <DndProvider backend={HTML5Backend}>{renderCards()}</DndProvider>
       {editCardMode === true &&
         renderEditCard({
