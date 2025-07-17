@@ -1,3 +1,3 @@
 interface IEnv {
-  HH_ALLOW_UPLOAD_IMAGE?: 'yes' | 'no' | string;
+  NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE?: 'yes' | 'no' | string;
 }

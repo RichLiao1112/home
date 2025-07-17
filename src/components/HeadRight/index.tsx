@@ -243,7 +243,7 @@ const HeadRight = (props: IProps) => {
             defaultValue={defaultDBSelectValue}
           />
           <div className={styles.blank}></div>
-          {/* {env?.HH_ALLOW_UPLOAD_IMAGE === 'yes' ? (
+          {/* {env?.NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE === 'yes' ? (
             <>
               <div
                 className={styles.title}

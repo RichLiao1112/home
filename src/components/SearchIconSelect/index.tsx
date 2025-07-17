@@ -10,6 +10,8 @@ import { isHttpSource } from '@/common';
 import { IMediaSource } from '@/services/media';
 import CustomUpload from '../CustomUpload';
 
+const NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE = process.env.NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE;
+
 export type TRemoteIcon = {
   id: string;
 };
@@ -179,14 +181,14 @@ const SearchIconSelect = (props: IProps) => {
         </div>
       ) : null}
 
-      <div style={{ marginTop: 6 }}>
+      {NEXT_PUBLIC_HH_ALLOW_UPLOAD_IMAGE !== 'no' ? <div style={{ marginTop: 6 }}>
         <CustomUpload
           onChange={p => {
             console.log(p);
             onChange?.(`${location.origin}/assets/${p}`)
           }}
         />
-      </div>
+      </div> : null}
     </div>
   );
 };
