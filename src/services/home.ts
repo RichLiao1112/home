@@ -47,6 +47,7 @@ export interface IDBData {
 
 export interface IStyle {
   color?: string;
+  textAlign?: 'left' | 'center' | 'right';
 }
 
 export interface ICategory {
@@ -55,6 +56,7 @@ export interface ICategory {
   style?: IStyle;
   key?: keyof IDBData; // configKey
   cards?: ICard[];
+  position?: number; // 用于排序
 }
 
 /**
@@ -102,7 +104,7 @@ class HomeService {
     const data = readFileSync(dbPath, { encoding: 'utf-8' });
     const parseData: IDBData = JSON.parse(data || '{}');
     // 数据检查
-    Object.entries(parseData).forEach(([k, v]) => {
+    Object.entries(parseData).forEach(([k, v], i) => {
       const defaultCagegory: ICategory = {
         title: '默认分类',
         key: k,
@@ -111,6 +113,7 @@ class HomeService {
         style: {
           color: '#000',
         },
+        position: i
       };
       if (
         (v.categories instanceof Array && v.categories.length === 0) ||

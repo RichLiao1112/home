@@ -202,3 +202,15 @@ export const apiGetDomainIP = (payload: { domain: string }) => {
     .then((res) => res.json())
     .catch((err) => console.warn('[apiGetIP]', err));
 }
+
+export const apiSortCategory = (payload: { key: string; mapping: { [key: string]: number; } }) => {
+  return fetch('/api/category/sort', {
+    method: 'PUT',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify({ data: payload }),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.warn('[apiSortCategory]', err));
+};

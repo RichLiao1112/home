@@ -12,6 +12,7 @@ import { PageContext } from '@/context/page.context';
 import Category from '../Category';
 import Card from '../Card';
 import { message } from 'antd';
+import SortCategory from '../SortCategory';
 
 export interface IProps {
   dbData: IDBData;
@@ -29,6 +30,7 @@ const Main = (props: IProps) => {
   }));
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const categoryNameStyle = JSON.parse(head?.categoryNameStyle || '{}');
+  const [openSortModal, setOpenSortModal] = useState(false);
 
   // const [isLocalNet, setIsLocalNet] = useState(false);
   const lanChangeRef = useRef(false);
@@ -110,7 +112,7 @@ const Main = (props: IProps) => {
       <div className={styles.editMode}>
         {showCardType.includes('add') && (
           <Card
-            type='add'
+            type="add"
             payload={{
               title: '新增应用',
               cover: 'material-symbols:add',
@@ -122,7 +124,7 @@ const Main = (props: IProps) => {
 
         {showCardType.includes('addCategory') && (
           <Card
-            type='addCategory'
+            type="addCategory"
             payload={{
               title: '新增分类',
               cover: 'material-symbols:add',
@@ -135,16 +137,20 @@ const Main = (props: IProps) => {
   };
 
   const renderCards = () => {
-    return categories.map((item) => {
+    return categories.sort((a, b) => (a.position || 0) - (b.position || 0)).map((item) => {
       const { cards, ...category } = item;
       const dataSource = cards || [];
       return (
-        <div key={category.id} className={styles.category}>
+        <div
+          key={category.id}
+          className={styles.category}
+        >
           <Category
             id={category.id}
             title={category.title}
             key={category.id}
             configKey={configKey}
+            handleOpenSortModal={() => setOpenSortModal(true)}
             style={{
               ...category.style,
               ...(categoryNameStyle || {}),
@@ -175,7 +181,11 @@ const Main = (props: IProps) => {
 
   return (
     <main className={styles.main}>
-      <Head layout={layout} configKey={configKey} categoryOptions={categoryOptions} />
+      <Head
+        layout={layout}
+        configKey={configKey}
+        categoryOptions={categoryOptions}
+      />
       <DndProvider backend={HTML5Backend}>{renderCards()}</DndProvider>
       {editCardMode === true &&
         renderEditCard({
@@ -191,6 +201,14 @@ const Main = (props: IProps) => {
           }}
         />
       </div>
+      {openSortModal && configKey ? (
+        <SortCategory
+          open={openSortModal}
+          onClose={() => setOpenSortModal(false)}
+          categories={categories}
+          configKey={configKey}
+        />
+      ) : null}
     </main>
   );
 };

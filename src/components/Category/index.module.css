@@ -2,13 +2,8 @@
   padding: 0 1rem;
   display: block;
   position: relative;
-
-  &:hover {
-    .icons {
-      display: inline;
-    }
-  }
 }
+
 
 .title {
   font-weight: 700;
@@ -16,17 +11,11 @@
 }
 
 .icons {
-  display: none;
-}
-
-.icon {
-  opacity: 0.45;
-  margin-left: 0.5rem;
-  cursor: pointer;
-
+  display: inline-block;
+  padding: 0 0.16rem;
+  opacity: .15;
   &:hover {
     opacity: 1;
-    transform: scale(1.1);
     transition: all 0.2s;
   }
 }
