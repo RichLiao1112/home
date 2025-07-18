@@ -54,6 +54,7 @@ const Category = (props: IProps) => {
                   icon="mono-icons:delete"
                   width="1rem"
                   height="1rem"
+                  style={{ color: style?.color || '#000' }}
                 />
               }
               type="text"
@@ -67,6 +68,7 @@ const Category = (props: IProps) => {
                   icon="uil:edit-alt"
                   width="1rem"
                   height="1rem"
+                  style={{ color: style?.color || '#000' }}
                 />
               }
               type="text"
@@ -90,6 +92,7 @@ const Category = (props: IProps) => {
                   icon="line-md:menu"
                   width="1rem"
                   height="1rem"
+                  style={{ color: style?.color || '#000' }}
                 />
               }
               type="text"

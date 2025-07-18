@@ -13,7 +13,7 @@
 .icons {
   display: inline-block;
   padding: 0 0.16rem;
-  opacity: .15;
+  opacity: .35;
   &:hover {
     opacity: 1;
     transition: all 0.2s;
