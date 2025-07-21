@@ -61,7 +61,7 @@ const Category = (props: IProps) => {
               onClick={deleteSelf}
             />
           </Tooltip>
-          <Tooltip title="删除">
+          <Tooltip title="编辑">
             <Button
               icon={
                 <Iconify
