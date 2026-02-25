@@ -3,10 +3,16 @@ import MediaService from '@/services/media';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import { allowedMimeTypes, maxFileSize, maxFileSizeMB } from '@/common';
+import { checkAuth } from '@/common/auth';
 
 const HH_ALLOW_UPLOAD_IMAGE = process.env.HH_ALLOW_UPLOAD_IMAGE;
 
 export async function POST(req: NextRequest) {
+  // 认证检查
+  const auth = checkAuth(req);
+  if (!auth.authorized) {
+    return auth.error!;
+  }
   if (HH_ALLOW_UPLOAD_IMAGE !== 'no') {
   } else {
     return NextResponse.json(

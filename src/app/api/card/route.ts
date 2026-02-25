@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService, { ICard } from '@/services/home';
 import { genUUID } from '@/common';
+import { checkAuth } from '@/common/auth';
 
 export async function PUT(req: NextRequest) {
+  // 认证检查
+  const auth = checkAuth(req);
+  if (!auth.authorized) {
+    return auth.error!;
+  }
   try {
     const body = await req.json();
     const { data } = body;

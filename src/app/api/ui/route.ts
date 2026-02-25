@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService from '@/services/home';
+import { checkAuth } from '@/common/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  // 认证检查
+  const auth = checkAuth(req);
+  if (!auth.authorized) {
+    return auth.error!;
+  }
   const body = await req.json();
   const { data } = body;
   try {

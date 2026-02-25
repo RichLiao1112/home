@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService from '@/services/home';
+import { checkAuth } from '@/common/auth';
 
 export async function GET() {
   try {
@@ -16,6 +17,12 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
+  // 认证检查
+  const auth = checkAuth(req);
+  if (!auth.authorized) {
+    return auth.error!;
+  }
+
   try {
     const body = await req.json();
     const { data } = body;
@@ -51,6 +58,12 @@ export type TParams = {
 };
 
 export async function DELETE(req: NextRequest) {
+  // 认证检查
+  const auth = checkAuth(req);
+  if (!auth.authorized) {
+    return auth.error!;
+  }
+
   try {
     const body = await req.json();
     const { data } = body;

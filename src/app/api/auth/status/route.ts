@@ -2,15 +2,13 @@ import { NextResponse } from 'next/server';
 import HomeService from '@/services/home';
 
 export async function GET() {
-  const selfSetENV: Record<string, any> = HomeService.getHHEnv();
   const authConfig = HomeService.getAuthConfig();
-  // 将认证配置添加到返回数据中，但不返回明文密码
+
+  // 返回认证是否开启
   return NextResponse.json({
-    message: '',
     success: true,
     data: {
-      ...selfSetENV,
-      HH_AUTH_ENABLED: authConfig.enabled,
+      enabled: authConfig.enabled,
     },
   });
 }

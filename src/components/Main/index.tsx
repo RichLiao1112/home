@@ -13,12 +13,15 @@ import Category from '../Category';
 import Card from '../Card';
 import { message } from 'antd';
 import SortCategory from '../SortCategory';
+import { useAuth } from '@/hooks/useAuth';
+import LoginForm from '../LoginForm';
 
 export interface IProps {
   dbData: IDBData;
 }
 
 const Main = (props: IProps) => {
+  const { isAuthenticated, authEnabled, loading } = useAuth();
   const { setEditCardMode, editCardMode, setLinkMode } = useContext(PageContext);
   const configKey = getSelectedKey();
   const selectedConfig = props.dbData?.[configKey];
@@ -178,6 +181,11 @@ const Main = (props: IProps) => {
       );
     });
   };
+
+  // 如果开启认证且未登录，显示登录表单
+  if (authEnabled && !loading && !isAuthenticated) {
+    return <LoginForm />;
+  }
 
   return (
     <main className={styles.main}>

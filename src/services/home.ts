@@ -243,6 +243,13 @@ class HomeService {
     return this._hhenv;
   }
 
+  public getAuthConfig() {
+    return {
+      enabled: this._hhenv['HH_AUTH_ENABLED'] === 'true',
+      password: this._hhenv['HH_AUTH_PASSWORD'] || '',
+    };
+  }
+
   public getCategoryCards(key: string, categoryId: string) {
     const dbData = this._dbData[key] || {};
     return dbData.categories.find((it) => it.id === categoryId)?.cards || [];

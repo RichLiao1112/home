@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import HomeService, { ICategory } from '@/services/home';
+import { checkAuth } from '@/common/auth';
 
 type TParams = {
   id: string;
 };
 
 export async function DELETE(req: NextRequest, context: { params: TParams }) {
+  // 认证检查
+  const auth = checkAuth(req);
+  if (!auth.authorized) {
+    return auth.error!;
+  }
   try {
     const { id } = context.params;
     const query = new URLSearchParams(req.url.split('?')[1] || '');
