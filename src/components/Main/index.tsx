@@ -23,10 +23,8 @@ export interface IProps {
 const Main = (props: IProps) => {
   const { isAuthenticated, authEnabled, loading } = useAuth();
   const { setEditCardMode, editCardMode, setLinkMode } = useContext(PageContext);
-  // 如果开启认证且未登录，显示登录表单（完全隐藏内容）
-  if (authEnabled && !loading && !isAuthenticated) {
-    return <LoginForm />;
-  }
+
+  // 所有 hooks 必须无条件调用
   const configKey = getSelectedKey();
   const selectedConfig = props.dbData?.[configKey];
   const { layout, categories = [] } = selectedConfig || {};
@@ -89,14 +87,14 @@ const Main = (props: IProps) => {
         }
       });
     }
-  }, []);
+  }, [changeLanMode]);
 
   const onKeydown = useCallback((e: any) => {
     if (e && e.keyCode === 27) {
       // Esc button
       setEditCardMode?.(false);
     }
-  }, []);
+  }, [setEditCardMode]);
 
   useEffect(() => {
     document.body.addEventListener('keydown', onKeydown);
@@ -112,6 +110,11 @@ const Main = (props: IProps) => {
   useEffect(() => {
     document.documentElement.style.setProperty('--background-image', `url(${head?.backgroundImage || ''})`);
   }, [head?.backgroundImage]);
+
+  // 如果开启认证且未登录，显示登录表单（完全隐藏内容）
+  if (authEnabled && !loading && !isAuthenticated) {
+    return <LoginForm />;
+  }
 
   const renderEditCard = (payload: { categoryId?: string; showCardType: string[] }) => {
     const { categoryId, showCardType } = payload;
