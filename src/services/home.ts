@@ -245,8 +245,8 @@ class HomeService {
 
   public getAuthConfig() {
     return {
-      enabled: this._hhenv['HH_AUTH_ENABLED'] === 'true',
-      password: this._hhenv['HH_AUTH_PASSWORD'] || '',
+      enabled: process.env.HH_AUTH_ENABLED === 'true',
+      password: process.env.HH_AUTH_PASSWORD || '',
     };
   }
 
