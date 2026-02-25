@@ -10,5 +10,5 @@ services:
       - UNSPLASH_ACCESS_KEY=jM_e5xFaPxyIxfx9WmnVbyoV-RK2yqO_c-nDetFHuVs
       - HH_ALLOW_UPLOAD_IMAGE=no
       # 登录功能配置
-      # - HH_AUTH_ENABLED=true  # 开启登录功能
-      # - HH_AUTH_PASSWORD=your_password  # 设置登录密码
+      - HH_AUTH_ENABLED=true  # 开启登录功能
+      - HH_AUTH_PASSWORD=123456  # 设置登录密码

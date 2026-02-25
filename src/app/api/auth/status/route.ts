@@ -3,6 +3,7 @@ import HomeService from '@/services/home';
 
 export async function GET() {
   const authConfig = HomeService.getAuthConfig();
+  console.log('[auth/status] authConfig:', authConfig);
 
   // 返回认证是否开启
   return NextResponse.json({
