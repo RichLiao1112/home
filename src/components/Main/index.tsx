@@ -23,6 +23,10 @@ export interface IProps {
 const Main = (props: IProps) => {
   const { isAuthenticated, authEnabled, loading } = useAuth();
   const { setEditCardMode, editCardMode, setLinkMode } = useContext(PageContext);
+  // 如果开启认证且未登录，显示登录表单（完全隐藏内容）
+  if (authEnabled && !loading && !isAuthenticated) {
+    return <LoginForm />;
+  }
   const configKey = getSelectedKey();
   const selectedConfig = props.dbData?.[configKey];
   const { layout, categories = [] } = selectedConfig || {};
@@ -181,11 +185,6 @@ const Main = (props: IProps) => {
       );
     });
   };
-
-  // 如果开启认证且未登录，显示登录表单
-  if (authEnabled && !loading && !isAuthenticated) {
-    return <LoginForm />;
-  }
 
   return (
     <main className={styles.main}>
